@@ -17,7 +17,10 @@ jobs:
           unzip main.zip
           cp -r annotation_workflow_template-main/.github .
           rm -r annotation_workflow_template-main/
-          rm main.zip check.yml compare.yml extract.yml
+          rm   main.zip \
+               annotation_workflow_template-main/.github/workflows/check.yml \
+               annotation_workflow_template-main/.github/workflows/compare.yml \
+               annotation_workflow_template-main/.github/workflows/extract.yml
       - name: Configure git and push updated workflow
         working-directory: ./main
         continue-on-error: true
