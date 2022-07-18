@@ -10,3 +10,4 @@ echo "$pyv"
 ls "$GITHUB_WORKSPACE"
 pip install ms3
 ms3 -h
+ms3 extract MS3/*.mscx -M -N -X -D
