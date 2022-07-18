@@ -18,9 +18,9 @@ jobs:
           cp -r annotation_workflow_template-main/.github .
           rm -r annotation_workflow_template-main/
           rm   main.zip \
-               annotation_workflow_template-main/.github/workflows/check.yml \
-               annotation_workflow_template-main/.github/workflows/compare.yml \
-               annotation_workflow_template-main/.github/workflows/extract.yml
+               /workflows/check.yml \
+               /workflows/compare.yml \
+               /workflows/extract.yml
       - name: Configure git and push updated workflow
         working-directory: ./main
         continue-on-error: true
