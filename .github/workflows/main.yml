@@ -15,12 +15,9 @@ jobs:
         run: |
           wget https://github.com/DCMLab/annotation_workflow_template/archive/refs/heads/main.zip
           unzip main.zip
-          cp -r annotation_workflow_template-main/.github .
+          cp -r annotation_workflow_template-main/.github/gantt.py annotation_workflow_template-main/.github/update_pages.py .
           rm -r annotation_workflow_template-main/
-          rm   main.zip \
-               /workflows/check.yml \
-               /workflows/compare.yml \
-               /workflows/extract.yml
+          rm   main.zip
       - name: Configure git and push updated workflow
         working-directory: ./main
         continue-on-error: true
