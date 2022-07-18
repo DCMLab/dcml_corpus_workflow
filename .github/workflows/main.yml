@@ -5,10 +5,34 @@ jobs:
     runs-on: ubuntu-latest
     name: A job to say hello
     steps:
-      # To use this repository's private action,
-      # you must check out the repository
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout main
+        uses: actions/checkout@v2
+        with:
+          path: main
+          token: ${{ secrets.MS3_BOT_TOKEN }}
+      - name: Pull current workflow
+        working-directory: ./main
+        run: |
+          wget https://github.com/DCMLab/annotation_workflow_template/archive/refs/heads/main.zip
+          unzip main.zip
+          cp -r annotation_workflow_template-main/.github .
+          rm -r annotation_workflow_template-main/
+          rm main.zip
+      - name: Configure git and push updated workflow
+        working-directory: ./main
+        continue-on-error: true
+        run: |
+          git config --global user.name "ms3-bot"
+          git config --global user.email dcml.annotators@epfl.ch
+          git config --global user.token ${{ secrets.MS3_BOT_TOKEN }}
+          git add -A
+          git commit -m "Current version of workflows"
+          git push
+
+      # # To use this repository's private action,
+      # # you must check out the repository
+      # - name: Checkout
+      #   uses: actions/checkout@v3
       - name: Hello world action step
         uses: ./ # Uses an action in the root directory
         id: hello
