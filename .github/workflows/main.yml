@@ -54,6 +54,8 @@ jobs:
 
       - name: Hello world action step
         uses: ./main # Uses an action in the root directory
+        env:
+          option: 'extract'
         id: hello
         with:
           who-to-greet: 'extract'

@@ -2,7 +2,7 @@
 
 echo "Hello $0"
 echo "Hello $1"
-echo $INPUT_WHO_TO_GREET
+echo $option
 
 time=$(date)
 echo "$HOME"
