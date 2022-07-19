@@ -24,20 +24,6 @@ jobs:
           rm -r annotation_workflow_template-main/
           rm   main.zip
 
-      # # To use this repository's private action,
-      # # you must check out the repository
-      # - name: Checkout
-      #   uses: actions/checkout@v3
-      - name: Hello world action step
-        uses: ./main # Uses an action in the root directory
-        id: hello
-        with:
-          who-to-greet: 'Mona the Octocat'
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
-
-
       - name: Configure git and push updated workflow
         working-directory: ./main
         continue-on-error: true
@@ -47,4 +33,35 @@ jobs:
           git config --global user.token ${{ secrets.MS3_BOT_TOKEN }}
           git add -A
           git commit -m "Current version of workflows"
+          git push
+      # # To use this repository's private action,
+      # # you must check out the repository
+      # - name: Checkout
+      #   uses: actions/checkout@v3
+
+      - uses: lots0logs/gh-action-get-changed-files@2.1.4
+        id: modified
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Display changed and added files
+        continue-on-error: true
+        run: |
+          cat ${HOME}/files_modified.json
+          cat ${HOME}/files_added.json
+          
+      - name: Hello world action step
+        uses: ./main # Uses an action in the root directory
+        id: hello
+        with:
+          who-to-greet: 'Mona the Octocat'
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"
+
+      - name: Push files
+        working-directory: ./main
+        continue-on-error: true
+        run: |
+          git add -A
+          git commit -m "Automatically added TSV files from parse with ms3"
           git push
