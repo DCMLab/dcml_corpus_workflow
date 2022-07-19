@@ -13,7 +13,7 @@ ls "${GITHUB_WORKSPACE}/main/MS3/"
 pip install ms3
 ms3 -h
 
-ls "${HOME}
+ls "${HOME}"
 cd "${GITHUB_WORKSPACE}/main"
 ms3 extract -f "${HOME}/files_modified.json" -M -N -X -D
 ms3 extract -f "${HOME}/files_added.json" -M -N -X -D
