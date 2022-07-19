@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 echo "Hello $0"
 echo "Hello $1"
