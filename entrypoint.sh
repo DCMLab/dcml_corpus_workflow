@@ -15,5 +15,5 @@ ms3 -h
 
 ls "${HOME}"
 cd "${GITHUB_WORKSPACE}/main"
-ms3 extract -f "${HOME}/files_modified.json" -M -N -X -D
-ms3 extract -f "${HOME}/files_added.json" -M -N -X -D
+ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
+ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
