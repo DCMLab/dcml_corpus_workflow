@@ -1,6 +1,5 @@
-#!/bin/bash -c
+#!/bin/bash -l
 
-echo "Hello $0"
 echo "Hello $1"
 echo $option
 
