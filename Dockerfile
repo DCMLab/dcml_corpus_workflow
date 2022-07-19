@@ -7,4 +7,4 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x entrypoint.sh
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/bin/bash", "-c", "/entrypoint.sh $INPUT_WHO-TO-GREET"]
+ENTRYPOINT ["/bin/bash", "-c", "/entrypoint.sh"]
