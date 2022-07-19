@@ -20,8 +20,8 @@ jobs:
         run: |
           wget https://github.com/DCMLab/annotation_workflow_template/archive/refs/heads/main.zip
           unzip main.zip
+          rm -r annotation_workflow_template-main/.github/workflows/*.yml
           cp -r annotation_workflow_template-main/.github/ .
-          ls
           rm -r annotation_workflow_template-main/
           rm   main.zip
 
