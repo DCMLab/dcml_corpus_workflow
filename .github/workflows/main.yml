@@ -20,8 +20,8 @@ jobs:
         run: |
           wget https://github.com/DCMLab/annotation_workflow_template/archive/refs/heads/main.zip
           unzip main.zip
-          mkdir /.github/workflows/
-          cp -r annotation_workflow_template-main/.github/workflows/gantt.py annotation_workflow_template-main/.github/workflows/update_pages.py /.github/workflows/.
+          cp -r annotation_workflow_template-main/.github/ .
+          ls
           rm -r annotation_workflow_template-main/
           rm   main.zip
 
