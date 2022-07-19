@@ -1,0 +1,31 @@
+name: check_labels
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - development
+
+jobs:
+  perform_check:
+    if: github.event.pusher.name != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+        with:
+          path: main
+      - uses: lots0logs/gh-action-get-changed-files@2.1.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Display changed files
+        run: |
+          cat ${HOME}/files_modified.json
+          cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
+
+      - name: Hello world action step
+        uses: ./main # Uses an action in the root directory
+        id: hello
+        with:
+          who-to-greet: 'check'
