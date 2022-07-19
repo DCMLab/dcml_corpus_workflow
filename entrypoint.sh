@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Hello $0"
 echo "Hello $1"
 time=$(date)
 echo "$HOME"
