@@ -48,7 +48,9 @@ jobs:
         run: |
           cat ${HOME}/files_modified.json
           cat ${HOME}/files_added.json
-          
+          cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
+          cp ${HOME}/files_added.json ${GITHUB_WORKSPACE}/
+
       - name: Hello world action step
         uses: ./main # Uses an action in the root directory
         id: hello
