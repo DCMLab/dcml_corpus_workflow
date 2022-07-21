@@ -1,0 +1,44 @@
+name: label_comparison
+
+on: pull_request
+
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v2
+        with:
+          path: main
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: lots0logs/gh-action-get-changed-files@2.1.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Display changed files
+        run: |
+           cat ${HOME}/files_modified.json
+           cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
+
+      - name: Hello world action step
+        uses: ./main # Uses an action in the root directory
+        env:
+          option: 'compare'
+        id: hello
+        with:
+          who-to-greet: 'compare'
+
+      - name: Commit comparison files
+        working-directory: ./main
+        continue-on-error: true
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Added comparison files for review"
+      - name: Push files
+        working-directory: ./main
+        continue-on-error: true
+        run: |
+          git push

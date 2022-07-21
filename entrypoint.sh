@@ -25,5 +25,5 @@ elif [ "$1" == "check"  ]; then
   ms3 check -f "${GITHUB_WORKSPACE}/files_modified.json" --assertion
 elif [  "$1" == "compare" ]; then
   #statements
-  echo "TO-DO"
+  ms3 compare -f "${GITHUB_WORKSPACE}/files_modified.json"
 fi
