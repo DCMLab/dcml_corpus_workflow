@@ -156,6 +156,15 @@
           <midiPort>0</midiPort>
           <midiChannel>1</midiChannel>
           </Channel>
+        <Channel name="harmony">
+          <controller ctrl="0" value="0"/>
+          <controller ctrl="32" value="0"/>
+          <program value="0"/>
+          <controller ctrl="7" value="127"/>
+          <synti>Fluid</synti>
+          <midiPort>1</midiPort>
+          <midiChannel>1</midiChannel>
+          </Channel>
         </Instrument>
       </Part>
     <Part>
@@ -6779,6 +6788,9 @@
         </Measure>
       <Measure>
         <voice>
+          <Harmony>
+            <name>V</name>
+            </Harmony>
           <Chord>
             <durationType>quarter</durationType>
             <Note>
@@ -6786,6 +6798,9 @@
               <tpc>9</tpc>
               </Note>
             </Chord>
+          <Harmony>
+            <name>IV</name>
+            </Harmony>
           <Chord>
             <durationType>quarter</durationType>
             <Note>
@@ -6793,6 +6808,9 @@
               <tpc>10</tpc>
               </Note>
             </Chord>
+          <Harmony>
+            <name>V</name>
+            </Harmony>
           <Chord>
             <durationType>quarter</durationType>
             <Note>
