@@ -6762,9 +6762,15 @@
             <subtype>f</subtype>
             <velocity>96</velocity>
             </Dynamic>
+          <Chord>
+            <durationType>half</durationType>
+            <Note>
+              <pitch>75</pitch>
+              <tpc>11</tpc>
+              </Note>
+            </Chord>
           <Rest>
-            <durationType>measure</durationType>
-            <duration>4/4</duration>
+            <durationType>half</durationType>
             </Rest>
           </voice>
         </Measure>
