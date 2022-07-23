@@ -1609,8 +1609,14 @@
       <Measure>
         <voice>
           <Chord>
-            <dots>1</dots>
             <durationType>quarter</durationType>
+            <Note>
+              <pitch>74</pitch>
+              <tpc>16</tpc>
+              </Note>
+            </Chord>
+          <Chord>
+            <durationType>eighth</durationType>
             <StemDirection>down</StemDirection>
             <Note>
               <pitch>77</pitch>
