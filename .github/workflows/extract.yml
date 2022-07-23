@@ -1,4 +1,4 @@
-name: name: ms3_extract
+name: ms3_extract
 
 on:
   push:
