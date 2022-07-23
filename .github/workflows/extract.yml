@@ -1,3 +1,5 @@
+name: name: ms3_extract
+
 on:
   push:
     branches:
@@ -9,7 +11,6 @@ jobs:
     if: github.event.pusher.name != 'ms3-bot'
     runs-on: ubuntu-latest
 
-    name: A job to say hello
     steps:
       - name: Checkout main
         uses: actions/checkout@v2
@@ -53,14 +54,11 @@ jobs:
           cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
           cp ${HOME}/files_added.json ${GITHUB_WORKSPACE}/
 
-      - name: Hello world action step
+      - name: Action_to_run_docker
         uses: ./main # Uses an action in the root directory
-        id: hello
+        id: act_docker
         with:
-          who-to-greet: 'extract'
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+          ms3-command: 'extract'
 
       - name: Push files
         working-directory: ./main
