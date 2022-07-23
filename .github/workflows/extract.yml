@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  hello_world_job:
+  perform_extract:
     if: github.event.pusher.name != 'ms3-bot'
     runs-on: ubuntu-latest
 
