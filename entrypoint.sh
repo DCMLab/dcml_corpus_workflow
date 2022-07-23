@@ -10,7 +10,7 @@ echo "$pyv"
 ls "$GITHUB_WORKSPACE"
 ls "${GITHUB_WORKSPACE}/main"
 ls "${GITHUB_WORKSPACE}/main/MS3/"
-pip install ms3
+pip install ms3==0.4.11
 ms3 -h
 
 ls "${HOME}"
