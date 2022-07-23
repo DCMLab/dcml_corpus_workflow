@@ -3265,7 +3265,7 @@
         <voice>
           <Harmony>
             <harmonyType>1</harmonyType>
-            <name>V</name>
+            <name>IV</name>
             </Harmony>
           <Beam>
             <StemDirection>down</StemDirection>
@@ -3280,7 +3280,7 @@
             </Chord>
           <Harmony>
             <harmonyType>1</harmonyType>
-            <name>I</name>
+            <name>IIV</name>
             </Harmony>
           <Chord>
             <BeamMode>mid</BeamMode>
@@ -3418,7 +3418,7 @@
             </FiguredBass>
           <Harmony>
             <harmonyType>1</harmonyType>
-            <name>V</name>
+            <name>IV</name>
             </Harmony>
           <Chord>
             <dots>1</dots>

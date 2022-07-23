@@ -24,8 +24,8 @@ jobs:
           cat ${HOME}/files_modified.json
           cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
 
-      - name: Hello world action step
+      - name: Action_to_run_docker
         uses: ./main # Uses an action in the root directory
-        id: hello
+        id: act_docker
         with:
-          who-to-greet: 'check'
+          ms3-command: 'check'

@@ -5,7 +5,6 @@ FROM python:3
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x entrypoint.sh
-RUN bash -c 'echo -e $INPUT_WHO_TO_GREET'
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
