@@ -2,15 +2,15 @@ mc	mn	mc_onset	mn_onset	timesig	staff	voice	volta	label	alt_label	globalkey	loca
 1	1	0	0	4/4	4	1		F.I{		F	I		I	I						{	M	0	0	0, 4, 1		0	0
 1	1	1/4	1/4	4/4	4	1		viio6		F	I		viio6	vii	o	6					o	0	0	2, -1, 5		5	2
 1	1	1/2	1/2	4/4	4	1		I6		F	I		I6	I		6					M	0	0	4, 1, 0		0	4
-2	2	0	0	4/4	4	1		IV		F	I		IV	IV							M	0	0	-1, 3, 0		-1	-1
-2	2	1/8	1/8	4/4	4	1		I		F	I		I	I							M	0	0	0, 4, 1		0	0
+2	2	0	0	4/4	4	1		V		F	I		V	V							M	0	0	1, 5, 2		1	1
+2	2	1/8	1/8	4/4	4	1		IV		F	I		IV	IV							M	0	0	-1, 3, 0		-1	-1
 2	2	1/4	1/4	4/4	4	1		V(4)		F	I		V(4)	V			4				M	0	0	1, 0, 2		1	1
 2	2	7/16	7/16	4/4	4	1		V		F	I		V	V							M	0	0	1, 5, 2		1	1
 2	2	1/2	1/2	4/4	4	1		I|PAC}		F	I		I	I					PAC	}	M	0	0	0, 4, 1		0	0
 3	3	0	0	4/4	4	1		{		F	I									{		0	0				
 3	3	1/4	1/4	4/4	4	1		I6		F	I		I6	I		6					M	0	0	4, 1, 0		0	4
 3	3	3/8	3/8	4/4	4	1		vii%7/V		F	I		vii%7/V	vii	%	7		V			%7	0	0	6, 3, 0, 4		6	6
-3	3	1/2	1/2	4/4	4	1		V		F	I		V	V							M	0	0	1, 5, 2		1	1
+3	3	1/2	1/2	4/4	4	1		IV		F	I		IV	IV							M	0	0	-1, 3, 0		-1	-1
 3	3	3/4	3/4	4/4	4	1		iii6		F	I		iii6	iii		6					m	0	0	1, 5, 4		4	1
 4	4	0	0	4/4	4	1		ii6(2)		F	I		ii6(2)	ii		6	2				m	0	0	-1, 3, 4		2	-1
 4	4	1/4	1/4	4/4	4	1		ii6		F	I		ii6	ii		6					m	0	0	-1, 3, 2		2	-1
