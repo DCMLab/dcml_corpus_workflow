@@ -1,5 +1,5 @@
 # action.yml
-name: 'Docker run'
+name: 'Docker_set_up'
 description: 'Initialize docker and run ms3 commands'
 inputs:
   ms3-command:  # id of input
