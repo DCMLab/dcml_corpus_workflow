@@ -1,0 +1,33 @@
+# action.yml
+name: 'Set_up_workflow'
+description: 'This action is in charged of downloading the workflow into the corresponding repo'
+jobs:
+  perform_set_up:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+        with:
+          path: main
+          token: ${{ secrets.MS3_BOT_TOKEN }}
+      - name: Pull current workflow
+        working-directory: ./main
+        run: |
+          wget https://github.com/DCMLab/dcml_corpus_workflow/archive/refs/heads/main.zip
+          unzip main.zip
+          cp -r annotation_workflow_template-main/.github .
+          cp -r annotation_workflow_template-main/docker_act .
+          rm -r annotation_workflow_template-main/
+          rm main.zip
+
+      - name: Configure git and push updated workflow
+        working-directory: ./main
+        continue-on-error: true
+        run: |
+          git config --global user.name "ms3-bot"
+          git config --global user.email dcml.annotators@epfl.ch
+          git config --global user.token ${{ secrets.MS3_BOT_TOKEN }}
+          git add -A
+          git commit -m "latest workflow ready"
+          git push
