@@ -1,6 +1,13 @@
 # action.yml
 name: 'Set_up_workflow'
 description: 'This action is in charged of downloading the workflow into the corresponding repo'
+
+inputs:
+  tokenarg:  # id of input
+    description: 'token for private repo'
+    required: true
+    default: '000'
+
 jobs:
   perform_set_up:
     runs-on: ubuntu-latest
@@ -10,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: main
-          token: ${{ secrets.MS3_BOT_TOKEN }}
+          token: ${{ github.event.inputs.tokenarg }}
       - name: Pull current workflow
         working-directory: ./main
         run: |
@@ -27,7 +34,7 @@ jobs:
         run: |
           git config --global user.name "ms3-bot"
           git config --global user.email dcml.annotators@epfl.ch
-          git config --global user.token ${{ secrets.MS3_BOT_TOKEN }}
+          git config --global user.token ${{ github.event.inputs.tokenarg }}
           git add -A
           git commit -m "latest workflow ready"
           git push
