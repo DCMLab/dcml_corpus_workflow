@@ -8,33 +8,64 @@ inputs:
     required: true
     default: '000'
 
-jobs:
-  perform_set_up:
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout main
-        uses: actions/checkout@v2
-        with:
-          path: main
-          token: ${{ inputs.tokenarg }}
-      - name: Pull current workflow
-        working-directory: ./main
-        run: |
-          wget https://github.com/DCMLab/dcml_corpus_workflow/archive/refs/heads/main.zip
-          unzip main.zip
-          cp -r annotation_workflow_template-main/.github .
-          cp -r annotation_workflow_template-main/docker_act .
-          rm -r annotation_workflow_template-main/
-          rm main.zip
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout main
+      uses: actions/checkout@v2
+      with:
+        path: main
+        token: ${{ secrets.GITHUB_TOKEN  }}
+    - name: Pull current workflow
+      working-directory: ./main
+      run: |
+        wget https://github.com/DCMLab/dcml_corpus_workflow/archive/refs/heads/main.zip
+        unzip main.zip
+        cp -r annotation_workflow_template-main/.github .
+        cp -r annotation_workflow_template-main/docker_act .
+        rm -r annotation_workflow_template-main/
+        rm main.zip
 
-      - name: Configure git and push updated workflow
-        working-directory: ./main
-        continue-on-error: true
-        run: |
-          git config --global user.name "ms3-bot"
-          git config --global user.email dcml.annotators@epfl.ch
-          git config --global user.token ${{ inputs.tokenarg }}
-          git add -A
-          git commit -m "latest workflow ready"
-          git push
+    - name: Configure git and push updated workflow
+      working-directory: ./main
+      continue-on-error: true
+      run: |
+        git config --global user.name "ms3-bot"
+        git config --global user.email dcml.annotators@epfl.ch
+        git config --global user.token ${{ secrets.GITHUB_TOKEN }}
+        git add -A
+        git commit -m "latest workflow ready"
+        git push
+
+
+# jobs:
+#   perform_set_up:
+#     runs-on: ubuntu-latest
+#     using: "composite"
+#     steps:
+#       - name: Checkout main
+#         uses: actions/checkout@v2
+#         with:
+#           path: main
+#           token: ${{ inputs.tokenarg }}
+#       - name: Pull current workflow
+#         working-directory: ./main
+#         run: |
+#           wget https://github.com/DCMLab/dcml_corpus_workflow/archive/refs/heads/main.zip
+#           unzip main.zip
+#           cp -r annotation_workflow_template-main/.github .
+#           cp -r annotation_workflow_template-main/docker_act .
+#           rm -r annotation_workflow_template-main/
+#           rm main.zip
+#
+#       - name: Configure git and push updated workflow
+#         working-directory: ./main
+#         continue-on-error: true
+#         run: |
+#           git config --global user.name "ms3-bot"
+#           git config --global user.email dcml.annotators@epfl.ch
+#           git config --global user.token ${{ inputs.tokenarg }}
+#           git add -A
+#           git commit -m "latest workflow ready"
+#           git push
