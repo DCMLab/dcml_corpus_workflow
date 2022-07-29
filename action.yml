@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: main
-          token: ${{ github.event.inputs.tokenarg }}
+          token: ${{ inputs.tokenarg }}
       - name: Pull current workflow
         working-directory: ./main
         run: |
@@ -34,7 +34,7 @@ jobs:
         run: |
           git config --global user.name "ms3-bot"
           git config --global user.email dcml.annotators@epfl.ch
-          git config --global user.token ${{ github.event.inputs.tokenarg }}
+          git config --global user.token ${{ inputs.tokenarg }}
           git add -A
           git commit -m "latest workflow ready"
           git push
