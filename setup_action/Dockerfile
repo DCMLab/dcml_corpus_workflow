@@ -6,5 +6,8 @@ COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x entrypoint.sh
 
+RUN --mount=type=secret,id=github_token \
+  cat /run/secrets/github_token
+
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
