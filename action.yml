@@ -35,6 +35,11 @@ runs:
     run: cp -r dcml_corpus_workflow-main/.github .
     shell: bash
 
+  - name: copy docker action
+    working-directory: ./main
+    run: cp -r dcml_corpus_workflow-main/docker_act .
+    shell: bash
+
   - name: remove unzipped folder
     working-directory: ./main
     run: rm -r dcml_corpus_workflow-main/
