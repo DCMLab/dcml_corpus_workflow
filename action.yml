@@ -30,6 +30,54 @@ runs:
     run: unzip main.zip
     shell: bash
 
+  - name: copy gitworkflow
+    working-directory: ./main
+    run: cp -r annotation_workflow_template-main/.github .
+    shell: bash
+
+  - name: remove unzipped folder
+    working-directory: ./main
+    run: rm -r annotation_workflow_template-main/
+    shell: bash
+
+  - name: remove zip
+    working-directory: ./main
+    run: rm main.zip
+    shell: bash
+
+  - name: Configure git username
+    working-directory: ./main
+    run: git config --global user.name "ms3-bot"
+    shell: bash
+
+  - name: Configure git email
+    working-directory: ./main
+    run: git config --global user.email dcml.annotators@epfl.ch
+    shell: bash
+
+  - name: Configure git token
+    working-directory: ./main
+    run: git config --global user.token ${{ inputs.tokenarg }}
+    shell: bash
+
+  - name: Add updated workflow
+    working-directory: ./main
+    continue-on-error: true
+    run: git add -A
+    shell: bash
+
+  - name: Commit updated workflow
+    working-directory: ./main
+    continue-on-error: true
+    run: git commit -m "latest workflow ready"
+    shell: bash
+
+  - name: Push updated workflow
+    working-directory: ./main
+    continue-on-error: true
+    run: git push
+    shell: bash
+
 
   # - name: Pull current workflow
   #   working-directory: ./main
