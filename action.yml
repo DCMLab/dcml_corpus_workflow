@@ -10,8 +10,6 @@ inputs:
 
 runs:
   using: 'composite'
-  image: 'Dockerfile'
-
   steps:
   - run: echo Hello ${{ inputs.tokenarg }}.
     shell: bash
