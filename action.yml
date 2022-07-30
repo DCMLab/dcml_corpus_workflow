@@ -32,12 +32,12 @@ runs:
 
   - name: copy gitworkflow
     working-directory: ./main
-    run: cp -r annotation_workflow_template-main/.github .
+    run: cp -r dcml_corpus_workflow-main/.github .
     shell: bash
 
   - name: remove unzipped folder
     working-directory: ./main
-    run: rm -r annotation_workflow_template-main/
+    run: rm -r dcml_corpus_workflow-main/
     shell: bash
 
   - name: remove zip
