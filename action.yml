@@ -14,6 +14,45 @@ runs:
   - run: echo Hello ${{ inputs.tokenarg }}.
     shell: bash
 
+  - name: Checkout main
+    uses: actions/checkout@v2
+    with:
+      path: main
+      token: ${{ inputs.tokenarg }}
+
+  - name: testing pulling and copy
+    working-directory: ./main
+    run: wget https://github.com/DCMLab/dcml_corpus_workflow/archive/refs/heads/main.zip
+    shell: bash
+
+  - name: extract
+    working-directory: ./main
+    run: unzip main.zip
+    shell: bash
+
+
+  # - name: Pull current workflow
+  #   working-directory: ./main
+  #   run: |
+  #     wget https://github.com/DCMLab/dcml_corpus_workflow/archive/refs/heads/main.zip
+  #     unzip main.zip
+  #     cp -r annotation_workflow_template-main/.github .
+  #     cp -r annotation_workflow_template-main/docker_act .
+  #     rm -r annotation_workflow_template-main/
+  #     rm main.zip
+  #
+  # - name: Configure git and push updated workflow
+  #   working-directory: ./main
+  #   continue-on-error: true
+  #   run: |
+  #     git config --global user.name "ms3-bot"
+  #     git config --global user.email dcml.annotators@epfl.ch
+  #     git config --global user.token ${{ github.event.inputs.tokenarg }}
+  #     git add -A
+  #     git commit -m "latest workflow ready"
+  #     git push
+  #
+
 # runs:
 #   using: 'docker'
 #   image: 'Dockerfile'
