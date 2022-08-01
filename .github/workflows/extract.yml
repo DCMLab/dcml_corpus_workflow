@@ -9,7 +9,7 @@ on:
 
 jobs:
   perform_extract:
-    if: (github.event.pusher.name != 'ms3-bot' &&  && github.event.pusher.name != 'marcel41')
+    if: (github.event.pusher.name != 'ms3-bot' && github.event.pusher.name != 'marcel41')
     runs-on: ubuntu-latest
 
     steps:
