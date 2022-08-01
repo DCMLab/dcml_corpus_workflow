@@ -5,6 +5,7 @@ on:
     branches-ignore:
       - main
       - development
+      - testing_branch
 
 jobs:
   perform_check:

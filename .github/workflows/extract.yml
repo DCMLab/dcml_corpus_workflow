@@ -5,6 +5,7 @@ on:
     branches:
       - development
       - main
+      - testing_branch
 
 jobs:
   perform_extract:
