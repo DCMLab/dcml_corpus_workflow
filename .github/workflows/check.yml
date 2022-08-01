@@ -8,7 +8,7 @@ on:
 
 jobs:
   perform_check:
-    if: (github.event.pusher.name != 'github-actions[bot]' && github.event.pusher.name != 'ms3-bot')
+    if: (github.event.pusher.name != 'github-actions[bot]' && github.event.pusher.name != 'ms3-bot' && github.event.pusher.name != 'marcel41')
     runs-on: ubuntu-latest
 
     steps:
