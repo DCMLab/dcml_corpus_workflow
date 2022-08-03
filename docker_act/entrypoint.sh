@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Argument being passed: $1"
-# echo "Executing: pip install ms3==0.4.11"
-# pip install ms3==0.4.11
+echo "Executing: pip install ms3==0.4.11"
+pip install ms3==0.4.11
 echo "Executing: ms3 -h"
 ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
