@@ -5,7 +5,7 @@ on: pull_request
 jobs:
   compare:
     runs-on: ubuntu-latest
-
+    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41')
     steps:
       - name: Checkout PR
         uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
            cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
 
       - name: Action_to_run_docker
-        uses: ./main/docker_act # Uses an action in the root directory
+        uses: DCMLab/dcml_corpus_workflow@v2.0.2 # Uses an action in the root directory
         id: act_docker
         with:
           ms3-command: 'compare'

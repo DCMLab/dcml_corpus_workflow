@@ -28,7 +28,7 @@ jobs:
 
 
       - name: Action_to_run_docker
-        uses: ./main/docker_act # Uses an action in the root directory
+        uses: DCMLab/dcml_corpus_workflow@v2.0.2 # Uses an action in the root directory
         id: act_docker
         with:
           ms3-command: 'check'
