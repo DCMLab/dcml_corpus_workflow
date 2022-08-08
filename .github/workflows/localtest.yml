@@ -1,0 +1,26 @@
+name: local_testing
+
+on:
+  push:
+    branches:
+      - development
+      - main
+      - testing_branch
+
+jobs:
+  perform_extract:
+    if: (github.event.pusher.name != 'ms3-bot' && github.event.pusher.name != 'marcel41')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+        with:
+          path: main
+          token: ${{ secrets.MS3_BOT_TOKEN }}
+
+      - name: Action_to_run_docker
+        uses: ./main # Uses an action in the root directory
+        id: act_docker
+        with:
+          ms3-command: 'extract'

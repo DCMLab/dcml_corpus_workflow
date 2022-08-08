@@ -1,8 +1,9 @@
 #!/bin/bash
 pushing_files() {
+  echo "Pushing files"
   git add -A
   git commit -m "$1"
-  git push
+  # git push
 }
 
 echo "Argument being passed: $1"
