@@ -16,9 +16,9 @@ cd "${GITHUB_WORKSPACE}/main"
 
 if [ "$1" == "extract" ]; then
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
+  # ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
+  # ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
 
   # git add -A
   # git commit -m "Automatically added TSV files from parse with ms3"
