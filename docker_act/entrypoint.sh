@@ -8,10 +8,10 @@ echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
 
 if [ "$1" == "extract" ]; then
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
+  # echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
+  # ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
+  # echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
+  # ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
 
 
   echo "Pushing files"
