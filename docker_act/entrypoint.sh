@@ -21,7 +21,8 @@ echo "Executing: ms3 -h"
 ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
-git diff --name-status HEAD HEAD~1
+
+git diff --name-only HEAD HEAD~1
 
 configure_git
 
