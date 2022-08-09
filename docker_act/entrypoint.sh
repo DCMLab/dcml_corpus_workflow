@@ -25,7 +25,7 @@ ls -a
 configure_git
 pushing_files
 git diff --name-only HEAD HEAD~1
-git diff --name-only ${{ github.event.before }} $GITHUB_SHA
+git diff --name-only $commitbefore $GITHUB_SHA
 
 
 if [ "$1" == "extract" ]; then
