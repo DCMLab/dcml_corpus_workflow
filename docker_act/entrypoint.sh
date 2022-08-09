@@ -3,7 +3,7 @@ pushing_files() {
   echo "Pushing files"
   git add -A
   git commit -m "$1"
-  git push
+  # git push
 }
 
 configure_git(){
