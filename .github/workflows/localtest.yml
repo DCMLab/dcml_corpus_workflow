@@ -41,3 +41,4 @@ jobs:
           ms3-command: 'extract'
         env:
           Token: "${{ secrets.MS3_BOT_TOKEN }}"
+          commitbefore: "${{ github.event.before }}"
