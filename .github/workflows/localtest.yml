@@ -20,6 +20,7 @@ jobs:
           fetch-depth: 2
           token: ${{ secrets.MS3_BOT_TOKEN }}
 
+
       - name: Action_to_run_docker
         uses: ./main # Uses an action in the root directory
         id: act_docker
