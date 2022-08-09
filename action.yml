@@ -6,6 +6,10 @@ inputs:
     description: 'ms3 execution for mscx files, arguments can be [extract, check, compare]'
     required: true
     default: '-h'
+  # bot-token:  # id of input
+  #   description: 'Token generated to allow cloning and pushing to private repos'
+  #   required: true
+  #   default: '0000'
 
 runs:
   using: 'docker'

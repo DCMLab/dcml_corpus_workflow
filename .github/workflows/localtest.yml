@@ -24,3 +24,5 @@ jobs:
         id: act_docker
         with:
           ms3-command: 'extract'
+        env:
+          Token: "lolsdsd"
