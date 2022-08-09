@@ -27,6 +27,7 @@ configure_git
 pushing_files
 git diff --name-only HEAD HEAD~1
 
+
 if [ "$1" == "extract" ]; then
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
   ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
