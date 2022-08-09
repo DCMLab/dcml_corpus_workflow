@@ -28,6 +28,8 @@ configure_git
 pushing_files
 git log -n 3
 git diff --name-only $commitbefore $GITHUB_SHA
+git diff --name-only $commitbefore $GITHUB_SHA
+git diff --name-only $commitbefore $GITHUB_SHA
 
 
 if [ "$1" == "extract" ]; then
