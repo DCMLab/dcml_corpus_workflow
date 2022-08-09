@@ -22,6 +22,7 @@ ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
 
+git pull
 ls -a
 configure_git
 pushing_files
