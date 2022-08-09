@@ -22,6 +22,8 @@ ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
 ls -a
+echo $commitbefore
+echo $GITHUB_SHA
 configure_git
 pushing_files
 git log -n 3
