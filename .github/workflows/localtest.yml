@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: main
-          fetch-depth: 2
+          fetch-depth: 0
           token: ${{ secrets.MS3_BOT_TOKEN }}
 
       - uses: lots0logs/gh-action-get-changed-files@2.1.4
