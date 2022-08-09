@@ -21,11 +21,11 @@ echo "Executing: ms3 -h"
 ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
-
 ls -a
 configure_git
 pushing_files
 git diff --name-only HEAD HEAD~1
+git diff --name-only ${{ github.event.before }} $GITHUB_SHA
 
 
 if [ "$1" == "extract" ]; then
