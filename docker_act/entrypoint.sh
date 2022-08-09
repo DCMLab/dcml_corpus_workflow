@@ -12,7 +12,9 @@ configure_git(){
   git config --global user.email dcml.annotators@epfl.ch
   git config --global user.token $Token
 }
+
 git diff --name-status HEAD HEAD~1
+
 echo "Argument being passed: $1"
 # echo "Executing: pip install ms3==0.4.11"
 # pip install ms3==0.4.11
