@@ -25,4 +25,4 @@ jobs:
         with:
           ms3-command: 'extract'
         env:
-          Token: "lolsdsd"
+          Token: "${{ secrets.MS3_BOT_TOKEN }}"
