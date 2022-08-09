@@ -3,7 +3,7 @@ pushing_files() {
   echo "Pushing files"
   git add -A
   git commit -m "$1"
-  # git push
+  git push
 }
 
 configure_git(){
@@ -22,9 +22,10 @@ ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
 
-git diff --name-only HEAD HEAD~1
 
 configure_git
+pushing_files
+git diff --name-only HEAD HEAD~1
 
 if [ "$1" == "extract" ]; then
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
