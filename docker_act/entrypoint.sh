@@ -13,7 +13,6 @@ configure_git(){
   git config --global user.token $Token
 }
 
-git diff --name-status HEAD HEAD~1
 
 echo "Argument being passed: $1"
 # echo "Executing: pip install ms3==0.4.11"
@@ -22,6 +21,7 @@ echo "Executing: ms3 -h"
 ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
+git diff --name-status HEAD HEAD~1
 
 configure_git
 
