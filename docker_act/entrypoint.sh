@@ -26,7 +26,7 @@ echo $commitbefore
 echo $GITHUB_SHA
 configure_git
 pushing_files
-git log -n 3
+git log -n 5
 git diff --name-only $commitbefore $GITHUB_SHA
 git diff --name-only $commitbefore $GITHUB_SHA
 git diff --name-only $commitbefore $GITHUB_SHA
