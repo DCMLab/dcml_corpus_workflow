@@ -1,0 +1,37 @@
+name: label_comparison
+
+on: pull_request
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41')
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v2
+        with:
+          path: main
+          ref: ${{ github.event.pull_request.head.ref }}
+          
+      - name: Action_to_run_docker
+        uses: ./main # Uses an action in the root directory
+        id: act_docker
+        with:
+          ms3-command: 'extract'
+        env:
+          Token: "${{ secrets.MS3_BOT_TOKEN }}"
+          commitbefore: "${{ github.event.before }}"
+
+      # - name: Commit comparison files
+      #   working-directory: ./main
+      #   continue-on-error: true
+      #   run: |
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #     git add -A
+      #     git commit -m "Added comparison files for review"
+      # - name: Push files
+      #   working-directory: ./main
+      #   continue-on-error: true
+      #   run: |
+      #     git push
