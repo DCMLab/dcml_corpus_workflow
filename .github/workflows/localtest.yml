@@ -20,6 +20,19 @@ jobs:
           fetch-depth: 2
           token: ${{ secrets.MS3_BOT_TOKEN }}
 
+      - uses: lots0logs/gh-action-get-changed-files@2.1.4
+        id: modified
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Display changed and added files
+        continue-on-error: true
+        run: |
+          cat ${HOME}/files_modified.json
+          cat ${HOME}/files_added.json
+          cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
+          cp ${HOME}/files_added.json ${GITHUB_WORKSPACE}/
+
 
       - name: Action_to_run_docker
         uses: ./main # Uses an action in the root directory
