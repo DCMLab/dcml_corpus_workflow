@@ -24,6 +24,7 @@ cd "${GITHUB_WORKSPACE}/main"
 ls -a
 configure_git
 pushing_files
+git log -n 3
 git diff --name-only $commitbefore $GITHUB_SHA
 
 
