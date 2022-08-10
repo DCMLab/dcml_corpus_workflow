@@ -102,8 +102,8 @@ elif [  "$1" == "compare" ]; then
     git diff --name-only $commitFrom $commitTo
   fi
 
-  echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_modified.json"
-  ms3 compare -f "${GITHUB_WORKSPACE}/files_modified.json"
+  echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_modified.txt"
+  ms3 compare -f "${GITHUB_WORKSPACE}/files_modified.txt"
 
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
