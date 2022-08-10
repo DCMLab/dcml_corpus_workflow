@@ -5,8 +5,7 @@ pushing_files() {
     git add -A
     git commit -m "$1"
     echo "Pushing files"
-    # git push
-
+    git push
   fi
 }
 
@@ -56,17 +55,8 @@ ls -a
 configure_git
 pushing_files
 git log -n 10
-
-
 echo $commitTo
 echo $commitFrom
-if [[ -z $commitFrom ]]; then
-  #statements
-  git diff --name-status origin/$GITHUB_BASE_REF $commitTo
-else
-  git diff --name-status $commitFrom $commitTo
-fi
-
 # if[[ ! $commitbefore ]]; then
 #   git diff --name-only $commitbefore $commitForPull
 # else
@@ -75,27 +65,21 @@ fi
 # git diff --name-only $commitbefore $commitForPull
 # git diff --name-only $commitbefore $commitForPull
 
-
-
-
-
-
-
 get_difference_between_commits $1
 
 if [ "$1" == "extract" ]; then
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
+  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.txt -M -N -X -D"
+  ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.txt" -M -N -X -D
+  # echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
+  # ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
 
   # git add -A
   # git commit -m "Automatically added TSV files from parse with ms3"
   # git push
   pushing_files "Automatically added TSV files from parse with ms3"
 elif [ "$1" == "check"  ]; then
-  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_modified.json --assertion"
-  ms3 check -f "${GITHUB_WORKSPACE}/files_modified.json" --assertion
+  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_modified.txt --assertion"
+  ms3 check -f "${GITHUB_WORKSPACE}/files_modified.txt" --assertion
 elif [  "$1" == "compare" ]; then
   echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_modified.txt"
   ms3 compare -f "${GITHUB_WORKSPACE}/files_modified.txt"
