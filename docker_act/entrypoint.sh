@@ -1,9 +1,13 @@
 #!/bin/bash
 pushing_files() {
-  echo "Pushing files"
-  git add -A
-  git commit -m "$1"
-  # git push
+
+  if [[ `git status --porcelain` ]]; then
+    git add -A
+    git commit -m "$1"
+    echo "Pushing files"
+    # git push
+
+  fi
 }
 
 configure_git(){
