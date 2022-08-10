@@ -22,20 +22,16 @@ ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
 ls -a
-echo $GITHUB_HEAD_REF
-echo $commitbefore
-echo $GITHUB_SHA
-echo $commitForPull
 configure_git
 pushing_files
 git log -n 10
 
 
-if [[ -z $commitbefore ]]; then
+if [[ -z $commitFrom ]]; then
   #statements
-  git diff --name-only origin/$GITHUB_BASE_REF $commitForPull
+  git diff --name-status origin/$GITHUB_BASE_REF $commitTo
 else
-  git diff --name-only $commitbefore $commitForPull
+  git diff --name-status $commitFrom $commitTo
 fi
 
 # if[[ ! $commitbefore ]]; then
@@ -53,6 +49,8 @@ fi
 
 
 if [ "$1" == "extract" ]; then
+  git diff --name-only $commitFrom $GITHUB_SHA
+
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
   ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
@@ -66,6 +64,14 @@ elif [ "$1" == "check"  ]; then
   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_modified.json --assertion"
   ms3 check -f "${GITHUB_WORKSPACE}/files_modified.json" --assertion
 elif [  "$1" == "compare" ]; then
+
+  if [[ -z $commitFrom ]]; then
+    #statements
+    git diff --name-only origin/$GITHUB_BASE_REF $commitTo
+  else
+    git diff --name-only $commitFrom $commitTo
+  fi
+
   echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_modified.json"
   ms3 compare -f "${GITHUB_WORKSPACE}/files_modified.json"
 
