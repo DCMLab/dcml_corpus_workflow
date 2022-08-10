@@ -27,7 +27,7 @@ echo $GITHUB_SHA
 echo $commitForPull
 configure_git
 pushing_files
-git log -n 5
+git log -n 10
 
 echo "modified"
 git diff --name-only $commitbefore $commitForPull
