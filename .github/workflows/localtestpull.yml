@@ -30,7 +30,7 @@ jobs:
         env:
           Token: "${{ secrets.MS3_BOT_TOKEN }}"
           commitbefore: "${{ github.event.before }}"
-
+          commitForPull: "${{ github.event.pull_request.head.sha }}"
       # - name: Commit comparison files
       #   working-directory: ./main
       #   continue-on-error: true
