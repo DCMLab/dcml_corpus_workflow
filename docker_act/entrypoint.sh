@@ -13,6 +13,33 @@ configure_git(){
   git config --global user.token $Token
 }
 
+get_difference_between_commits(){
+    if [[ "$1" == "extract" ]] || [[ "$1" == "check" ]] ; then
+      diffres=$(git diff --name-only $commitFrom $GITHUB_SHA)
+      # diffres=$(git diff --name-status f0e3fa26fbafa9d38e57a78e4006f2f3be5b0a8e 395fd645d3aecd327876b8bd306b3bca63286540)
+    elif [[ "$1" == "compare" ]]; then
+      if [[ -z $commitFrom ]]; then
+        diffres=$(git diff --name-status origin/$GITHUB_BASE_REF $commitTo)
+      else
+        diffres=$(git diff --name-status $commitFrom $commitTo)
+      fi
+    fi
+
+    echo "[" > "${GITHUB_WORKSPACE}/files_modified.txt"
+
+    while IFS= read -r line
+    do
+       splitLine=($line)
+       if [[ "${splitLine[0]}" == "M" ]] || [[ "${splitLine[0]}" == "A" ]] ; then
+         echo "\"${splitLine[1]}\"," >> files_modified.txt
+       fi
+    done < <(printf '%s\n' "$diffres")
+    echo "]" >> "${GITHUB_WORKSPACE}/files_modified.txt"
+
+    cat "${GITHUB_WORKSPACE}/files_modified.txt"
+
+}
+
 git branch
 echo "Argument being passed: $1"
 # echo "Executing: pip install ms3==0.4.11"
@@ -50,9 +77,10 @@ fi
 
 
 
+get_difference_between_commits $1
+
 if [ "$1" == "extract" ]; then
   git diff --name-only $commitFrom $GITHUB_SHA
-
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
   ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
