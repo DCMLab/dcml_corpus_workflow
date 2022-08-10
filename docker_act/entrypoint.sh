@@ -40,6 +40,7 @@ git diff --name-only $commitbefore $commitForPull
 
 
 
+
 if [ "$1" == "extract" ]; then
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
   ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
