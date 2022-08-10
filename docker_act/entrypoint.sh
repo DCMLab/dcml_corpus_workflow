@@ -14,17 +14,21 @@ configure_git(){
 }
 
 get_difference_between_commits(){
+    echo "$1"
     if [[ "$1" == "extract" ]] || [[ "$1" == "check" ]] ; then
       diffres=$(git diff --name-only $commitFrom $GITHUB_SHA)
       # diffres=$(git diff --name-status f0e3fa26fbafa9d38e57a78e4006f2f3be5b0a8e 395fd645d3aecd327876b8bd306b3bca63286540)
     elif [[ "$1" == "compare" ]]; then
+      echo "entercompare"
       if [[ -z $commitFrom ]]; then
         diffres=$(git diff --name-status origin/$GITHUB_BASE_REF $commitTo)
       else
+        echo "this is not empy commit"
         diffres=$(git diff --name-status $commitFrom $commitTo)
       fi
     fi
 
+    echo "$diffres"
     echo "[" > "${GITHUB_WORKSPACE}/files_modified.txt"
 
     while IFS= read -r line
