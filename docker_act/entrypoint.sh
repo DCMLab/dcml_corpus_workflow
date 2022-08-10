@@ -79,33 +79,33 @@ fi
 
 get_difference_between_commits $1
 
-if [ "$1" == "extract" ]; then
-  git diff --name-only $commitFrom $GITHUB_SHA
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
-
-  # git add -A
-  # git commit -m "Automatically added TSV files from parse with ms3"
-  # git push
-  pushing_files "Automatically added TSV files from parse with ms3"
-elif [ "$1" == "check"  ]; then
-  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_modified.json --assertion"
-  ms3 check -f "${GITHUB_WORKSPACE}/files_modified.json" --assertion
-elif [  "$1" == "compare" ]; then
-
-  if [[ -z $commitFrom ]]; then
-    #statements
-    git diff --name-only origin/$GITHUB_BASE_REF $commitTo
-  else
-    git diff --name-only $commitFrom $commitTo
-  fi
-
-  echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_modified.txt"
-  ms3 compare -f "${GITHUB_WORKSPACE}/files_modified.txt"
-
-  git config --global user.name "github-actions[bot]"
-  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  pushing_files "Added comparison files for review"
-fi
+# if [ "$1" == "extract" ]; then
+#   git diff --name-only $commitFrom $GITHUB_SHA
+#   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.json -M -N -X -D"
+#   ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.json" -M -N -X -D
+#   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
+#   ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
+#
+#   # git add -A
+#   # git commit -m "Automatically added TSV files from parse with ms3"
+#   # git push
+#   pushing_files "Automatically added TSV files from parse with ms3"
+# elif [ "$1" == "check"  ]; then
+#   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_modified.json --assertion"
+#   ms3 check -f "${GITHUB_WORKSPACE}/files_modified.json" --assertion
+# elif [  "$1" == "compare" ]; then
+#
+#   if [[ -z $commitFrom ]]; then
+#     #statements
+#     git diff --name-only origin/$GITHUB_BASE_REF $commitTo
+#   else
+#     git diff --name-only $commitFrom $commitTo
+#   fi
+#
+#   echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_modified.txt"
+#   ms3 compare -f "${GITHUB_WORKSPACE}/files_modified.txt"
+#
+#   git config --global user.name "github-actions[bot]"
+#   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+#   pushing_files "Added comparison files for review"
+# fi
