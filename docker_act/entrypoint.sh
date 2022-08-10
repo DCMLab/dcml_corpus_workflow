@@ -31,8 +31,7 @@ pushing_files
 git log -n 10
 
 
-
-if[[-z "$commitbefore"]]; then
+if[[ ! $commitbefore ]]; then
   git diff --name-only $commitbefore $commitForPull
 else
   git diff --name-only origin/$GITHUB_BASE_REF $commitForPull
