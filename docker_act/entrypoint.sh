@@ -18,7 +18,7 @@ configure_git(){
 
 get_difference_between_commits(){
     if [[ "$1" == "extract" ]] || [[ "$1" == "check" ]] ; then
-      diffres=$(git diff --name-only $commitFrom $GITHUB_SHA)
+      diffres=$(git diff --name-status $commitFrom $GITHUB_SHA)
       # diffres=$(git diff --name-status f0e3fa26fbafa9d38e57a78e4006f2f3be5b0a8e 395fd645d3aecd327876b8bd306b3bca63286540)
     elif [[ "$1" == "compare" ]]; then
       if [[ -z $commitFrom ]]; then
@@ -43,7 +43,6 @@ get_difference_between_commits(){
 
 }
 
-git branch
 echo "Argument being passed: $1"
 # echo "Executing: pip install ms3==0.4.11"
 # pip install ms3==0.4.11
