@@ -27,7 +27,8 @@ pushing_files
 git log -n 10
 
 
-
+echo $commitTo
+echo $commitFrom
 if [[ -z $commitFrom ]]; then
   #statements
   git diff --name-status origin/$GITHUB_BASE_REF $commitTo
