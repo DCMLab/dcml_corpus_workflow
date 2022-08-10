@@ -28,18 +28,19 @@ get_difference_between_commits(){
       fi
     fi
 
-    echo "[" > "${GITHUB_WORKSPACE}/files_modified.txt"
+    echo "[" > "${GITHUB_WORKSPACE}/files_added_modified.json"
 
     while IFS= read -r line
     do
        splitLine=($line)
        if [[ "${splitLine[0]}" == "M" ]] || [[ "${splitLine[0]}" == "A" ]] ; then
-         echo "\"${splitLine[1]}\"," >> "${GITHUB_WORKSPACE}/files_modified.txt"
+         echo "\"${splitLine[1]}\"," >> "${GITHUB_WORKSPACE}/files_added_modified.json"
        fi
     done < <(printf '%s\n' "$diffres")
-    echo "]" >> "${GITHUB_WORKSPACE}/files_modified.txt"
+    truncate -s-1 "${GITHUB_WORKSPACE}/files_added_modified.json"
+    echo "]" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
 
-    cat "${GITHUB_WORKSPACE}/files_modified.txt"
+    cat "${GITHUB_WORKSPACE}/files_added_modified.json"
 
 }
 
@@ -67,8 +68,8 @@ echo $commitFrom
 get_difference_between_commits $1
 
 if [ "$1" == "extract" ]; then
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_modified.txt -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_modified.txt" -M -N -X -D
+  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added_modified.json -M -N -X -D"
+  ms3 extract -f "${GITHUB_WORKSPACE}/files_added_modified.json" -M -N -X -D
   # echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
   # ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
 
@@ -77,11 +78,11 @@ if [ "$1" == "extract" ]; then
   # git push
   pushing_files "Automatically added TSV files from parse with ms3"
 elif [ "$1" == "check"  ]; then
-  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_modified.txt --assertion"
-  ms3 check -f "${GITHUB_WORKSPACE}/files_modified.txt" --assertion
+  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
+  ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
 elif [  "$1" == "compare" ]; then
-  echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_modified.txt"
-  ms3 compare -f "${GITHUB_WORKSPACE}/files_modified.txt"
+  echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
+  ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   pushing_files "Added comparison files for review"
