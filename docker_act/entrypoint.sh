@@ -32,6 +32,7 @@ git log -n 10
 
 echo "modified"
 git diff --name-only "origin/${GITHUB_HEAD_REF}" $commitForPull
+echo "modified"
 git diff --name-only $commitbefore $commitForPull
 # git diff --name-only $commitbefore $commitForPull
 # git diff --name-only $commitbefore $commitForPull
