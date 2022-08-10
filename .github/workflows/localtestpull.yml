@@ -11,8 +11,17 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: main
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }}
-          
+
+      - uses: lots0logs/gh-action-get-changed-files@2.1.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Display changed files
+        run: |
+           cat ${HOME}/files_modified.json
+           cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
+
       - name: Action_to_run_docker
         uses: ./main # Uses an action in the root directory
         id: act_docker
@@ -21,7 +30,7 @@ jobs:
         env:
           Token: "${{ secrets.MS3_BOT_TOKEN }}"
           commitbefore: "${{ github.event.before }}"
-
+          commitForPull: "${{ github.event.pull_request.head.sha }}"
       # - name: Commit comparison files
       #   working-directory: ./main
       #   continue-on-error: true

@@ -22,10 +22,18 @@ ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
 ls -a
+echo $commitbefore
+echo $GITHUB_SHA
+echo $commitForPull
 configure_git
 pushing_files
-git diff --name-only HEAD HEAD~1
-git diff --name-only $commitbefore $GITHUB_SHA
+git log -n 5
+
+echo "modified"
+git diff --name-only $commitbefore $commitForPull
+git diff --name-only $commitbefore $commitForPull
+git diff --name-only $commitbefore $commitForPull
+
 
 
 if [ "$1" == "extract" ]; then
