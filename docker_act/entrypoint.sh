@@ -33,9 +33,9 @@ git log -n 10
 
 if [[ -z $commitbefore ]]; then
   #statements
-  git diff --name-only $commitbefore $commitForPull
-else
   git diff --name-only origin/$GITHUB_BASE_REF $commitForPull
+else
+  git diff --name-only $commitbefore $commitForPull
 fi
 
 # if[[ ! $commitbefore ]]; then
