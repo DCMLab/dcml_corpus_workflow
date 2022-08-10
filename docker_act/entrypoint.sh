@@ -22,6 +22,7 @@ ms3 -h
 echo "Executing: cd ${GITHUB_WORKSPACE}/main"
 cd "${GITHUB_WORKSPACE}/main"
 ls -a
+echo $GITHUB_HEAD_REF
 echo $commitbefore
 echo $GITHUB_SHA
 echo $commitForPull
