@@ -24,9 +24,12 @@ cd "${GITHUB_WORKSPACE}/main"
 ls -a
 echo $commitbefore
 echo $GITHUB_SHA
+echo $commitForPull
 configure_git
 pushing_files
 git log -n 5
+
+echo "modified"
 git diff --name-only $commitbefore $commitForPull
 git diff --name-only $commitbefore $commitForPull
 git diff --name-only $commitbefore $commitForPull
