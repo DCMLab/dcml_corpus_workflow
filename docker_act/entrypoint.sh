@@ -1,6 +1,11 @@
 #!/bin/bash
+#######################################
+# Push to current branch
+# Arguments:
+#    $1 custom commit
+#######################################
 pushing_files() {
-
+  #check if there have been changes
   if [[ `git status --porcelain` ]]; then
     git add -A
     git commit -m "$1"
@@ -9,6 +14,13 @@ pushing_files() {
   fi
 }
 
+#######################################
+# Configuring git
+# Globals:
+#   Token: deeloper token of the bot ms3-bot
+# Arguments:
+#   None
+#######################################
 configure_git(){
   echo "Configuring git"
   git config --global user.name "ms3-bot"
@@ -16,6 +28,19 @@ configure_git(){
   git config --global user.token $Token
 }
 
+#######################################
+# Getting a list of files changed during PR or Push
+# Globals:
+#   GITHUB_SHA: the last commit that triggered the action , in the case
+#               of pull_request, this is the last merge commit, for push
+#               this is the last commit of the branch by default
+#   GITHUB_BASE_REF: The base ref or targer branch of the pull request
+#   GITHUB_WORKSPACE: default path for checkout action
+# Arguments:
+#   $1 to choose between PR or Push
+# Outputs:
+#  files_added_modified.json
+#######################################
 get_difference_between_commits(){
     if [[ "$1" == "extract" ]] || [[ "$1" == "check" ]] ; then
       diffres=$(git diff --name-status $commitFrom $GITHUB_SHA)
@@ -45,46 +70,30 @@ get_difference_between_commits(){
 
 }
 
-echo "Argument being passed: $1"
-# echo "Executing: pip install ms3==0.4.11"
-# pip install ms3==0.4.11
-echo "Executing: ms3 -h"
-ms3 -h
-echo "Executing: cd ${GITHUB_WORKSPACE}/main"
-cd "${GITHUB_WORKSPACE}/main"
-ls -a
-configure_git
-pushing_files
-git log -n 10
-echo $commitTo
-echo $commitFrom
-# if[[ ! $commitbefore ]]; then
-#   git diff --name-only $commitbefore $commitForPull
-# else
-#   git diff --name-only origin/$GITHUB_BASE_REF $commitForPull
-# fi
-# git diff --name-only $commitbefore $commitForPull
-# git diff --name-only $commitbefore $commitForPull
 
-get_difference_between_commits $1
+main(){
+  echo "Argument being passed: $1"
+  echo "Executing: ms3 -h"
+  ms3 -h
+  echo "Executing: cd ${GITHUB_WORKSPACE}/main"
+  cd "${GITHUB_WORKSPACE}/main"
+  configure_git
+  pushing_files
+  get_difference_between_commits $1
+  if [ "$1" == "extract" ]; then
+    echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added_modified.json -M -N -X -D"
+    ms3 extract -f "${GITHUB_WORKSPACE}/files_added_modified.json" -M -N -X -D
+    pushing_files "Automatically added TSV files from parse with ms3"
+  elif [ "$1" == "check"  ]; then
+    echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
+    ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
+  elif [  "$1" == "compare" ]; then
+    echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
+    ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"
+    git config --global user.name "github-actions[bot]"
+    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    pushing_files "Added comparison files for review"
+  fi
+}
 
-if [ "$1" == "extract" ]; then
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added_modified.json -M -N -X -D"
-  ms3 extract -f "${GITHUB_WORKSPACE}/files_added_modified.json" -M -N -X -D
-  # echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added.json -M -N -X -D"
-  # ms3 extract -f "${GITHUB_WORKSPACE}/files_added.json" -M -N -X -D
-
-  # git add -A
-  # git commit -m "Automatically added TSV files from parse with ms3"
-  # git push
-  pushing_files "Automatically added TSV files from parse with ms3"
-elif [ "$1" == "check"  ]; then
-  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
-  ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
-elif [  "$1" == "compare" ]; then
-  echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
-  ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"
-  git config --global user.name "github-actions[bot]"
-  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  pushing_files "Added comparison files for review"
-fi
+main $1
