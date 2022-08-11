@@ -37,7 +37,8 @@ get_difference_between_commits(){
          echo "\"${splitLine[1]}\"," >> "${GITHUB_WORKSPACE}/files_added_modified.json"
        fi
     done < <(printf '%s\n' "$diffres")
-    truncate -s-1 "${GITHUB_WORKSPACE}/files_added_modified.json"
+    truncate -s-2 "${GITHUB_WORKSPACE}/files_added_modified.json"
+    echo "" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
     echo "]" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
 
     cat "${GITHUB_WORKSPACE}/files_added_modified.json"
