@@ -55,6 +55,7 @@ get_difference_between_commits(){
 
 
 
+
     #finish the action execution if mscx files have been changed or added
     if [[ -z $diffres ]]; then
       echo "No mscx changes were detected, finishing early"
