@@ -36,13 +36,21 @@ jobs:
            echo ::set-output name=res::$(echo $(gh pr view --json state -q .[]))
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check if pull
         run: |
            echo ${{ steps.checkpull.outputs.res }}
-      - name: test skipping
-        if: (steps.checkpull.outputs.res == 'OPENED' )
+
+      - name: pull_request
+        if: (steps.checkpull.outputs.res == 'OPENED' && github.event_name=='pull_request')
         run: |
            echo ${{ steps.checkpull.outputs.res }}
+
+      - name: push
+        if: (steps.checkpull.outputs.res != 'OPENED' && github.event_name=='pull_request')
+        run: |
+           echo ${{ steps.checkpull.outputs.res }}
+
 
 
       # - name: Checkout PR
