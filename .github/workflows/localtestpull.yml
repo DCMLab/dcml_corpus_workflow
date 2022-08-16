@@ -21,13 +21,22 @@ jobs:
     if: (github.actor != 'ms3-bot' && github.actor != 'marcel41')
     steps:
 
+      - name: Checkout PR
+        uses: actions/checkout@v2
+        with:
+          path: main
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
       - name: Check if pull
         id: checkpull
         run: |
            gh pr view --json title
            echo ::set-output name=res::$(gh pr view --json title)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: main
       - name: Check if pull
         run: |
            echo ${{ steps.checkpull.output.res }}
