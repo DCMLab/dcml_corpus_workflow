@@ -40,7 +40,7 @@ jobs:
         run: |
            echo ${{ steps.checkpull.outputs.res }}
       - name: test skipping
-        if: steps.checkpull.outputs.res != ""
+        if: (steps.checkpull.outputs.res != '')
         run: |
            echo ${{ steps.checkpull.outputs.res }}
 
