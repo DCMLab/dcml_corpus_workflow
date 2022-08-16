@@ -39,6 +39,10 @@ jobs:
       - name: Check if pull
         run: |
            echo ${{ steps.checkpull.outputs.res }}
+      - name: test skipping
+        if: steps.checkpull.outputs.res != ""
+        run: |
+           echo ${{ steps.checkpull.outputs.res }}
 
       # - name: Checkout PR
       #   uses: actions/checkout@v2
