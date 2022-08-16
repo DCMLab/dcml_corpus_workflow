@@ -26,6 +26,8 @@ jobs:
         run: |
            gh pr view --json title
            echo ::set-output name=res::$(gh pr view --json title)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
       - name: Check if pull
         run: |
            echo ${{ steps.checkpull.output.res }}
