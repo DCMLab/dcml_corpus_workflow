@@ -53,22 +53,23 @@ get_difference_between_commits(){
       fi
     fi
 
-    # echo "[" > "${GITHUB_WORKSPACE}/files_added_modified.json"
+
     #finish the action execution if mscx files have been changed or added
     if [[ -z $diffres ]]; then
       exit 0
     fi
-
+    
+    echo "[" > "${GITHUB_WORKSPACE}/files_added_modified.json"
     while IFS= read -r line
     do
        splitLine=($line)
        if [[ "${splitLine[0]}" == "M" ]] || [[ "${splitLine[0]}" == "A" ]] ; then
          echo "\"${splitLine[1]}\"," >> "${GITHUB_WORKSPACE}/files_added_modified.json"
        fi
-    # done < <(printf '%s\n' "$diffres")
-    # truncate -s-2 "${GITHUB_WORKSPACE}/files_added_modified.json"
-    # echo "" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
-    # echo "]" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
+    done < <(printf '%s\n' "$diffres")
+    truncate -s-2 "${GITHUB_WORKSPACE}/files_added_modified.json"
+    echo "" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
+    echo "]" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
 
     cat "${GITHUB_WORKSPACE}/files_added_modified.json"
 
