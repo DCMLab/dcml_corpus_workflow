@@ -22,8 +22,13 @@ jobs:
     steps:
 
       - name: Check if pull
+        id: checkpull
         run: |
-           echo ${{ github.event.pull_request.title }}
+           gh pr view --json title
+           echo ::set-output name=res::$(gh pr view --json title)
+      - name: Check if pull
+        run: |
+           echo ${{ steps.checkpull.output.res }}
 
       # - name: Checkout PR
       #   uses: actions/checkout@v2
