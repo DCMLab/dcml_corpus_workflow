@@ -30,8 +30,8 @@ jobs:
 
       - name: Check if pull
         id: checkpull
+        working-directory: ./main
         run: |
-           cd  "${{ GITHUB_WORKSPACE }}/main"
            gh pr view --json title
            echo ::set-output name=res::$(gh pr view --json title)
         env:
