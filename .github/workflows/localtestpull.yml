@@ -52,12 +52,12 @@ jobs:
            echo ${{ steps.checkpull.outputs.res }}
 
       - name: pull_request
-        if: (steps.checkpull.outputs.res == 'OPENED' && github.event_name=='pull_request')
+        if: (steps.checkpull.outputs.res == 'OPEN' && github.event_name=='pull_request')
         run: |
            echo ${{ steps.checkpull.outputs.res }}
 
       - name: push
-        if: (steps.checkpull.outputs.res != 'OPENED' && github.event_name=='push')
+        if: (steps.checkpull.outputs.res != 'OPEN' && github.event_name=='push')
         run: |
            echo ${{ steps.checkpull.outputs.res }}
 
