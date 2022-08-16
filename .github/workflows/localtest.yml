@@ -1,9 +1,9 @@
-# name: local_testing
-#
-# on:
-#   push:
-#     branches:
-#       - development
+name: local_testing
+
+on:
+  push:
+    branches:
+      - test
 #       - main
 #       - testing_branch
 #       - child-dev
