@@ -23,7 +23,7 @@ jobs:
 
       - name: Check if pull
         run: |
-           echo ${{ github.event.pull_reques.title }}
+           echo ${{ github.event.pull_request.title }}
 
       # - name: Checkout PR
       #   uses: actions/checkout@v2
