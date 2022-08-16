@@ -17,7 +17,7 @@ pushing_files() {
 #######################################
 # Configuring git
 # Globals:
-#   Token: deeloper token of the bot ms3-bot
+#   Token: developer's token of the bot ms3-bot
 # Arguments:
 #   None
 #######################################
@@ -43,17 +43,21 @@ configure_git(){
 #######################################
 get_difference_between_commits(){
     if [[ "$1" == "extract" ]] || [[ "$1" == "check" ]] ; then
-      diffres=$(git diff --name-status $commitFrom $GITHUB_SHA)
+      diffres=$(git diff --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
       # diffres=$(git diff --name-status f0e3fa26fbafa9d38e57a78e4006f2f3be5b0a8e 395fd645d3aecd327876b8bd306b3bca63286540)
     elif [[ "$1" == "compare" ]]; then
       if [[ -z $commitFrom ]]; then
-        diffres=$(git diff --name-status origin/$GITHUB_BASE_REF $commitTo)
+        diffres=$(git diff --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
       else
-        diffres=$(git diff --name-status $commitFrom $commitTo)
+        diffres=$(git diff --name-status $commitFrom $commitTo | grep -E '*.mscx')
       fi
     fi
 
-    echo "[" > "${GITHUB_WORKSPACE}/files_added_modified.json"
+    # echo "[" > "${GITHUB_WORKSPACE}/files_added_modified.json"
+    #finish the action execution if mscx files have been changed or added
+    if [[ -z $diffres ]]; then
+      exit 0
+    fi
 
     while IFS= read -r line
     do
@@ -61,10 +65,10 @@ get_difference_between_commits(){
        if [[ "${splitLine[0]}" == "M" ]] || [[ "${splitLine[0]}" == "A" ]] ; then
          echo "\"${splitLine[1]}\"," >> "${GITHUB_WORKSPACE}/files_added_modified.json"
        fi
-    done < <(printf '%s\n' "$diffres")
-    truncate -s-2 "${GITHUB_WORKSPACE}/files_added_modified.json"
-    echo "" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
-    echo "]" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
+    # done < <(printf '%s\n' "$diffres")
+    # truncate -s-2 "${GITHUB_WORKSPACE}/files_added_modified.json"
+    # echo "" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
+    # echo "]" >> "${GITHUB_WORKSPACE}/files_added_modified.json"
 
     cat "${GITHUB_WORKSPACE}/files_added_modified.json"
 
@@ -73,17 +77,32 @@ get_difference_between_commits(){
 
 main(){
   echo "Argument being passed: $1"
-  echo "Executing: ms3 -h"
-  ms3 -h
   echo "Executing: cd ${GITHUB_WORKSPACE}/main"
   cd "${GITHUB_WORKSPACE}/main"
   configure_git
   pushing_files
   get_difference_between_commits $1
   if [ "$1" == "extract" ]; then
-    echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added_modified.json -M -N -X -D"
-    ms3 extract -f "${GITHUB_WORKSPACE}/files_added_modified.json" -M -N -X -D
+
+    #current version of ms3 in docker image does not work with this command
+    # ms3 extract -d ./MS3 -M -N -X -D
+    find ./MS3 -name '*.mscx' -print >> "allMS3files.json"
+    echo "[" > "allMS3files.json"
+    while IFS= read -r line
+    do
+      echo "\"${line}\"," >> "allMS3files.json"
+    done < <(find ./MS3 -name '*.mscx' -print)
+    truncate -s-2 "allMS3files.json"
+    echo "" >> "allMS3files.json"
+    echo "]" >> "allMS3files.json"
+    cat allMS3files.json
+    ms3 extract -f "allMS3files.json" -M -N -X -D
     pushing_files "Automatically added TSV files from parse with ms3"
+
+  elif [ "$1" == "pull_request"  ]; then
+    echo "pull request detected"
+  elif [ "$1" == "push"  ]; then
+    echo "push detected"
   elif [ "$1" == "check"  ]; then
     echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
     ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
