@@ -95,16 +95,18 @@ executing_all_ms3_commands(){
     exit -1
   fi
   pushing_files "Automatically added TSV files from parse with ms3"
-
+  echo "---------------------------------------------------------------------------------------"
   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/added_and_modified_files.json --assertion"
   if ! ms3 check -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" --assertion; then
     exit -1
   fi
+  echo "---------------------------------------------------------------------------------------"
 
   echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/added_and_modified_files.json"
   if ! ms3 compare -f "${GITHUB_WORKSPACE}/added_and_modified_files.json"; then
     exit -1
   fi
+  echo "---------------------------------------------------------------------------------------"
 
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
