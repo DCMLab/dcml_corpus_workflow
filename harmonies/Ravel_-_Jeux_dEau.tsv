@@ -2,7 +2,7 @@ mc	mn	mc_onset	mn_onset	timesig	staff	voice	volta	label	alt_label	globalkey	loca
 1	1	0	0	4/4	3	1		E.IM7(9)		E	I		IM7(9)	I	M	7	9				MM7	0	0	0, 4, 1, 5	2	0	0
 1	1	3/8	3/8	4/4	3	1		IVM7		E	I		IVM7	IV	M	7					MM7	0	0	-1, 3, 0, 4		-1	-1
 1	1	1/2	1/2	4/4	3	1		IM7(9)		E	I		IM7(9)	I	M	7	9				MM7	0	0	0, 4, 1, 5	2	0	0
-1	1	7/8	7/8	4/4	3	1		IV7		E	I		IV7	IV		7					Mm7	0	0	-1, 3, 0, -3		-1	-1
+1	1	7/8	7/8	4/4	3	1		I7		E	I		I7	I		7					Mm7	0	0	0, 4, 1, -2		0	0
 2	2	0	0	2/4	3	1		IM7(9)		E	I		IM7(9)	I	M	7	9				MM7	0	0	0, 4, 1, 5	2	0	0
 3	3	0	0	4/4	3	1		IVM7		E	I		IVM7	IV	M	7					MM7	0	0	-1, 3, 0, 4		-1	-1
 3	3	3/8	3/8	4/4	3	1		V43(+6b5)/vi		E	I		V43(+6b5)/vi	V		43	+6b5	vi			Mm7	0	0	-2, 2, 4, 8	0	4	-2
