@@ -89,7 +89,6 @@ main(){
   configure_git
   pushing_files
   if [[ "$1" == "extract" ]]; then
-
     #current version of ms3 in docker image does not work with this command
     # ms3 extract -d ./MS3 -M -N -X -D
     find ./MS3 -name '*.mscx' -print >> "allMS3files.json"
@@ -104,13 +103,32 @@ main(){
     cat allMS3files.json
     ms3 extract -f "allMS3files.json" -M -N -X -D
     pushing_files "Automatically added TSV files from parse with ms3"
-  elif [[ "$1" == "pull_request" ]]; then
+  elif [[ "$1" == "pull_request" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
     get_difference_between_commits $1
     echo "pull request detected"
-  elif [[ "$1" == "push" ]] &&  [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
+
+    echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added_modified.json -M -N -X -D"
+    ms3 extract -f "${GITHUB_WORKSPACE}/files_added_modified.json" -M -N -X -D
+
+    echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
+    ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
+
+    echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
+    ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"
+
+  elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
     get_difference_between_commits $1
     echo "push detected"
-    
+
+    echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added_modified.json -M -N -X -D"
+    ms3 extract -f "${GITHUB_WORKSPACE}/files_added_modified.json" -M -N -X -D
+
+    echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
+    ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
+
+    echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
+    ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"
+
   # elif [ "$1" == "check"  ]; then
   #   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
   #   ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
