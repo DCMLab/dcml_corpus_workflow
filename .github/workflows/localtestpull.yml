@@ -8,10 +8,7 @@ on:
       - main
       - testing_branch
   pull_request:
-    branches-ignore:
-      - development
-      - main
-      - testing_branch
+
 
 jobs:
   compare:
