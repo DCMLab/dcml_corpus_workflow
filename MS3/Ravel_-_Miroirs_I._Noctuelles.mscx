@@ -157,7 +157,7 @@
     <metaTag name="arranger"></metaTag>
     <metaTag name="composed_end">1905</metaTag>
     <metaTag name="composed_start">1901</metaTag>
-    <metaTag name="composer">Maurice Ravel</metaTag>
+    <metaTag name="composer">Maurice Ravel lol</metaTag>
     <metaTag name="copyright"></metaTag>
     <metaTag name="creationDate">2017-11-19</metaTag>
     <metaTag name="lyricist"></metaTag>
@@ -19396,7 +19396,6 @@
             <Spanner type="Slur">
               <prev>
                 <location>
-                  <staves>1</staves>
                   <fractions>-1/4</fractions>
                   </location>
                 </prev>
@@ -19404,6 +19403,7 @@
             <Spanner type="Slur">
               <prev>
                 <location>
+                  <staves>1</staves>
                   <fractions>-1/4</fractions>
                   </location>
                 </prev>
