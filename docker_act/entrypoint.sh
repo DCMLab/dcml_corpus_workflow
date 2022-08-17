@@ -110,6 +110,7 @@ main(){
   elif [[ "$1" == "push" ]] &&  [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
     get_difference_between_commits $1
     echo "push detected"
+    
   # elif [ "$1" == "check"  ]; then
   #   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
   #   ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
