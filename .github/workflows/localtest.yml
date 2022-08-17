@@ -3,7 +3,9 @@ name: local_testing
 on:
   push:
     branches:
+      - development
       - main
+      - testing_branch
 
 jobs:
   compare:
