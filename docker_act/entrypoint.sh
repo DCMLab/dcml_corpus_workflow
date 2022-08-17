@@ -42,18 +42,21 @@ configure_git(){
 #  files_added_modified.json
 #######################################
 get_difference_between_commits(){
-    if [[ "$1" == "extract" ]] || [[ "$1" == "check" ]] ; then
+    # if [[ "$1" == "extract" ]] || [[ "$1" == "check" ]] ; then
+    #   diffres=$(git diff --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
+    #   # diffres=$(git diff --name-status f0e3fa26fbafa9d38e57a78e4006f2f3be5b0a8e 395fd645d3aecd327876b8bd306b3bca63286540)
+    # elif [[ "$1" == "compare" ]]; then
+    #   if [[ -z $commitFrom ]]; then
+    #     diffres=$(git diff --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
+    #   else
+    #     diffres=$(git diff --name-status $commitFrom $commitTo | grep -E '*.mscx')
+    #   fi
+    # fi
+    if [[ "$1" == "push" ]] ; then
       diffres=$(git diff --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
-      # diffres=$(git diff --name-status f0e3fa26fbafa9d38e57a78e4006f2f3be5b0a8e 395fd645d3aecd327876b8bd306b3bca63286540)
-    elif [[ "$1" == "compare" ]]; then
-      if [[ -z $commitFrom ]]; then
-        diffres=$(git diff --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
-      else
-        diffres=$(git diff --name-status $commitFrom $commitTo | grep -E '*.mscx')
-      fi
+    elif [[ "$1" == "pull_request" ]]; then
+      diffres=$(git diff --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
     fi
-
-
 
 
     #finish the action execution if mscx files have been changed or added
@@ -85,8 +88,7 @@ main(){
   cd "${GITHUB_WORKSPACE}/main"
   configure_git
   pushing_files
-  get_difference_between_commits $1
-  if [ "$1" == "extract" ]; then
+  if [[ "$1" == "extract" ]]; then
 
     #current version of ms3 in docker image does not work with this command
     # ms3 extract -d ./MS3 -M -N -X -D
@@ -102,20 +104,21 @@ main(){
     cat allMS3files.json
     ms3 extract -f "allMS3files.json" -M -N -X -D
     pushing_files "Automatically added TSV files from parse with ms3"
-
-  elif [ "$1" == "pull_request"  ]; then
+  elif [[ "$1" == "pull_request" ]]; then
+    get_difference_between_commits $1
     echo "pull request detected"
-  elif [ "$1" == "push"  ]; then
+  elif [[ "$1" == "push" ]] &&  [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
+    get_difference_between_commits $1
     echo "push detected"
-  elif [ "$1" == "check"  ]; then
-    echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
-    ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
-  elif [  "$1" == "compare" ]; then
-    echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
-    ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"
-    git config --global user.name "github-actions[bot]"
-    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "Added comparison files for review"
+  # elif [ "$1" == "check"  ]; then
+  #   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
+  #   ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
+  # elif [  "$1" == "compare" ]; then
+  #   echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
+  #   ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"
+  #   git config --global user.name "github-actions[bot]"
+  #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  #   pushing_files "Added comparison files for review"
   fi
 }
 

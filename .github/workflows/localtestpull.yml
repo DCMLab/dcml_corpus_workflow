@@ -21,8 +21,7 @@ jobs:
     if: (github.actor != 'ms3-bot' && github.actor != 'marcel41')
     steps:
 
-
-      - name: Checkout PR
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           path: main
@@ -30,50 +29,27 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.MS3_BOT_TOKEN }}
 
-      - name: obtainRef
-        id: gettingRef
+      - name: Check if pull
+        id: checkpull
+        working-directory: ./main
         run: |
-           echo ${{ github.event.pull_request.head.ref }}
-           if [[ "${{ github.event_name }}" == "push" ]]; then
-             echo ::set-output name=refCheckout::$(echo "")
-           elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-             echo ::set-output name=refCheckout::$(echo "${{ github.event.pull_request.head.ref }}")
-           fi
+           gh pr view --json state -q .[]
+           echo ::set-output name=res::$(echo $(gh pr view --json state -q .[]))
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Checkout
-      #   uses: actions/checkout@v2
-      #   with:
-      #     path: main
-      #     fetch-depth: 0
-      #     ref: ${{ steps.gettingRef.outputs.refCheckout }}
-      #     token: ${{ secrets.MS3_BOT_TOKEN }}
-      #
-      # - name: Checkout PR
-      #   if: github.event_name=='pull_request'
-      #   uses: actions/checkout@v2
-      #   with:
-      #     path: main
-      #     fetch-depth: 0
-      #     ref: ${{ github.event.pull_request.head.ref }}
-      #     token: ${{ secrets.MS3_BOT_TOKEN }}
-      # #
-      # - name: Checkout
-      #   if: github.event_name=='push'
-      #   uses: actions/checkout@v2
-      #   with:
-      #     path: main
-      #     fetch-depth: 0
-      #     token: ${{ secrets.MS3_BOT_TOKEN }}
-      #
-      # - name: Check if pull
-      #   id: checkpull
-      #   working-directory: ./main
-      #   run: |
-      #      gh pr view --json state -q .[]
-      #      echo ::set-output name=res::$(echo $(gh pr view --json state -q .[]))
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #
+      - name: Action_to_run_docker
+        uses: ./main # Uses an action in the root directory
+        id: act_docker
+        with:
+          ms3-command: ${{ github.event_name }}
+        env:
+          Token: "${{ secrets.MS3_BOT_TOKEN }}"
+          IsThereAPullRequestOpened: "${{ steps.checkpull.outputs.res }}"
+          commitFrom: "${{ github.event.before }}"
+          commitTo: "${{ github.event.pull_request.head.sha }}"
+
+
       # - name: Check if pull
       #   run: |
       #      echo ${{ steps.checkpull.outputs.res }}
