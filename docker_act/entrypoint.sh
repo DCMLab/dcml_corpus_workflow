@@ -147,6 +147,7 @@ main(){
   #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #   pushing_files "Added comparison files for review"
   fi
+  
 }
 
 main $1
