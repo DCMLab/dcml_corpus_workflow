@@ -55,7 +55,7 @@ jobs:
         if: (steps.act_docker.outputs.skipped == 'true')
         run: |
            gh run cancel ${{ github.run_id }}
-           gh api repos/DCMLab/dcml_corpus_workflow/actions/runs/"${{ github.run_id }}" -X DELETE
+           gh api repos/DCMLab/dcml_corpus_workflow/actions/runs/2876970131 -X DELETE
         env:
           GITHUB_TOKEN: ${{ secrets.MS3_BOT_TOKEN }}
 
