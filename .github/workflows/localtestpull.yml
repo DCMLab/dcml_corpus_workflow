@@ -21,14 +21,22 @@ jobs:
     if: (github.actor != 'ms3-bot' && github.actor != 'marcel41')
     steps:
 
-      - name: ObtainRef
+      - name: obtainRef
+        id: gettingRef
         run: |
            if [[ "${{ github.event_name }}" == "push" ]]; then
-             echo "hello"
+             echo ::set-output name=refCheckout::$(echo "")
            elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-             echo "bye"
+             echo ::set-output name=refCheckout::$(echo "${{ github.event.pull_request.head.ref }}")
            fi
 
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: main
+          fetch-depth: 0
+          ref: ${{ steps.gettingRef.outputs.refCheckout }}
+          token: ${{ secrets.MS3_BOT_TOKEN }}
       # - name: Checkout PR
       #   if: github.event_name=='pull_request'
       #   uses: actions/checkout@v2
