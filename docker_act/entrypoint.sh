@@ -123,11 +123,11 @@ main(){
     echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/files_added_modified.json -M -N -X -D"
     if ! ms3 extract -f "${GITHUB_WORKSPACE}/files_added_modified.json" -M -N -X -D; then
       exit -1
-
+    fi
     echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
     if ! ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion; then
       exit -1
-
+    fi
     echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
     ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"
 
