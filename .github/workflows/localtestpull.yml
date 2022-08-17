@@ -57,7 +57,7 @@ jobs:
            gh run cancel ${{ github.run_id }}
            gh api repos/DCMLab/dcml_corpus_workflow/actions/runs/"${{ github.run_id }}" -X DELETE
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MS3_BOT_TOKEN }}
 
       # - name: Check if pull
       #   run: |
