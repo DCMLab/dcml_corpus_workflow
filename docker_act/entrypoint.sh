@@ -62,6 +62,7 @@ get_difference_between_commits(){
     #finish the action execution if mscx files have been changed or added
     if [[ -z $diffres ]]; then
       echo "No mscx changes were detected, finishing early"
+      gh run cancel "${idworkflow}"
       exit 0
     fi
 
@@ -147,7 +148,7 @@ main(){
   #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #   pushing_files "Added comparison files for review"
   fi
-  
+
 }
 
 main $1

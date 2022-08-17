@@ -48,7 +48,8 @@ jobs:
           IsThereAPullRequestOpened: "${{ steps.checkpull.outputs.res }}"
           commitFrom: "${{ github.event.before }}"
           commitTo: "${{ github.event.pull_request.head.sha }}"
-
+          idworkflow: "${{ github.run_id }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Check if pull
       #   run: |
