@@ -62,7 +62,7 @@ get_difference_between_commits(){
     #finish the action execution if mscx files have been changed or added
     if [[ -z $diffres ]]; then
       echo "No mscx changes were detected, finishing early"
-      # exit 0
+      exit 0
     fi
 
     echo "[" > "${GITHUB_WORKSPACE}/files_added_modified.json"
