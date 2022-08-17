@@ -54,7 +54,6 @@ jobs:
         working-directory: ./main
         if: (steps.act_docker.outputs.skipped == 'true')
         run: |
-           gh run cancel ${{ github.run_id }}
            echo ${{ github.run_id }}
            gh api repos/DCMLab/dcml_corpus_workflow/actions/runs/${{ github.run_id }} -X DELETE
         env:
