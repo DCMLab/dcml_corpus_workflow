@@ -23,7 +23,11 @@ jobs:
 
       - name: ObtainRef
         run: |
-           if [[ "hola" == "hola" ]]; then echo "hello" else echo "bye" fi
+           if [[ "hola" == "hola" ]]; then
+             echo "hello"
+           else
+             echo "bye"
+           fi
 
       # - name: Checkout PR
       #   if: github.event_name=='pull_request'
