@@ -29134,7 +29134,7 @@
             <direction>up</direction>
             </Tuplet>
           <Chord>
-            <durationType>eighth</durationType>
+            <durationType>quarter</durationType>
             <Spanner type="Slur">
               <Slur>
                 <SlurSegment no="0">
@@ -29148,13 +29148,6 @@
                   </location>
                 </next>
               </Spanner>
-            <Note>
-              <pitch>78</pitch>
-              <tpc>8</tpc>
-              </Note>
-            </Chord>
-          <Chord>
-            <durationType>eighth</durationType>
             <Note>
               <pitch>72</pitch>
               <tpc>14</tpc>
