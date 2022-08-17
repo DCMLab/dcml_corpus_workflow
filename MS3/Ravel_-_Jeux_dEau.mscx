@@ -150,7 +150,6 @@
       <usePre_3_6_defaults>1</usePre_3_6_defaults>
       <defaultsVersion>301</defaultsVersion>
       <Spatium>1.2</Spatium>
-      <romanNumeralPlacement>1</romanNumeralPlacement>
       </Style>
     <showInvisible>1</showInvisible>
     <showUnprintable>1</showUnprintable>
@@ -2674,6 +2673,22 @@
             <sigN>4</sigN>
             <sigD>4</sigD>
             </TimeSig>
+          <Spanner type="HairPin">
+            <HairPin>
+              <subtype>0</subtype>
+              <diagonal>1</diagonal>
+              <Segment>
+                <subtype>0</subtype>
+                <offset x="0" y="6.3233"/>
+                <off2 x="0" y="-2.42"/>
+                </Segment>
+              </HairPin>
+            <next>
+              <location>
+                <measures>1</measures>
+                </location>
+              </next>
+            </Spanner>
           <Spanner type="Ottava">
             <Ottava>
               <subtype>8va</subtype>
@@ -2688,22 +2703,6 @@
               <location>
                 <measures>1</measures>
                 <fractions>1/2</fractions>
-                </location>
-              </next>
-            </Spanner>
-          <Spanner type="HairPin">
-            <HairPin>
-              <subtype>0</subtype>
-              <diagonal>1</diagonal>
-              <Segment>
-                <subtype>0</subtype>
-                <offset x="0" y="6.3233"/>
-                <off2 x="0" y="-2.42"/>
-                </Segment>
-              </HairPin>
-            <next>
-              <location>
-                <measures>1</measures>
                 </location>
               </next>
             </Spanner>
@@ -7200,6 +7199,15 @@
             <durationType>16th</durationType>
             <Spanner type="Slur">
               <Slur>
+                </Slur>
+              <next>
+                <location>
+                  <fractions>1/16</fractions>
+                  </location>
+                </next>
+              </Spanner>
+            <Spanner type="Slur">
+              <Slur>
                 <SlurSegment no="0">
                   <o2 x="-6.25" y="-4.58333"/>
                   <o3 x="-6.25" y="-4.58333"/>
@@ -7209,15 +7217,6 @@
               <next>
                 <location>
                   <fractions>15/16</fractions>
-                  </location>
-                </next>
-              </Spanner>
-            <Spanner type="Slur">
-              <Slur>
-                </Slur>
-              <next>
-                <location>
-                  <fractions>1/16</fractions>
                   </location>
                 </next>
               </Spanner>
@@ -9236,6 +9235,16 @@
             <durationType>16th</durationType>
             <Spanner type="Slur">
               <Slur>
+                <up>down</up>
+                </Slur>
+              <next>
+                <location>
+                  <fractions>1/16</fractions>
+                  </location>
+                </next>
+              </Spanner>
+            <Spanner type="Slur">
+              <Slur>
                 <SlurSegment no="0">
                   <o1 x="0" y="0.416667"/>
                   <offset x="0" y="-1.11111"/>
@@ -9244,16 +9253,6 @@
               <next>
                 <location>
                   <fractions>7/16</fractions>
-                  </location>
-                </next>
-              </Spanner>
-            <Spanner type="Slur">
-              <Slur>
-                <up>down</up>
-                </Slur>
-              <next>
-                <location>
-                  <fractions>1/16</fractions>
                   </location>
                 </next>
               </Spanner>
@@ -19697,6 +19696,24 @@
               <tpc>26</tpc>
               </Note>
             </Chord>
+          <Spanner type="Pedal">
+            <Pedal>
+              <endHookType>1</endHookType>
+              <beginText>&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;</beginText>
+              <continueText>(&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;)</continueText>
+              <lineVisible>0</lineVisible>
+              <Segment>
+                <subtype>0</subtype>
+                <offset x="0" y="25.1111"/>
+                <off2 x="0" y="0"/>
+                </Segment>
+              </Pedal>
+            <next>
+              <location>
+                <fractions>1/8</fractions>
+                </location>
+              </next>
+            </Spanner>
           <Spanner type="Ottava">
             <Ottava>
               <subtype>8va</subtype>
@@ -19727,24 +19744,6 @@
               <location>
                 <measures>1</measures>
                 <fractions>-1/2</fractions>
-                </location>
-              </next>
-            </Spanner>
-          <Spanner type="Pedal">
-            <Pedal>
-              <endHookType>1</endHookType>
-              <beginText>&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;</beginText>
-              <continueText>(&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;)</continueText>
-              <lineVisible>0</lineVisible>
-              <Segment>
-                <subtype>0</subtype>
-                <offset x="0" y="25.1111"/>
-                <off2 x="0" y="0"/>
-                </Segment>
-              </Pedal>
-            <next>
-              <location>
-                <fractions>1/8</fractions>
                 </location>
               </next>
             </Spanner>
@@ -26463,6 +26462,23 @@
                 </location>
               </prev>
             </Spanner>
+          <Spanner type="HairPin">
+            <HairPin>
+              <subtype>1</subtype>
+              <placement>above</placement>
+              <Segment>
+                <subtype>0</subtype>
+                <offset x="0" y="-5.97222"/>
+                <off2 x="-2.77778" y="0"/>
+                </Segment>
+              </HairPin>
+            <next>
+              <location>
+                <measures>1</measures>
+                <fractions>-1/1</fractions>
+                </location>
+              </next>
+            </Spanner>
           <Spanner type="Pedal">
             <Pedal>
               <beginText>&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;</beginText>
@@ -26483,23 +26499,6 @@
               <location>
                 <measures>1</measures>
                 <fractions>-3/4</fractions>
-                </location>
-              </next>
-            </Spanner>
-          <Spanner type="HairPin">
-            <HairPin>
-              <subtype>1</subtype>
-              <placement>above</placement>
-              <Segment>
-                <subtype>0</subtype>
-                <offset x="0" y="-5.97222"/>
-                <off2 x="-2.77778" y="0"/>
-                </Segment>
-              </HairPin>
-            <next>
-              <location>
-                <measures>1</measures>
-                <fractions>-1/1</fractions>
                 </location>
               </next>
             </Spanner>
@@ -27806,20 +27805,20 @@
             <durationType>16th</durationType>
             <Spanner type="Slur">
               <Slur>
-                <up>up</up>
                 </Slur>
               <next>
                 <location>
-                  <fractions>15/16</fractions>
+                  <fractions>1/16</fractions>
                   </location>
                 </next>
               </Spanner>
             <Spanner type="Slur">
               <Slur>
+                <up>up</up>
                 </Slur>
               <next>
                 <location>
-                  <fractions>1/16</fractions>
+                  <fractions>15/16</fractions>
                   </location>
                 </next>
               </Spanner>
@@ -47504,6 +47503,23 @@
                 </location>
               </prev>
             </Spanner>
+          <Spanner type="HairPin">
+            <HairPin>
+              <subtype>1</subtype>
+              <dynType>0</dynType>
+              <diagonal>1</diagonal>
+              <Segment>
+                <subtype>0</subtype>
+                <offset x="0" y="1.27778"/>
+                <off2 x="-3.05556" y="0.555556"/>
+                </Segment>
+              </HairPin>
+            <next>
+              <location>
+                <fractions>1/8</fractions>
+                </location>
+              </next>
+            </Spanner>
           <Spanner type="Pedal">
             <Pedal>
               <beginText>&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;</beginText>
@@ -47519,23 +47535,6 @@
             <next>
               <location>
                 <fractions>3/16</fractions>
-                </location>
-              </next>
-            </Spanner>
-          <Spanner type="HairPin">
-            <HairPin>
-              <subtype>1</subtype>
-              <dynType>0</dynType>
-              <diagonal>1</diagonal>
-              <Segment>
-                <subtype>0</subtype>
-                <offset x="0" y="1.27778"/>
-                <off2 x="-3.05556" y="0.555556"/>
-                </Segment>
-              </HairPin>
-            <next>
-              <location>
-                <fractions>1/8</fractions>
                 </location>
               </next>
             </Spanner>
@@ -47600,19 +47599,6 @@
           <Rest>
             <durationType>16th</durationType>
             </Rest>
-          <Spanner type="Pedal">
-            <Pedal>
-              <beginText>&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;</beginText>
-              <continueText>(&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;)</continueText>
-              <endText>&lt;sym&gt;keyboardPedalUp&lt;/sym&gt;</endText>
-              <lineVisible>0</lineVisible>
-              </Pedal>
-            <next>
-              <location>
-                <fractions>3/16</fractions>
-                </location>
-              </next>
-            </Spanner>
           <Spanner type="HairPin">
             <HairPin>
               <subtype>1</subtype>
@@ -47627,6 +47613,19 @@
             <next>
               <location>
                 <fractions>1/8</fractions>
+                </location>
+              </next>
+            </Spanner>
+          <Spanner type="Pedal">
+            <Pedal>
+              <beginText>&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;</beginText>
+              <continueText>(&lt;sym&gt;keyboardPedalPed&lt;/sym&gt;)</continueText>
+              <endText>&lt;sym&gt;keyboardPedalUp&lt;/sym&gt;</endText>
+              <lineVisible>0</lineVisible>
+              </Pedal>
+            <next>
+              <location>
+                <fractions>3/16</fractions>
                 </location>
               </next>
             </Spanner>
@@ -52812,7 +52811,7 @@
             </location>
           <Harmony>
             <harmonyType>1</harmonyType>
-            <name>IVM7</name>
+            <name>IV7</name>
             </Harmony>
           </voice>
         </Measure>
