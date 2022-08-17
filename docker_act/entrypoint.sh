@@ -140,6 +140,7 @@ main(){
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
     executing_all_ms3_commands $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
+    echo "this workflow does not need to run because a pull_request is opened"
     configure_output_to_cancel_this_workflow
   fi
 
