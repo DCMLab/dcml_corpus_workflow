@@ -23,9 +23,9 @@ jobs:
 
       - name: ObtainRef
         run: |
-           if [[ "hola" == "hola" ]]; then
+           if [[ ${{ github.event_name }} =="push" ]]; then
              echo "hello"
-           else
+           elif [[ ${{ github.event_name }} =="pull_request" ]]; then
              echo "bye"
            fi
 
