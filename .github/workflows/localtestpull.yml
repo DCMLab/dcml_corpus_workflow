@@ -21,48 +21,50 @@ jobs:
     if: (github.actor != 'ms3-bot' && github.actor != 'marcel41')
     steps:
 
-      - name: Checkout PR
-        if: github.event_name=='pull_request'
-        uses: actions/checkout@v2
-        with:
-          path: main
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ secrets.MS3_BOT_TOKEN }}
-
-      - name: Checkout
-        if: github.event_name=='push'
-        uses: actions/checkout@v2
-        with:
-          path: main
-          fetch-depth: 0
-          token: ${{ secrets.MS3_BOT_TOKEN }}
-
-      - name: Check if pull
-        id: checkpull
-        working-directory: ./main
+      - name: ObtainRef
         run: |
-           gh pr view --json state -q .[]
-           echo ::set-output name=res::$(echo $(gh pr view --json state -q .[]))
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           if [ "hola" == "hola" ] then echo "hello" else echo "bye" fi
+           # echo ::set-output name=res::$(echo $(gh)
 
-      - name: Check if pull
-        run: |
-           echo ${{ steps.checkpull.outputs.res }}
-
-      - name: pull_request
-        if: (steps.checkpull.outputs.res == 'OPEN' && github.event_name=='pull_request')
-        run: |
-           echo ${{ steps.checkpull.outputs.res }}
-
-      - name: push
-        if: (steps.checkpull.outputs.res != 'OPEN' && github.event_name=='push')
-        run: |
-           echo ${{ steps.checkpull.outputs.res }}
-
-
-
+      # - name: Checkout PR
+      #   if: github.event_name=='pull_request'
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: main
+      #     fetch-depth: 0
+      #     ref: ${{ github.event.pull_request.head.ref }}
+      #     token: ${{ secrets.MS3_BOT_TOKEN }}
+      #
+      # - name: Checkout
+      #   if: github.event_name=='push'
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: main
+      #     fetch-depth: 0
+      #     token: ${{ secrets.MS3_BOT_TOKEN }}
+      #
+      # - name: Check if pull
+      #   id: checkpull
+      #   working-directory: ./main
+      #   run: |
+      #      gh pr view --json state -q .[]
+      #      echo ::set-output name=res::$(echo $(gh pr view --json state -q .[]))
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #
+      # - name: Check if pull
+      #   run: |
+      #      echo ${{ steps.checkpull.outputs.res }}
+      #
+      # - name: pull_request
+      #   if: (steps.checkpull.outputs.res == 'OPEN' && github.event_name=='pull_request')
+      #   run: |
+      #      echo ${{ steps.checkpull.outputs.res }}
+      #
+      # - name: push
+      #   if: (steps.checkpull.outputs.res != 'OPEN' && github.event_name=='push')
+      #   run: |
+      #      echo ${{ steps.checkpull.outputs.res }}
 
 
 
