@@ -24,7 +24,6 @@ jobs:
       - name: ObtainRef
         run: |
            if [ "hola" == "hola" ] then echo "hello" else echo "bye" fi
-           # echo ::set-output name=res::$(echo $(gh)
 
       # - name: Checkout PR
       #   if: github.event_name=='pull_request'
