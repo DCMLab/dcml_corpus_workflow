@@ -115,6 +115,7 @@ main(){
     if ! ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion; then
       exit -1
     fi
+
     echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
     if ! ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"; then
       exit -1
@@ -135,8 +136,7 @@ main(){
     echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
     if ! ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"; then
       exit -1
-    if
-
+    fi
   # elif [ "$1" == "check"  ]; then
   #   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/files_added_modified.json --assertion"
   #   ms3 check -f "${GITHUB_WORKSPACE}/files_added_modified.json" --assertion
