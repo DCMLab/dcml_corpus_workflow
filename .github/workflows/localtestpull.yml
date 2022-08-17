@@ -21,38 +21,49 @@ jobs:
     if: (github.actor != 'ms3-bot' && github.actor != 'marcel41')
     steps:
 
-      - name: obtainRef
-        id: gettingRef
-        run: |
-           if [[ "${{ github.event_name }}" == "push" ]]; then
-             echo ::set-output name=refCheckout::$(echo "")
-           elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
-             echo ::set-output name=refCheckout::$(echo "${{ github.event.pull_request.head.ref }}")
-           fi
 
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          path: main
-          fetch-depth: 0
-          ref: ${{ steps.gettingRef.outputs.refCheckout }}
-          token: ${{ secrets.MS3_BOT_TOKEN }}
       - name: Checkout PR
-        if: github.event_name=='pull_request'
         uses: actions/checkout@v2
         with:
           path: main
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.MS3_BOT_TOKEN }}
+
+      - name: obtainRef
+        id: gettingRef
+        run: |
+           echo ${{ github.event.pull_request.head.ref }}
+           if [[ "${{ github.event_name }}" == "push" ]]; then
+             echo ::set-output name=refCheckout::$(echo "")
+           elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+             echo ::set-output name=refCheckout::$(echo "${{ github.event.pull_request.head.ref }}")
+           fi
+
+      # - name: Checkout
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: main
+      #     fetch-depth: 0
+      #     ref: ${{ steps.gettingRef.outputs.refCheckout }}
+      #     token: ${{ secrets.MS3_BOT_TOKEN }}
       #
-      - name: Checkout
-        if: github.event_name=='push'
-        uses: actions/checkout@v2
-        with:
-          path: main
-          fetch-depth: 0
-          token: ${{ secrets.MS3_BOT_TOKEN }}
+      # - name: Checkout PR
+      #   if: github.event_name=='pull_request'
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: main
+      #     fetch-depth: 0
+      #     ref: ${{ github.event.pull_request.head.ref }}
+      #     token: ${{ secrets.MS3_BOT_TOKEN }}
+      # #
+      # - name: Checkout
+      #   if: github.event_name=='push'
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: main
+      #     fetch-depth: 0
+      #     token: ${{ secrets.MS3_BOT_TOKEN }}
       #
       # - name: Check if pull
       #   id: checkpull
