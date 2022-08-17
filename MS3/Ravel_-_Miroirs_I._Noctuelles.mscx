@@ -29163,8 +29163,17 @@
           <Chord>
             <durationType>eighth</durationType>
             <Note>
-              <pitch>68</pitch>
-              <tpc>10</tpc>
+              <Spanner type="Tie">
+                <Tie>
+                  </Tie>
+                <next>
+                  <location>
+                    <fractions>1/12</fractions>
+                    </location>
+                  </next>
+                </Spanner>
+              <pitch>73</pitch>
+              <tpc>9</tpc>
               </Note>
             </Chord>
           <endTuplet/>
@@ -29182,11 +29191,15 @@
           <Chord>
             <durationType>eighth</durationType>
             <Note>
-              <Accidental>
-                <subtype>accidentalFlat</subtype>
-                </Accidental>
-              <pitch>76</pitch>
-              <tpc>6</tpc>
+              <Spanner type="Tie">
+                <prev>
+                  <location>
+                    <fractions>-1/12</fractions>
+                    </location>
+                  </prev>
+                </Spanner>
+              <pitch>73</pitch>
+              <tpc>9</tpc>
               </Note>
             </Chord>
           <Chord>
