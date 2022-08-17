@@ -119,7 +119,7 @@ main(){
     echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/files_added_modified.json"
     if ! ms3 compare -f "${GITHUB_WORKSPACE}/files_added_modified.json"; then
       exit -1
-    if
+    fi
 
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
     get_difference_between_commits $1
