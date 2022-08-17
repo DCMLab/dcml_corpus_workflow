@@ -37,22 +37,22 @@ jobs:
           fetch-depth: 0
           ref: ${{ steps.gettingRef.outputs.refCheckout }}
           token: ${{ secrets.MS3_BOT_TOKEN }}
-      # - name: Checkout PR
-      #   if: github.event_name=='pull_request'
-      #   uses: actions/checkout@v2
-      #   with:
-      #     path: main
-      #     fetch-depth: 0
-      #     ref: ${{ github.event.pull_request.head.ref }}
-      #     token: ${{ secrets.MS3_BOT_TOKEN }}
+      - name: Checkout PR
+        if: github.event_name=='pull_request'
+        uses: actions/checkout@v2
+        with:
+          path: main
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.MS3_BOT_TOKEN }}
       #
-      # - name: Checkout
-      #   if: github.event_name=='push'
-      #   uses: actions/checkout@v2
-      #   with:
-      #     path: main
-      #     fetch-depth: 0
-      #     token: ${{ secrets.MS3_BOT_TOKEN }}
+      - name: Checkout
+        if: github.event_name=='push'
+        uses: actions/checkout@v2
+        with:
+          path: main
+          fetch-depth: 0
+          token: ${{ secrets.MS3_BOT_TOKEN }}
       #
       # - name: Check if pull
       #   id: checkpull
