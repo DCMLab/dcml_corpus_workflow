@@ -81,7 +81,7 @@ get_difference_between_commits(){
 
 }
 #######################################
-# Executing sequentially ms3 extract, ms3 check and ms3 compare  to mscx files commited/added
+# Executing  ms3 extract, ms3 check and ms3 compare  to mscx files commited/added
 # Globals:
 #   GITHUB_WORKSPACE: default path for checkout action
 # Arguments:
@@ -90,15 +90,8 @@ get_difference_between_commits(){
 executing_all_ms3_commands(){
   get_difference_between_commits $1
 
-  if [[ "$1" == "push" ]]; then
-    echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/added_and_modified_files.json -M -N -X -D"
-    if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -X -D; then
-      exit -1
-    fi
-  fi
-  
-  pushing_files "Automatically added TSV files from parse with ms3"
-  echo "---------------------------------------------------------------------------------------"
+
+  # echo "---------------------------------------------------------------------------------------"
   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/added_and_modified_files.json --assertion"
   if ! ms3 check -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" --assertion; then
     exit -1
@@ -110,11 +103,17 @@ executing_all_ms3_commands(){
     exit -1
   fi
   echo "---------------------------------------------------------------------------------------"
-
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   pushing_files "Added comparison files for review"
 
+
+  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/added_and_modified_files.json -M -N -X -D"
+  if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -X -D; then
+    exit -1
+  fi
+
+  pushing_files "Automatically added TSV files from parse with ms3"
 }
 
 main(){
