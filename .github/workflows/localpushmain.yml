@@ -1,0 +1,33 @@
+name: local_testing
+
+on:
+  push:
+    branches:
+      - development
+      - main
+      - testing_branch
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]')
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: main
+          fetch-depth: 0
+          token: ${{ secrets.MS3_BOT_TOKEN }}
+
+      - name: Action_to_run_docker
+        uses: ./main # Uses an action in the root directory
+        id: act_docker
+        with:
+          ms3-command: "push_to_main"
+        env:
+          Token: "${{ secrets.MS3_BOT_TOKEN }}"
+          IsThereAPullRequestOpened: ""
+          commitFrom: ""
+          commitTo: ""
+          idworkflow: ""
