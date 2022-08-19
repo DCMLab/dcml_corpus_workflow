@@ -91,7 +91,7 @@ executing_all_ms3_commands(){
   get_difference_between_commits $1
 
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/added_and_modified_files.json -M -N -X -D"
-  if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -X -D; then
+  if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -D; then
     exit -1
   fi
 
@@ -124,7 +124,7 @@ check_if_a_new_mscx_file(){
   do
      splitLine=($line)
      if [[ "${splitLine[0]}" == "M" ]] || [[ "${splitLine[0]}" == "A" ]] ; then
-         echo "no_empty" > "${GITHUB_WORKSPACE}/added_and_modified_files.json"
+         echo "no_empty" >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
          break
      fi
   done < <(printf '%s\n' "$diffres")
