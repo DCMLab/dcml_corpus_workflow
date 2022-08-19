@@ -129,7 +129,9 @@ check_if_a_new_mscx_file(){
      fi
   done < <(printf '%s\n' "$diffres")
 
-  added_or_modified_file=$(<<"${GITHUB_WORKSPACE}/added_and_modified_files.json")
+  # added_or_modified_file=$(<<"${GITHUB_WORKSPACE}/added_and_modified_files.json")
+
+  added_or_modified_file=$( cat "${GITHUB_WORKSPACE}"/added_and_modified_files.json)
   if [[ -z $added_or_modified_file ]]; then
     echo "No mscx changes were detected, finishing early"
     configure_output_to_cancel_this_workflow
