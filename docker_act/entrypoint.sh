@@ -90,7 +90,12 @@ get_difference_between_commits(){
 executing_all_ms3_commands(){
   get_difference_between_commits $1
 
+  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/added_and_modified_files.json -M -N -X -D"
+  if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -X -D; then
+    exit -1
+  fi
 
+  pushing_files "Automatically added TSV files from parse with ms3"
   # echo "---------------------------------------------------------------------------------------"
   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/added_and_modified_files.json --assertion"
   if ! ms3 check -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" --assertion; then
@@ -108,14 +113,28 @@ executing_all_ms3_commands(){
   pushing_files "Added comparison files for review"
 
 
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/added_and_modified_files.json -M -N -X -D"
-  if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -X -D; then
-    exit -1
-  fi
 
-  pushing_files "Automatically added TSV files from parse with ms3"
 }
 
+check_if_a_new_mscx_file(){
+  diffres=$(git diff --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
+  #finish the action execution if mscx files have not been changed or added
+  echo "" > "${GITHUB_WORKSPACE}/added_and_modified_files.json"
+  while IFS= read -r line
+  do
+     splitLine=($line)
+     if [[ "${splitLine[0]}" == "M" ]] || [[ "${splitLine[0]}" == "A" ]] ; then
+         echo "no_empty" > "${GITHUB_WORKSPACE}/added_and_modified_files.json"
+         break
+     fi
+  done < <(printf '%s\n' "$diffres")
+
+  added_or_modified_file=$(<<"${GITHUB_WORKSPACE}/added_and_modified_files.json")
+  if [[ -z $added_or_modified_file ]]; then
+    echo "No mscx changes were detected, finishing early"
+    configure_output_to_cancel_this_workflow
+  fi
+}
 main(){
   echo "Argument being passed: $1"
   echo "Executing: cd ${GITHUB_WORKSPACE}/main"
@@ -123,8 +142,11 @@ main(){
   configure_git
 
   if [[ "$1" == "push_to_main" ]]; then
+
+    check_if_a_new_mscx_file
     #current version of ms3 in docker image does not work with this command
-    # ms3 extract -d ./MS3 -M -N -X -D
+    # ms3 workflow_run
+
     find ./MS3 -name '*.mscx' -print >> "allMS3files.json"
     echo "[" > "allMS3files.json"
     while IFS= read -r line
@@ -134,9 +156,30 @@ main(){
     truncate -s-2 "allMS3files.json"
     echo "" >> "allMS3files.json"
     echo "]" >> "allMS3files.json"
+
+    # ms3 workflow_run
     cat allMS3files.json
     ms3 extract -f "allMS3files.json" -M -N -X -D
+
     pushing_files "Automatically added TSV files from parse with ms3"
+
+
+
+    echo "Executing: ms3 check -f allMS3files.json"
+    if ! ms3 check -f "allMS3files.json"; then
+      exit -1
+    fi
+
+
+    echo "Executing: ms3 compare -f allMS3files.json"
+    ms3 compare -f "allMS3files.json";
+
+    echo "---------------------------------------------------------------------------------------"
+    git config --global user.name "github-actions[bot]"
+    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    pushing_files "Added comparison files for review"
+
+
   elif [[ "$1" == "pull_request" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
     executing_all_ms3_commands $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
