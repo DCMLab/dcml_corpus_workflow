@@ -176,7 +176,7 @@ main(){
     fi
 
     echo "Executing: ms3 compare -f allMS3files.json"
-    ms3 compare -f "${GITHUB_WORKSPACE}/allMS3files.json";
+    ms3 compare -f "${GITHUB_WORKSPACE}/allMS3files.json"
 
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
