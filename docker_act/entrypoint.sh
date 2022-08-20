@@ -157,7 +157,7 @@ main(){
     echo "[" > "${GITHUB_WORKSPACE}/allMS3files.json"
     while IFS= read -r line
     do
-      echo "\"${line}\"," >> "allMS3files.json"
+      echo "\"${line}\"," >> "${GITHUB_WORKSPACE}/allMS3files.json"
     done < <(find ./MS3 -name '*.mscx' -print)
     truncate -s-2 "${GITHUB_WORKSPACE}/allMS3files.json"
     echo "" >> "${GITHUB_WORKSPACE}/allMS3files.json"
