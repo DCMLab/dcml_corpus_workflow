@@ -171,12 +171,12 @@ main(){
 
 
     echo "Executing: ms3 check -f allMS3files.json"
-    if ! ms3 check -f "allMS3files.json"; then
+    if ! ms3 check -f "${GITHUB_WORKSPACE}/allMS3files.json"; then
       exit -1
     fi
 
     echo "Executing: ms3 compare -f allMS3files.json"
-    ms3 compare -f "allMS3files.json";
+    ms3 compare -f "${GITHUB_WORKSPACE}/allMS3files.json";
 
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
