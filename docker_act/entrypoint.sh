@@ -94,9 +94,8 @@ executing_all_ms3_commands(){
   if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -D; then
     exit -1
   fi
-
   pushing_files "Automatically added TSV files from parse with ms3"
-  # echo "---------------------------------------------------------------------------------------"
+  echo "---------------------------------------------------------------------------------------"
   echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/added_and_modified_files.json --assertion"
   if ! ms3 check -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" --assertion; then
     exit -1
@@ -112,14 +111,19 @@ executing_all_ms3_commands(){
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   pushing_files "Added comparison files for review"
 
-
-
 }
 
-check_if_a_new_mscx_file(){
+#######################################
+# This function will check if at least one mscx file has been added or modified
+# if not it will exit the script
+# Globals:
+#   GITHUB_WORKSPACE: default path for checkout action
+#   GITHUB_SHA: the last commit that triggered the action
+#               this is the last commit of the branch by default
+# Arguments:
+#   None
+abort_if_no_modified_file(){
   diffres=$(git diff --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
-  #finish the action execution if mscx files have not been changed or added
-  echo "$diffres"
   echo "" > "${GITHUB_WORKSPACE}/added_and_modified_files.json"
   while IFS= read -r line
   do
@@ -130,16 +134,14 @@ check_if_a_new_mscx_file(){
      fi
   done < <(printf '%s\n' "$diffres")
 
-  # added_or_modified_file=$(<<"${GITHUB_WORKSPACE}/added_and_modified_files.json")
-
   added_or_modified_file=$( cat "${GITHUB_WORKSPACE}/added_and_modified_files.json")
 
-  echo $added_or_modified_file
   if [[ -z $added_or_modified_file ]]; then
     echo "No mscx changes were detected, finishing early"
     configure_output_to_cancel_this_workflow
   fi
 }
+
 main(){
   echo "Argument being passed: $1"
   echo "Executing: cd ${GITHUB_WORKSPACE}/main"
@@ -148,10 +150,9 @@ main(){
 
   if [[ "$1" == "push_to_main" ]]; then
 
-    check_if_a_new_mscx_file
+    abort_if_no_modified_file
     #current version of ms3 in docker image does not work with this command
     # ms3 workflow_run
-
     find ./MS3 -name '*.mscx' -print >> "allMS3files.json"
     echo "[" > "allMS3files.json"
     while IFS= read -r line
@@ -169,12 +170,10 @@ main(){
     pushing_files "Automatically added TSV files from parse with ms3"
 
 
-
     echo "Executing: ms3 check -f allMS3files.json"
     if ! ms3 check -f "allMS3files.json"; then
       exit -1
     fi
-
 
     echo "Executing: ms3 compare -f allMS3files.json"
     ms3 compare -f "allMS3files.json";
