@@ -153,12 +153,12 @@ main(){
     abort_if_no_modified_file
     #current version of ms3 in docker image does not work with this command
     # ms3 workflow_run
-    find ./MS3 -name '*.mscx' -print >> "allMS3files.json"
+    # find ./MS3 -name '*.mscx' -print >> "${GITHUB_WORKSPACE}/allMS3files.json"
     echo "[" > "${GITHUB_WORKSPACE}/allMS3files.json"
     while IFS= read -r line
     do
       echo "\"${line}\"," >> "${GITHUB_WORKSPACE}/allMS3files.json"
-    done < <(find ./MS3 -name '*.mscx' -print)
+    done < <(find /MS3 -name '*.mscx' -print)
     truncate -s-2 "${GITHUB_WORKSPACE}/allMS3files.json"
     echo "" >> "${GITHUB_WORKSPACE}/allMS3files.json"
     echo "]" >> "${GITHUB_WORKSPACE}/allMS3files.json"
