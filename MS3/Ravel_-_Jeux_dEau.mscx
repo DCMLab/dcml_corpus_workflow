@@ -52780,19 +52780,20 @@
               <tpc>17</tpc>
               </Note>
             </Chord>
-          <Rest>
-            <durationType>quarter</durationType>
-            </Rest>
-          <location>
-            <fractions>-1/8</fractions>
-            </location>
+          <Chord>
+            <durationType>eighth</durationType>
+            <Note>
+              <pitch>75</pitch>
+              <tpc>23</tpc>
+              </Note>
+            </Chord>
           <Harmony>
             <harmonyType>1</harmonyType>
             <name>IV7</name>
             </Harmony>
-          <location>
-            <fractions>1/8</fractions>
-            </location>
+          <Rest>
+            <durationType>eighth</durationType>
+            </Rest>
           <Harmony>
             <harmonyType>1</harmonyType>
             <name>IM7(9)</name>
