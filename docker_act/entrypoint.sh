@@ -154,18 +154,18 @@ main(){
     #current version of ms3 in docker image does not work with this command
     # ms3 workflow_run
     find ./MS3 -name '*.mscx' -print >> "allMS3files.json"
-    echo "[" > "allMS3files.json"
+    echo "[" > "${GITHUB_WORKSPACE}/allMS3files.json"
     while IFS= read -r line
     do
       echo "\"${line}\"," >> "allMS3files.json"
     done < <(find ./MS3 -name '*.mscx' -print)
-    truncate -s-2 "allMS3files.json"
-    echo "" >> "allMS3files.json"
-    echo "]" >> "allMS3files.json"
+    truncate -s-2 "${GITHUB_WORKSPACE}/allMS3files.json"
+    echo "" >> "${GITHUB_WORKSPACE}/allMS3files.json"
+    echo "]" >> "${GITHUB_WORKSPACE}/allMS3files.json"
 
     # ms3 workflow_run
-    cat allMS3files.json
-    ms3 extract -f "allMS3files.json" -M -N -X -D
+    cat "${GITHUB_WORKSPACE}/allMS3files.json"
+    ms3 extract -f "${GITHUB_WORKSPACE}/allMS3files.json" -M -N -X -D
 
     pushing_files "Automatically added TSV files from parse with ms3"
 
