@@ -119,6 +119,7 @@ executing_all_ms3_commands(){
 check_if_a_new_mscx_file(){
   diffres=$(git diff --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
   #finish the action execution if mscx files have not been changed or added
+  echo "$diffres"
   echo "" > "${GITHUB_WORKSPACE}/added_and_modified_files.json"
   while IFS= read -r line
   do

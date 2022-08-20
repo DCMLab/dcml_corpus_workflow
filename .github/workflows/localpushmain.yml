@@ -29,7 +29,7 @@ jobs:
         env:
           Token: "${{ secrets.MS3_BOT_TOKEN }}"
           IsThereAPullRequestOpened: ""
-          commitFrom: ""
+          commitFrom: "${{ github.event.before }}"
           commitTo: ""
           idworkflow: ""
 
