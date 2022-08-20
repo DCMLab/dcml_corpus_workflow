@@ -32972,6 +32972,10 @@
               <pitch>76</pitch>
               <tpc>18</tpc>
               </Note>
+            <Note>
+              <pitch>78</pitch>
+              <tpc>20</tpc>
+              </Note>
             </Chord>
           <Chord>
             <durationType>quarter</durationType>
