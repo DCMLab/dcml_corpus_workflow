@@ -54,9 +54,9 @@ configure_output_to_cancel_this_workflow(){
 #######################################
 get_difference_between_commits(){
     if [[ "$1" == "push" ]] ; then
-      diffres=$(git diff --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
+      diffres=$(git diff --diff-filter=AM --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
     elif [[ "$1" == "pull_request" ]]; then
-      diffres=$(git diff --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
+      diffres=$(git diff --diff-filter=AM --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
     fi
 
     #finish the action execution if mscx files have not been changed or added
@@ -69,10 +69,9 @@ get_difference_between_commits(){
     while IFS= read -r line
     do
        splitLine=($line)
-       if [[ "${splitLine[0]}" == "M" ]] || [[ "${splitLine[0]}" == "A" ]] ; then
-         echo "\"${splitLine[1]}\"," >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
-       fi
+       echo "\"${splitLine[1]}\"," >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
     done < <(printf '%s\n' "$diffres")
+
     truncate -s-2 "${GITHUB_WORKSPACE}/added_and_modified_files.json"
     echo "" >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
     echo "]" >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
@@ -122,21 +121,9 @@ executing_all_ms3_commands(){
 #               this is the last commit of the branch by default
 # Arguments:
 #   None
-abort_if_no_modified_file(){
-  diffres=$(git diff --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
-  echo "" > "${GITHUB_WORKSPACE}/added_and_modified_files.json"
-  while IFS= read -r line
-  do
-     splitLine=($line)
-     if [[ "${splitLine[0]}" == "M" ]] || [[ "${splitLine[0]}" == "A" ]] ; then
-         echo "no_empty" >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
-         break
-     fi
-  done < <(printf '%s\n' "$diffres")
-
-  added_or_modified_file=$( cat "${GITHUB_WORKSPACE}/added_and_modified_files.json")
-
-  if [[ -z $added_or_modified_file ]]; then
+abort_if_not_modified_file(){
+  diffres=$(git diff --diff-filter=AM --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
+  if [[ -z $diffres ]]; then
     echo "No mscx changes were detected, finishing early"
     configure_output_to_cancel_this_workflow
   fi
@@ -150,7 +137,7 @@ main(){
 
   if [[ "$1" == "push_to_main" ]]; then
 
-    abort_if_no_modified_file
+    abort_if_not_modified_file
     #current version of ms3 in docker image does not work with this command
     # ms3 workflow_run
     # find ./MS3 -name '*.mscx' -print >> "${GITHUB_WORKSPACE}/allMS3files.json"
@@ -166,7 +153,6 @@ main(){
     # ms3 workflow_run
     cat "${GITHUB_WORKSPACE}/allMS3files.json"
     ms3 extract -f "${GITHUB_WORKSPACE}/allMS3files.json" -M -N -X -D
-
     pushing_files "Automatically added TSV files from parse with ms3"
 
 
