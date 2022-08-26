@@ -45,7 +45,7 @@ jobs:
           IsThereAPullRequestOpened: "${{ steps.checkpull.outputs.res }}"
           commitFrom: "${{ github.event.before }}"
           commitTo: "${{ github.event.pull_request.head.sha }}"
-          comment: "${{ github.event.head_commit.message }}"
+          comment_msg: "${{ github.event.head_commit.message }}"
 
       - name: clean_workflow_if_skipped
         working-directory: ./main

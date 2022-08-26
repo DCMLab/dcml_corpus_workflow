@@ -150,7 +150,7 @@ main(){
   echo "Executing: cd ${GITHUB_WORKSPACE}/main"
   cd "${GITHUB_WORKSPACE}/main"
   configure_git
-  if [[ "$comment" == "trigger_whole_workflow" ]]; then
+  if [[ "$comment_msg" == "trigger_whole_workflow" ]]; then
 
     #Placeholder for ms3_workflow
     echo "[" > "${GITHUB_WORKSPACE}/allMS3files.json"
