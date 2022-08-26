@@ -89,16 +89,19 @@ get_difference_between_commits(){
 executing_all_ms3_commands(){
   get_difference_between_commits $1
 
+
+  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/added_and_modified_files.json --assertion"
+  if ! ms3 check -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" --assertion; then
+    exit -1
+  fi
+  echo "---------------------------------------------------------------------------------------"
+
   echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/added_and_modified_files.json -M -N -X -D"
   if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -D; then
     exit -1
   fi
   pushing_files "Automatically added TSV files from parse with ms3"
-  echo "---------------------------------------------------------------------------------------"
-  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/added_and_modified_files.json --assertion"
-  if ! ms3 check -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" --assertion; then
-    exit -1
-  fi
+
   echo "---------------------------------------------------------------------------------------"
 
   echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/added_and_modified_files.json"
@@ -162,16 +165,20 @@ main(){
     echo "" >> "${GITHUB_WORKSPACE}/allMS3files.json"
     echo "]" >> "${GITHUB_WORKSPACE}/allMS3files.json"
 
-    # ms3 workflow_run
-    cat "${GITHUB_WORKSPACE}/allMS3files.json"
-    ms3 extract -f "${GITHUB_WORKSPACE}/allMS3files.json" -M -N -X -D
-    pushing_files "Automatically added TSV files from parse with ms3"
 
 
     echo "Executing: ms3 check -f allMS3files.json"
     if ! ms3 check -f "${GITHUB_WORKSPACE}/allMS3files.json"; then
       exit -1
     fi
+
+
+    # ms3 workflow_run
+    cat "${GITHUB_WORKSPACE}/allMS3files.json"
+    ms3 extract -f "${GITHUB_WORKSPACE}/allMS3files.json" -M -N -X -D
+    pushing_files "Automatically added TSV files from parse with ms3"
+
+
 
     echo "Executing: ms3 compare -f allMS3files.json"
     ms3 compare -f "${GITHUB_WORKSPACE}/allMS3files.json"
