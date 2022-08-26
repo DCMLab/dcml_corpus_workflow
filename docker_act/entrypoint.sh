@@ -123,6 +123,7 @@ executing_all_ms3_commands(){
 #   None
 abort_if_not_modified_file(){
   diffres=$(git diff --diff-filter=AM --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
+  echo "$diffres"
   if [[ -z $diffres ]]; then
     echo "No mscx changes were detected, finishing early"
     configure_output_to_cancel_this_workflow
