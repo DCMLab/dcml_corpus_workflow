@@ -1,7 +1,7 @@
 name: label_comparison
 
-
 on:
+  workflow_dispatch:
   push:
     branches-ignore:
       - development
@@ -12,8 +12,8 @@ on:
 
 jobs:
   compare:
+    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]')
     steps:
 
       - name: Checkout
@@ -38,6 +38,7 @@ jobs:
         id: act_docker
         with:
           ms3-command: ${{ github.event_name }}
+          ms3-version: "old"
         env:
           Token: "${{ secrets.MS3_BOT_TOKEN }}"
           IsThereAPullRequestOpened: "${{ steps.checkpull.outputs.res }}"

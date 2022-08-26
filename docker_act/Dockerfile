@@ -1,5 +1,5 @@
 # Container image that runs your code
-FROM marcelmoran/dockerms3:latest
+FROM marcelmoran/dockerms3:beta
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x entrypoint.sh
