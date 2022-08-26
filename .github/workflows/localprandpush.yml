@@ -12,7 +12,7 @@ on:
 
 jobs:
   compare:
-    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]') || github.event_name == 'workflow_dispatch'
+    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]') || github.event.head_commit.message == 'trigger_whole_workflow'
     runs-on: ubuntu-latest
     steps:
 
@@ -45,7 +45,7 @@ jobs:
           IsThereAPullRequestOpened: "${{ steps.checkpull.outputs.res }}"
           commitFrom: "${{ github.event.before }}"
           commitTo: "${{ github.event.pull_request.head.sha }}"
-          idworkflow: "${{ github.run_id }}"
+          comment: "${{ github.event.head_commit.message }}"
 
       - name: clean_workflow_if_skipped
         working-directory: ./main
