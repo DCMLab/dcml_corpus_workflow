@@ -150,15 +150,36 @@ main(){
   cd "${GITHUB_WORKSPACE}/main"
   configure_git
   if [[ "$1" == "workflow_dispatch" ]]; then
-    
-    echo "Success triggering"
-    echo "Success triggering"
-    echo "Success triggering"
-    echo "Success triggering"
-    echo "Success triggering"
-    echo "Success triggering"
-    echo "Success triggering"
-    echo "Success triggering"
+
+    #Placeholder for ms3_workflow
+    echo "[" > "${GITHUB_WORKSPACE}/allMS3files.json"
+    while IFS= read -r line
+    do
+      echo "\"${line:2}\"," >> "${GITHUB_WORKSPACE}/allMS3files.json"
+    done < <(find ./MS3 -name '*.mscx' -print)
+    truncate -s-2 "${GITHUB_WORKSPACE}/allMS3files.json"
+    echo "" >> "${GITHUB_WORKSPACE}/allMS3files.json"
+    echo "]" >> "${GITHUB_WORKSPACE}/allMS3files.json"
+
+    # ms3 workflow_run
+    cat "${GITHUB_WORKSPACE}/allMS3files.json"
+    ms3 extract -f "${GITHUB_WORKSPACE}/allMS3files.json" -M -N -X -D
+    pushing_files "Automatically added TSV files from parse with ms3"
+
+
+    echo "Executing: ms3 check -f allMS3files.json"
+    if ! ms3 check -f "${GITHUB_WORKSPACE}/allMS3files.json"; then
+      exit -1
+    fi
+
+    echo "Executing: ms3 compare -f allMS3files.json"
+    ms3 compare -f "${GITHUB_WORKSPACE}/allMS3files.json"
+
+    echo "---------------------------------------------------------------------------------------"
+    git config --global user.name "github-actions[bot]"
+    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    pushing_files "Added comparison files for review"
+
 
   elif [[ "$1" == "push_to_main" ]]; then
 
