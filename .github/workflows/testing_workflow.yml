@@ -27,7 +27,8 @@ jobs:
           git config --global user.email dcml.annotators@epfl.ch
           git config --global user.token ${{ secrets.MS3_BOT_TOKEN }}
           git describe --tags
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: update workflow
         working-directory: ./main
         continue-on-error: true
@@ -36,6 +37,9 @@ jobs:
           echo "$version_num"
           sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$version_num#" "update_modules/testing_workflow_helper/.github/updateversion.yml"
           cat update_modules/testing_workflow_helper/.github/updateversion.yml
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # - name: Clean test
       #   working-directory: ./main
       #   run: |
