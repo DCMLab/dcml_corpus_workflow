@@ -7,7 +7,6 @@ on:
 
 jobs:
   perform_update_of_submodules:
-    if: github.event.pusher.name != 'ms3-bot'
     runs-on: ubuntu-latest
 
     steps:
