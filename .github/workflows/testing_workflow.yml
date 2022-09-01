@@ -1,8 +1,7 @@
 name: testing_workflow
 
 on:
-  release:
-    types: [published, edited, created]
+  push:
 
 
 jobs:
@@ -17,20 +16,15 @@ jobs:
           path: main
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Clean test
-      #   working-directory: ./main
-      #   continue-on-error: true
-      #   run: |
-      #     ls -a
-      #     shopt -s extglob
-      #     rm -rf !(.git|.github|script.sh|updatecorpuswk.sh|testing_workflow_helper|README.md)
-      #     ls -a
-      #     git config --global user.name "ms3-bot"
-      #     git config --global user.email dcml.annotators@epfl.ch
-      #     git config --global user.token ${{ secrets.MS3_BOT_TOKEN }}
-      #     git add -A
-      #     git commit -m "clean state"
-      #     git push
+      - name: Clean test
+        working-directory: ./main
+        continue-on-error: true
+        run: |
+          ls -a
+          git config --global user.name "ms3-bot"
+          git config --global user.email dcml.annotators@epfl.ch
+          git config --global user.token ${{ secrets.MS3_BOT_TOKEN }}
+          git describe --tags 
 
       - name: update workflow
         working-directory: ./main
