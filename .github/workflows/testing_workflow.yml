@@ -2,7 +2,6 @@ name: testing_workflow
 
 on:
   release:
-    types: [published, edited, created]
 
 
 jobs:
