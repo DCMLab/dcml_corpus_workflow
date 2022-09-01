@@ -1,0 +1,116 @@
+name: prpushd
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - development
+      - main
+  pull_request:
+
+
+jobs:
+  compare:
+    if: >
+     (github.actor != 'ms3-bot' && github.actor != 'marcel41')
+     || (github.event.pusher.name == 'github-actions[bot]' && github.event == 'pull_request')
+     || github.event.head_commit.message == 'trigger_whole_workflow'
+     || github.event.pull_request.title == 'PR to check for errors'
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: main
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.MS3_BOT_TOKEN }}
+
+
+      - name: Check if pull
+        id: checkpull
+        working-directory: ./main
+        continue-on-error: true
+        run: |
+           gh pr view --json state -q .[]
+           echo ::set-output name=res::$(echo $(gh pr view --json state -q .[]))
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Action_to_run_docker
+        uses: DCMLab/dcml_corpus_workflow@v2.1.2 # Uses an action in the root directory
+        id: act_docker
+        with:
+          ms3-command: ${{ github.event_name }}
+          ms3-version: "old"
+        env:
+          Token: "${{ secrets.MS3_BOT_TOKEN }}"
+          IsThereAPullRequestOpened: "${{ steps.checkpull.outputs.res }}"
+          commitFrom: "${{ github.event.before }}"
+          commitTo: "${{ github.event.pull_request.head.sha }}"
+          comment_msg: "${{ github.event.head_commit.message }}"
+          pr_title: "${{ github.event.pull_request.title }}"
+
+      - name: clean_workflow_if_skipped
+        working-directory: ./main
+        if: (steps.act_docker.outputs.skipped == 'true')
+        run: |
+           gh run cancel ${{ github.run_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+      # - name: Check if pull
+      #   run: |
+      #      echo ${{ steps.checkpull.outputs.res }}
+      #
+      # - name: pull_request
+      #   if: (steps.checkpull.outputs.res == 'OPEN' && github.event_name=='pull_request')
+      #   run: |
+      #      echo ${{ steps.checkpull.outputs.res }}
+      #
+      # - name: push
+      #   if: (steps.checkpull.outputs.res != 'OPEN' && github.event_name=='push')
+      #   run: |
+      #      echo ${{ steps.checkpull.outputs.res }}
+
+
+
+      # - name: Checkout PR
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: main
+      #     fetch-depth: 0
+      #     ref: ${{ github.event.pull_request.head.ref }}
+      #
+      # - uses: lots0logs/gh-action-get-changed-files@2.1.4
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Display changed files
+      #   run: |
+      #      cat ${HOME}/files_modified.json
+      #      cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
+      #
+      # - name: Action_to_run_docker
+      #   uses: ./main # Uses an action in the root directory
+      #   id: act_docker
+      #   with:
+      #     ms3-command: ${{ github.event_name }}
+      #   env:
+      #     Token: "${{ secrets.MS3_BOT_TOKEN }}"
+      #     commitFrom: "${{ github.event.before }}"
+      #     commitTo: "${{ github.event.pull_request.head.sha }}"
+      # - name: Commit comparison files
+      #   working-directory: ./main
+      #   continue-on-error: true
+      #   run: |
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      #     git add -A
+      #     git commit -m "Added comparison files for review"
+      # - name: Push files
+      #   working-directory: ./main
+      #   continue-on-error: true
+      #   run: |
+      #     git push

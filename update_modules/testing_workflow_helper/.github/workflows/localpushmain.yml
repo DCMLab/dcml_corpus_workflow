@@ -1,0 +1,72 @@
+name: local_testing
+
+on:
+  push:
+    branches:
+      - development
+      - main
+jobs:
+  compare:
+    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]')
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: main
+          fetch-depth: 0
+          token: ${{ secrets.MS3_BOT_TOKEN }}
+
+
+      - name: Action_to_run_docker
+        uses: DCMLab/dcml_corpus_workflow@v2.1.2 # Uses an action in the root directory
+        id: act_docker
+        with:
+          ms3-command: "push_to_main"
+          ms3-version: "old"
+        env:
+          Token: "${{ secrets.MS3_BOT_TOKEN }}"
+          IsThereAPullRequestOpened: ""
+          commitFrom: "${{ github.event.before }}"
+          commitTo: ""
+          comment_msg: ""
+
+#       - main
+#       - testing_branch
+#       - child-dev
+# jobs:
+#   perform_extract:
+#     if: (github.event.pusher.name != 'ms3-bot' && github.event.pusher.name != 'marcel41')
+#     runs-on: ubuntu-latest
+#
+#     steps:
+#       - name: Checkout main
+#         uses: actions/checkout@v2
+#         with:
+#           path: main
+#           fetch-depth: 0
+#           token: ${{ secrets.MS3_BOT_TOKEN }}
+#
+#       - uses: lots0logs/gh-action-get-changed-files@2.1.4
+#         id: modified
+#         with:
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#
+#       - name: Display changed and added files
+#         continue-on-error: true
+#         run: |
+#           cat ${HOME}/files_modified.json
+#           cat ${HOME}/files_added.json
+#           cp ${HOME}/files_modified.json ${GITHUB_WORKSPACE}/
+#           cp ${HOME}/files_added.json ${GITHUB_WORKSPACE}/
+#
+#
+#       - name: Action_to_run_docker
+#         uses: ./main # Uses an action in the root directory
+#         id: act_docker
+#         with:
+#           ms3-command: 'push_to_main'
+#         env:
+#           Token: "${{ secrets.MS3_BOT_TOKEN }}"
+#           commitFrom: "${{ github.event.before }}"

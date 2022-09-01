@@ -1,0 +1,17 @@
+name: prpushd
+
+on:
+  pull_request:
+      - name: Action_to_run_docker
+        uses: uses: DCMLab/dcml_corpus_workflow@lol
+        id: act_docker
+        with:
+          ms3-command: ${{ github.event_name }}
+          ms3-version: "old"
+        env:
+          Token: "${{ secrets.MS3_BOT_TOKEN }}"
+          IsThereAPullRequestOpened: "${{ steps.checkpull.outputs.res }}"
+          commitFrom: "${{ github.event.before }}"
+          commitTo: "${{ github.event.pull_request.head.sha }}"
+          comment_msg: "${{ github.event.head_commit.message }}"
+          pr_title: "${{ github.event.pull_request.title }}"
