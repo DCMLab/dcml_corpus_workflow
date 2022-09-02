@@ -47,7 +47,7 @@ jobs:
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Download .gitmodules
         working-directory: ./main
         run: |
@@ -57,10 +57,10 @@ jobs:
           cat .gitmodules
 
       - name: Update submodules and trigger workflows
-        working-directory: ./main
+        working-directory: ./main/update_modules/
         run: |
-          chmod +x updatecorpuswk.sh
-          ./updatecorpuswk.sh
+          chmod +x update_corpus.sh
+          ./update_corpus.sh
         env:
           GITHUB_TOKEN: ${{ secrets.MS3_BOT_TOKEN }}
           token: ${{ secrets.MS3_BOT_TOKEN }}
