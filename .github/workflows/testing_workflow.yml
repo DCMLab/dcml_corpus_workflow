@@ -28,15 +28,16 @@ jobs:
 
       - name: run workflow in a new branch
         working-directory: ./main
-        continue-on-error: true
+        continue-on-error: false
         run: |
-          git checkout -b testing_branch
-          git push --set-upstream origin testing_branch
+          git checkout -b update_modules
+          git push --set-upstream origin update_modules
           version_num=$(echo $(gh release view --json tagName -q .[]))
           echo "$version_num"
-          sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$version_num#" "update_modules/testing_workflow_helper/.github/updateversion.yml"
-          cat update_modules/testing_workflow_helper/.github/updateversion.yml
+          sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$version_num#" "update_modules/testing_workflow_helper/.github/workflows/localpr.yml"
+          sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$version_num#" "update_modules/testing_workflow_helper/.github/workflows/localpushmain.yml"
           shopt -s extglob
+          rm -rf !(.git|script.sh|update_modules|README.md)
           ls -a
 
           git add .
