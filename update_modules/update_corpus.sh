@@ -46,7 +46,7 @@ for name in "${submodules[@]}"; do
     echo "garbage" > idrunner.txt
     while IFS= read -r line
     do
-      if [[ $line == *"test extract"* ]]; then
+      if [[ $line == *"trigger_whole_workflow"* ]]; then
         echo $line
         stringarray=($line)
         if [[ "${stringarray[-1]}" == *"0m" ]]; then
@@ -78,7 +78,7 @@ for name in "${submodules[@]}"; do
       echo "Error: localpr was not triggered"
       exit 1
     fi
-    
+
     git pull
     gh pr create --title "PR to check for errors" --body "This pull request allows reviewers to check for errors before merging to main branch" -B main
     break
