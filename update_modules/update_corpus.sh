@@ -40,10 +40,46 @@ for name in "${submodules[@]}"; do
     git commit -m "trigger_whole_workflow"
     git push
 
-    sleep 80s # avoid encountering limit
+    sleep 5s
+    gh run list --workflow localpr.yml -L 3 -b testing_branch > res.txt
 
+    echo "garbage" > idrunner.txt
+    while IFS= read -r line
+    do
+      if [[ $line == *"test extract"* ]]; then
+        echo $line
+        stringarray=($line)
+        if [[ "${stringarray[-1]}" == *"0m" ]]; then
+          echo "${stringarray[-3]}" > idrunner.txt
+          break
+        fi
+      fi
+    done < res.txt
+
+    idrunner=$(cat "idrunner.txt")
+    echo $idrunner
+    runnerdone=$(gh run view $idrunner --json status)
+
+    if [[ ! $idrunner == "garbage" ]]; then
+      #statements
+      while [[ ! "$runnerdone" == *"completed"* ]]
+      do
+        sleep 10s # avoid limit
+                  # api rate 80 calls per minute
+        runnerdone=$(gh run view $idrunner --json status)
+      done
+
+      gh run view "${stringarray[-3]}" --log > res.txt
+      if ! git grep --all-match --no-index -q -e "Executing: ms3 check" "res.txt"; then
+        echo "Error: localpr was called but workflow was not called"
+        exit 1
+      fi
+    else
+      echo "Error: localpr was not triggered"
+      exit 1
+    fi
+    
     git pull
-
     gh pr create --title "PR to check for errors" --body "This pull request allows reviewers to check for errors before merging to main branch" -B main
     break
 done
