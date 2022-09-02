@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - development
-      - main
       - testing_branch
 
 
