@@ -37,8 +37,12 @@ jobs:
           sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$version_num#" "update_modules/testing_workflow_helper/.github/updateversion.yml"
           cat update_modules/testing_workflow_helper/.github/updateversion.yml
           shopt -s extglob
-          rm -rf !(.git|script.sh|updatecorpuswk.sh|testing_workflow_helper|README.md)
           ls -a
+
+          git add .
+          git commit -m "setup done"
+          git push
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
