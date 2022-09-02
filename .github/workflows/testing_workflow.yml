@@ -37,7 +37,8 @@ jobs:
           sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$version_num#" "update_modules/testing_workflow_helper/.github/workflows/localpr.yml"
           sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$version_num#" "update_modules/testing_workflow_helper/.github/workflows/localpushmain.yml"
           shopt -s extglob
-          rm -rf !(update_modules|README.md)
+          rm -rf !(update_modules|README.md
+          rm -rf .github/*
           ls -a
 
           git add .
