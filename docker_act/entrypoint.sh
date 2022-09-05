@@ -161,67 +161,37 @@ main(){
   if [[ "$comment_msg" == "trigger_workflow" ]] || [[ "$pr_title" == "PR to check for errors" ]]; then
 
     #Placeholder for ms3_workflow
-    echo "[" > "${GITHUB_WORKSPACE}/allMS3files.json"
-    while IFS= read -r line
-    do
-      echo "\"${line:2}\"," >> "${GITHUB_WORKSPACE}/allMS3files.json"
-    done < <(find ./MS3 -name '*.mscx' -print)
-    truncate -s-2 "${GITHUB_WORKSPACE}/allMS3files.json"
-    echo "" >> "${GITHUB_WORKSPACE}/allMS3files.json"
-    echo "]" >> "${GITHUB_WORKSPACE}/allMS3files.json"
-
-
-
-    echo "Executing: ms3 check -f allMS3files.json"
-    if ! ms3 check -f "${GITHUB_WORKSPACE}/allMS3files.json"; then
+    echo "Executing: ms3 check"
+    if ! ms3 check; then
       exit -1
     fi
-
-
     # ms3 workflow_run
-    cat "${GITHUB_WORKSPACE}/allMS3files.json"
-    ms3 extract -f "${GITHUB_WORKSPACE}/allMS3files.json" -M -N -X -D
+    ms3 extract -M -N -X -D
     pushing_files "Automatically added TSV files from parse with ms3"
 
-
-
-    echo "Executing: ms3 compare -f allMS3files.json"
-    ms3 compare -f "${GITHUB_WORKSPACE}/allMS3files.json"
+    echo "Executing: ms3 compare"
+    ms3 compare
 
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     pushing_files "Added comparison files for review"
 
-
   elif [[ "$1" == "push_to_main" ]]; then
 
     abort_if_not_modified_file
     #current version of ms3 in docker image does not work with this command
     # ms3 workflow_run
-    # find ./MS3 -name '*.mscx' -print >> "${GITHUB_WORKSPACE}/allMS3files.json"
-    echo "[" > "${GITHUB_WORKSPACE}/allMS3files.json"
-    while IFS= read -r line
-    do
-      echo "\"${line:2}\"," >> "${GITHUB_WORKSPACE}/allMS3files.json"
-    done < <(find ./MS3 -name '*.mscx' -print)
-    truncate -s-2 "${GITHUB_WORKSPACE}/allMS3files.json"
-    echo "" >> "${GITHUB_WORKSPACE}/allMS3files.json"
-    echo "]" >> "${GITHUB_WORKSPACE}/allMS3files.json"
-
-    # ms3 workflow_run
-    cat "${GITHUB_WORKSPACE}/allMS3files.json"
-    ms3 extract -f "${GITHUB_WORKSPACE}/allMS3files.json" -M -N -X -D
+    ms3 extract -M -N -X -D
     pushing_files "Automatically added TSV files from parse with ms3"
 
-
-    echo "Executing: ms3 check -f allMS3files.json"
-    if ! ms3 check -f "${GITHUB_WORKSPACE}/allMS3files.json"; then
+    echo "Executing: ms3 check"
+    if ! ms3 check; then
       exit -1
     fi
 
-    echo "Executing: ms3 compare -f allMS3files.json"
-    ms3 compare -f "${GITHUB_WORKSPACE}/allMS3files.json"
+    echo "Executing: ms3 compare"
+    ms3 compare
 
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
