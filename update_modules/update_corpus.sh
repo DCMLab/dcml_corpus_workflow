@@ -33,7 +33,8 @@ for name in "${submodules[@]}"; do
     git commit -m "trigger_workflow"
     git push
 
-    sleep 5s #allow some time before asking for the current executed actions
+    #allow some time before asking for the current executed actions
+    sleep 5s
     gh run list --workflow localpr.yml -L 3 -b testing_branch > res.txt
 
     echo "garbage" > idrunner.txt
