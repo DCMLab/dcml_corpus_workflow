@@ -166,6 +166,7 @@ main(){
       exit -1
     fi
     # ms3 workflow_run
+    echo "Executing: ms3 extract"
     ms3 extract -M -N -X -D
     pushing_files "Automatically added TSV files from parse with ms3"
 
@@ -182,6 +183,7 @@ main(){
     abort_if_not_modified_file
     #current version of ms3 in docker image does not work with this command
     # ms3 workflow_run
+    echo "Executing: ms3 extract"
     ms3 extract -M -N -X -D
     pushing_files "Automatically added TSV files from parse with ms3"
 
