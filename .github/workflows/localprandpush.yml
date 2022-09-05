@@ -12,7 +12,7 @@ on:
 
 jobs:
   compare:
-    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]') || github.event.head_commit.message == 'trigger_whole_workflow'
+    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]') || github.event.head_commit.message == 'trigger_workflow'
     runs-on: ubuntu-latest
     steps:
 

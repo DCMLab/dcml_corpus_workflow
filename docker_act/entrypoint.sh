@@ -133,7 +133,11 @@ abort_if_not_modified_file(){
   fi
 }
 
-
+#######################################
+# Modify python libraries to choose different version of ms3 installed in docker
+# Arguments:
+#   $1 allows the user to choose the most recent version of ms3 or and old version
+#######################################
 set_up_venv(){
 
   if [[ "$1" != "new" ]] && [[ "$1" != "old" ]]; then
@@ -147,13 +151,14 @@ set_up_venv(){
   pip show ms3
   echo "-------------------------------------"
 }
+
 main(){
-  echo "Argument being passed: $1 and $2"
+  echo "Arguments being passed: $1 and $2"
   set_up_venv $2
   echo "Executing: cd ${GITHUB_WORKSPACE}/main"
   cd "${GITHUB_WORKSPACE}/main"
   configure_git
-  if [[ "$comment_msg" == "trigger_whole_workflow" ]] || [[ "$pr_title" == "PR to check for errors" ]]; then
+  if [[ "$comment_msg" == "trigger_workflow" ]] || [[ "$pr_title" == "PR to check for errors" ]]; then
 
     #Placeholder for ms3_workflow
     echo "[" > "${GITHUB_WORKSPACE}/allMS3files.json"

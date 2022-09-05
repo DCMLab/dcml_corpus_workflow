@@ -1,15 +1,8 @@
 #!/bin/bash
 # Ref https://stackoverflow.com/questions/72178053/copy-git-submodules-from-one-repo-to-another
-
 cd "${GITHUB_WORKSPACE}/main"
 ls -a
 submodules=( $(git config -f "${GITHUB_WORKSPACE}/main/.gitmodules" --name-only --get-regexp 'submodule\..*\.path' | cut -f2 -d.) )
-for name in "${submodules[@]}"; do
-  path="$(git config -f .gitmodules --get submodule."$name".path)"
-  echo "$path" >> ignorefiles.txt
-done
-
-
 
 for name in "${submodules[@]}"; do
     path="$(git config -f .gitmodules --get submodule."$name".path)"
@@ -37,16 +30,16 @@ for name in "${submodules[@]}"; do
     cd "${GITHUB_WORKSPACE}/main/$path"
     cp -r "${GITHUB_WORKSPACE}/main/update_modules/testing_workflow_helper/.github/" "${GITHUB_WORKSPACE}/main/$path/"
     git add .
-    git commit -m "trigger_whole_workflow"
+    git commit -m "trigger_workflow"
     git push
 
-    sleep 5s
+    sleep 5s #allow some time before asking for the current executed actions
     gh run list --workflow localpr.yml -L 3 -b testing_branch > res.txt
 
     echo "garbage" > idrunner.txt
     while IFS= read -r line
     do
-      if [[ $line == *"trigger_whole_workflow"* ]]; then
+      if [[ $line == *"trigger_workflow"* ]]; then
         echo $line
         stringarray=($line)
         if [[ "${stringarray[-1]}" == *"0m" ]]; then
@@ -61,7 +54,6 @@ for name in "${submodules[@]}"; do
     runnerdone=$(gh run view $idrunner --json status)
 
     if [[ ! $idrunner == "garbage" ]]; then
-      #statements
       while [[ ! "$runnerdone" == *"completed"* ]]
       do
         sleep 10s # avoid limit
@@ -71,7 +63,7 @@ for name in "${submodules[@]}"; do
 
       gh run view "${stringarray[-3]}" --log > res.txt
       if ! git grep --all-match --no-index -q -e "Executing: ms3 check" "res.txt"; then
-        echo "Error: localpr was called but workflow was not called"
+        echo "Error: localpr ran but its workflow-log is not correct"
         exit 1
       fi
     else

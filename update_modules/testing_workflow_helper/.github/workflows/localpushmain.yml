@@ -3,11 +3,10 @@ name: local_testing
 on:
   push:
     branches:
-      - development
       - main
 jobs:
   compare:
-    if: (github.actor != 'ms3-bot' && github.actor != 'marcel41' && github.event.pusher.name != 'github-actions[bot]')
+    if: (github.actor != 'ms3-bot' && github.event.pusher.name != 'github-actions[bot]')
     runs-on: ubuntu-latest
     steps:
 
@@ -31,3 +30,4 @@ jobs:
           commitFrom: "${{ github.event.before }}"
           commitTo: ""
           comment_msg: ""
+          pr_title: ""

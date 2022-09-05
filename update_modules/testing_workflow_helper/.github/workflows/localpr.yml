@@ -1,10 +1,8 @@
 name: prpushd
 
 on:
-  workflow_dispatch:
   push:
     branches-ignore:
-      - development
       - main
   pull_request:
 
@@ -12,9 +10,8 @@ on:
 jobs:
   compare:
     if: >
-     (github.actor != 'ms3-bot' && github.actor != 'marcel41')
      || (github.event.pusher.name == 'github-actions[bot]' && github.event == 'pull_request')
-     || github.event.head_commit.message == 'trigger_whole_workflow'
+     || github.event.head_commit.message == 'trigger_workflow'
      || github.event.pull_request.title == 'PR to check for errors'
     runs-on: ubuntu-latest
     steps:
