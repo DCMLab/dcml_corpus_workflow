@@ -6,6 +6,9 @@ submodules=( $(git config -f "${GITHUB_WORKSPACE}/main/.gitmodules" --name-only 
 
 echo "$1"
 echo "$submodules"
+for name in "${submodules[@]}"; do
+  echo $name
+done
 # for name in "${submodules[@]}"; do
 #     path="$(git config -f .gitmodules --get submodule."$name".path)"
 #     url="$(git config -f .gitmodules --get submodule."$name".url)"
