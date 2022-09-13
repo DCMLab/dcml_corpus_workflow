@@ -4,6 +4,7 @@ cd "${GITHUB_WORKSPACE}/main"
 ls -a
 submodules=( $(git config -f "${GITHUB_WORKSPACE}/main/.gitmodules" --name-only --get-regexp 'submodule\..*\.path' | cut -f2 -d.) )
 
+echo "$1"
 for name in "${submodules[@]}"; do
     path="$(git config -f .gitmodules --get submodule."$name".path)"
     url="$(git config -f .gitmodules --get submodule."$name".url)"
@@ -74,5 +75,8 @@ for name in "${submodules[@]}"; do
 
     git pull
     gh pr create --title "PR to check for errors" --body "This pull request allows reviewers to check for errors before merging to main branch" -B main
-    break
+
+    if [[ "$1" == "test" ]]; then
+      break
+    fi
 done
