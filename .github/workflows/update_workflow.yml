@@ -45,6 +45,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Download .gitmodules test
+        working-directory: ./main
+        run: |
+          curl -s https://"${{secrets.MS3_BOT_TOKEN}}"@raw.githubusercontent.com/DCMLab/unittest_metacorpus/ms3_tests/.gitmodules
+          cat .gitmodules
+
       - name: Download .gitmodules
         working-directory: ./main
         run: |
@@ -53,11 +59,11 @@ jobs:
             https://api.github.com/repos/DCMLab/unittest_metacorpus/contents/.gitmodules?ref=ms3_tests > .gitmodules
           cat .gitmodules
 
-      - name: Update submodules and trigger workflows
-        working-directory: ./main/update_modules/
-        run: |
-          chmod +x update_corpus.sh
-          ./update_corpus.sh test
-        env:
-          GITHUB_TOKEN: ${{ secrets.MS3_BOT_TOKEN }}
-          token: ${{ secrets.MS3_BOT_TOKEN }}
+      # - name: Update submodules and trigger workflows
+      #   working-directory: ./main/update_modules/
+      #   run: |
+      #     chmod +x update_corpus.sh
+      #     ./update_corpus.sh test
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.MS3_BOT_TOKEN }}
+      #     token: ${{ secrets.MS3_BOT_TOKEN }}
