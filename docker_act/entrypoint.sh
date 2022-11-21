@@ -202,6 +202,7 @@ main(){
 
 
   elif [[ "$1" == "pull_request" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
+    #statements to differentiate between either PR or pull request being triggered
     executing_all_ms3_commands $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
     executing_all_ms3_commands $1
