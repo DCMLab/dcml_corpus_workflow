@@ -97,7 +97,7 @@ executing_all_ms3_commands(){
     regexFiles=($regexFiles$line)
   done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
 
-  echo "Executing ms3 review in with regex $regexFiles"
+  echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
     exit -1
   fi
@@ -122,7 +122,7 @@ pull_request_workflow(){
     regexFiles=($regexFiles$line)
   done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
 
-  echo "Executing ms3 review in with regex $regexFiles"
+  echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D --fail -i $regexFiles -c origin/$GITHUB_BASE_REF; then
     exit -1
   fi
@@ -178,7 +178,10 @@ main(){
   configure_git
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
     echo "Executing: ms3 review"
-    ms3 review -M -N -X -D --fail
+    if ! ms3 review -M -N -X -D --fail; then
+      exit -1
+    fi
+
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -188,7 +191,9 @@ main(){
 
     abort_if_not_modified_file
     echo "Executing: ms3 review"
-    ms3 review -M -N -X -D --fail
+    if ! ms3 review -M -N -X -D --fail; then
+      exit -1
+    fi
     echo "---------------------------------------------------------------------------------------"
     pushing_files "Automatically added TSV files from parse with ms3"
     git config --global user.name "github-actions[bot]"
