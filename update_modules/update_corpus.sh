@@ -20,9 +20,9 @@ for name in "${submodules[@]}"; do
     cd "${GITHUB_WORKSPACE}/main/$path"
 
     git branch
-    git push origin --delete testing_branch
-    git checkout -b testing_branch
-    git push --set-upstream origin testing_branch
+    git push origin --delete workflow_update
+    git checkout -b workflow_update
+    git push --set-upstream origin workflow_update
     ls -a
     rm -rf "${GITHUB_WORKSPACE}/main/$path/.github/workflows"
     cd "${GITHUB_WORKSPACE}/main"
@@ -35,7 +35,7 @@ for name in "${submodules[@]}"; do
 
     #allow some time before asking for the current executed actions
     sleep 5s
-    gh run list --workflow localpr.yml -L 3 -b testing_branch > res.txt
+    gh run list --workflow localpr.yml -L 3 -b workflow_update > res.txt
 
     echo "garbage" > idrunner.txt
     while IFS= read -r line
