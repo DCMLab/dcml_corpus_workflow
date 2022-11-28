@@ -54,7 +54,9 @@ configure_output_to_cancel_this_workflow(){
 #######################################
 get_difference_between_commits(){
     if [[ "$1" == "push" ]] ; then
-      diffres=$(git diff --diff-filter=AM --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
+
+      latestHashCommitInMain=$(git log -n 1 main --pretty=format:"%H")
+      diffres=$(git diff --diff-filter=AM --name-status $latestHashCommitInMain $GITHUB_SHA | grep -E '*.mscx')
     elif [[ "$1" == "pull_request" ]]; then
       diffres=$(git diff --diff-filter=AM --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
     fi
@@ -68,6 +70,8 @@ get_difference_between_commits(){
     while IFS= read -r line
     do
       splitLine=($line)
+      # spliting lines by separator
+      # https://stackoverflow.com/questions/46660224/split-string-using-ifs-example
       IFS='/' read -ra ADDR <<< "${splitLine[1]}"
       ARRAY=()
       for i in "${ADDR[@]}"; do
