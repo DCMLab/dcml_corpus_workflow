@@ -178,7 +178,7 @@ main(){
   configure_git
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
 
-    executing_all_ms3_commands $1
+    ms3 review -M -N -X -D --fail
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
