@@ -96,7 +96,7 @@ executing_all_ms3_commands(){
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
   done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
-
+  echo "Push request another branch:"
   echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
     exit -1
@@ -121,7 +121,7 @@ pull_request_workflow(){
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
   done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
-
+  echo "Pull request:"
   echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D --fail -i $regexFiles -c origin/$GITHUB_BASE_REF; then
     exit -1
