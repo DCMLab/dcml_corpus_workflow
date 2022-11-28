@@ -50,7 +50,7 @@ configure_output_to_cancel_this_workflow(){
 # Arguments:
 #   $1 to choose between PR or Push
 # Outputs:
-#  added_and_modified_files.json
+#  added_and_modified_files.txt
 #######################################
 get_difference_between_commits(){
     if [[ "$1" == "push" ]] ; then
@@ -65,18 +65,21 @@ get_difference_between_commits(){
       configure_output_to_cancel_this_workflow
     fi
 
-    echo "[" > "${GITHUB_WORKSPACE}/added_and_modified_files.json"
     while IFS= read -r line
     do
-       splitLine=($line)
-       echo "\"${splitLine[1]}\"," >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
+      splitLine=($line)
+      IFS='/' read -ra ADDR <<< "${splitLine[1]}"
+      ARRAY=()
+      for i in "${ADDR[@]}"; do
+        ARRAY+=($(echo $i|sed -r 's#[.]+#\\.#g'))
+      done
+      echo "${ARRAY[-1]}|" >> "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
     done < <(printf '%s\n' "$diffres")
 
-    truncate -s-2 "${GITHUB_WORKSPACE}/added_and_modified_files.json"
-    echo "" >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
-    echo "]" >> "${GITHUB_WORKSPACE}/added_and_modified_files.json"
+    truncate -s-2 "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
+    echo "" >> "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
 
-    cat "${GITHUB_WORKSPACE}/added_and_modified_files.json"
+    cat "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
 
 }
 #######################################
@@ -89,30 +92,44 @@ get_difference_between_commits(){
 executing_all_ms3_commands(){
   get_difference_between_commits $1
 
+  regexFiles=""
+  while IFS= read -r line; do
+    regexFiles=($regexFiles$line)
+  done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
 
-  echo "Executing: ms3 check -f ${GITHUB_WORKSPACE}/added_and_modified_files.json --assertion"
-  if ! ms3 check -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" --assertion; then
-    exit -1
-  fi
-  echo "---------------------------------------------------------------------------------------"
-
-  echo "Executing: ms3 extract -f ${GITHUB_WORKSPACE}/added_and_modified_files.json -M -N -X -D"
-  if ! ms3 extract -f "${GITHUB_WORKSPACE}/added_and_modified_files.json" -M -N -D; then
-    exit -1
-  fi
-  pushing_files "Automatically added TSV files from parse with ms3"
-
-  echo "---------------------------------------------------------------------------------------"
-
-  echo "Executing: ms3 compare -f ${GITHUB_WORKSPACE}/added_and_modified_files.json"
-  if ! ms3 compare -f "${GITHUB_WORKSPACE}/added_and_modified_files.json"; then
+  echo "Executing ms3 review in with regex $regexFiles"
+  if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
     exit -1
   fi
   echo "---------------------------------------------------------------------------------------"
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   pushing_files "Added comparison files for review"
+}
+#######################################
+# Executing  ms3 extract, ms3 check and ms3 compare  to mscx files commited/added
+# similar to executing all ms3_commands passing the flag commit
+# Globals:
+#   GITHUB_WORKSPACE: default path for checkout action
+# Arguments:
+#   $1 allows to differentiate between push and pull_request
+#######################################
+pull_request_workflow(){
+  get_difference_between_commits $1
 
+  regexFiles=""
+  while IFS= read -r line; do
+    regexFiles=($regexFiles$line)
+  done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
+
+  echo "Executing ms3 review in with regex $regexFiles"
+  if ! ms3 review -M -N -X -D --fail -i $regexFiles -c origin/$GITHUB_BASE_REF; then
+    exit -1
+  fi
+  echo "---------------------------------------------------------------------------------------"
+  git config --global user.name "github-actions[bot]"
+  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  pushing_files "Added comparison files for review"
 }
 
 #######################################
@@ -153,26 +170,15 @@ set_up_venv(){
 }
 
 main(){
-  echo "Arguments being passed: $1 and $2"
-  set_up_venv $2
+  # echo "Arguments being passed: $1 and $2"
+  echo "Arguments being passed: $1 and $comment_msg"
+  # set_up_venv $2
   echo "Executing: cd ${GITHUB_WORKSPACE}/main"
   cd "${GITHUB_WORKSPACE}/main"
   configure_git
-  if [[ "$comment_msg" == "trigger_workflow" ]] || [[ "$pr_title" == "PR to check for errors" ]]; then
+  if [[ "$comment_msg" == "trigger_workflow" ]]; then
 
-    #Placeholder for ms3_workflow
-    echo "Executing: ms3 check"
-    if ! ms3 check; then
-      exit -1
-    fi
-    # ms3 workflow_run
-    echo "Executing: ms3 extract"
-    ms3 extract -M -N -X -D
-    pushing_files "Automatically added TSV files from parse with ms3"
-
-    echo "Executing: ms3 compare"
-    ms3 compare
-
+    executing_all_ms3_commands $1
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -181,29 +187,17 @@ main(){
   elif [[ "$1" == "push_to_main" ]]; then
 
     abort_if_not_modified_file
-    #current version of ms3 in docker image does not work with this command
-    # ms3 workflow_run
-    echo "Executing: ms3 extract"
-    ms3 extract -M -N -X -D
-    pushing_files "Automatically added TSV files from parse with ms3"
-
-    echo "Executing: ms3 check"
-    if ! ms3 check; then
-      exit -1
-    fi
-
-    echo "Executing: ms3 compare"
-    ms3 compare
-
+    echo "Executing: ms3 review"
+    ms3 review -M -N -X -D --fail
     echo "---------------------------------------------------------------------------------------"
+    pushing_files "Automatically added TSV files from parse with ms3"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     pushing_files "Added comparison files for review"
 
-
   elif [[ "$1" == "pull_request" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
     #statements to differentiate between either PR or pull request being triggered
-    executing_all_ms3_commands $1
+    pull_request_workflow $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
     executing_all_ms3_commands $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then

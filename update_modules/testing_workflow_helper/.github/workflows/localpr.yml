@@ -40,7 +40,6 @@ jobs:
         id: act_docker
         with:
           ms3-command: ${{ github.event_name }}
-          ms3-version: "old"
         env:
           Token: "${{ secrets.MS3_BOT_TOKEN }}"
           IsThereAPullRequestOpened: "${{ steps.checkpull.outputs.res }}"
