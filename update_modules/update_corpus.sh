@@ -63,7 +63,7 @@ for name in "${submodules[@]}"; do
       done
 
       gh run view "${stringarray[-3]}" --log > res.txt
-      if ! git grep --all-match --no-index -q -e "Executing: ms3 check" "res.txt"; then
+      if ! git grep --all-match --no-index -q -e "Executing: ms3 review" "res.txt"; then
         echo "Error: localpr ran but its workflow-log is not correct"
         exit 1
       fi
