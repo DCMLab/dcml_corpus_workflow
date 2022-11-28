@@ -177,7 +177,7 @@ main(){
   cd "${GITHUB_WORKSPACE}/main"
   configure_git
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
-
+    echo "Executing: ms3 review"
     ms3 review -M -N -X -D --fail
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
