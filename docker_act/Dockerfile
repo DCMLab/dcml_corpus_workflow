@@ -1,5 +1,10 @@
-# Container image that runs your code
-FROM marcelmoran/dockerms3:latest
+# syntax=docker/dockerfile:1
+# Container image parent
+FROM python:3.10-slim-bullseye
+RUN apt-get -y update
+RUN apt-get -y install git
+RUN pip install git+https://github.com/johentsch/ms3.git@corpus_structure
+
 # Copies your code file from your action repository to the filesystem path `/` of the container
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x entrypoint.sh
