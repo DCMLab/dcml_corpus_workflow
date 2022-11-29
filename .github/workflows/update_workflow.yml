@@ -62,7 +62,7 @@ jobs:
         working-directory: ./main/update_modules/
         run: |
           chmod +x update_corpus.sh
-          ./update_corpus.sh test
+          ./update_corpus.sh
         env:
           GITHUB_TOKEN: ${{ secrets.MS3_BOT_TOKEN }}
           token: ${{ secrets.MS3_BOT_TOKEN }}
