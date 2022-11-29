@@ -78,6 +78,4 @@ for name in "${submodules[@]}"; do
     if [[ "$1" == "test" ]]; then
       break
     fi
-
-    break
 done
