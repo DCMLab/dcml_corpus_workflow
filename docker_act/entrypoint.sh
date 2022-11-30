@@ -103,6 +103,10 @@ executing_all_ms3_commands(){
   echo "Push request another branch:"
   echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
+    echo "---------------------------------------------------------------------------------------"
+    git config --global user.name "github-actions[bot]"
+    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    pushing_files "Added comparison files for review"
     exit -1
   fi
   echo "---------------------------------------------------------------------------------------"
@@ -128,6 +132,10 @@ pull_request_workflow(){
   echo "Pull request:"
   echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D --fail -i $regexFiles -c origin/$GITHUB_BASE_REF; then
+    echo "---------------------------------------------------------------------------------------"
+    git config --global user.name "github-actions[bot]"
+    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    pushing_files "Added comparison files for review"
     exit -1
   fi
   echo "---------------------------------------------------------------------------------------"
@@ -183,6 +191,10 @@ main(){
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
     echo "Executing: ms3 review"
     if ! ms3 review -M -N -X -D --fail; then
+      echo "---------------------------------------------------------------------------------------"
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      pushing_files "Added comparison files for review"
       exit -1
     fi
 
@@ -196,6 +208,11 @@ main(){
     abort_if_not_modified_file
     echo "Executing: ms3 review"
     if ! ms3 review -M -N -X -D --fail; then
+      echo "---------------------------------------------------------------------------------------"
+      pushing_files "Automatically added TSV files from parse with ms3"
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      pushing_files "Added comparison files for review"
       exit -1
     fi
     echo "---------------------------------------------------------------------------------------"
