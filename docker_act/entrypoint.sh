@@ -102,7 +102,7 @@ executing_all_ms3_commands(){
   done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
   echo "Push request another branch:"
   echo "Executing: ms3 review in with regex $regexFiles"
-  if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
+  if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $GITHUB_SHA; then
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -156,6 +156,8 @@ pull_request_workflow(){
 abort_if_not_modified_file(){
   diffres=$(git diff --diff-filter=AM --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
   echo "$diffres"
+  echo $GITHUB_SHA
+  echo $commitFrom
   if [[ -z $diffres ]]; then
     echo "No mscx changes were detected, finishing early"
     configure_output_to_cancel_this_workflow
@@ -205,6 +207,7 @@ main(){
 
   elif [[ "$1" == "push_to_main" ]]; then
 
+    echo "check if files have been"
     abort_if_not_modified_file
     echo "Executing: ms3 review"
     if ! ms3 review -M -N -X -D --fail; then
