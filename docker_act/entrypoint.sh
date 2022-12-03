@@ -207,8 +207,8 @@ main(){
 
   elif [[ "$1" == "push_to_main" ]]; then
 
-    echo "check if files have been"
-    abort_if_not_modified_file
+    # echo "check if files have been"
+    # abort_if_not_modified_file
     echo "Executing: ms3 review"
     if ! ms3 review -M -N -X -D --fail; then
       echo "---------------------------------------------------------------------------------------"
