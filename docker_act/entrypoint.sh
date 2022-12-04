@@ -106,7 +106,7 @@ push_to_no_main_branch(){
   done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
   echo "Push request another branch:"
   echo "Executing: ms3 review in with regex $regexFiles"
-  if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $GITHUB_SHA; then
+  if ! ms3 review -M -N -X -D --fail -i $regexFiles -c; then
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -129,23 +129,7 @@ push_to_no_main_branch(){
 #   $1 allows to differentiate between push and pull_request
 #######################################
 pull_request_workflow(){
-
-
-  if [[ ! -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
-  then
-      # hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-      hashLastCommitStartingAtPR=$(git log HEAD --pretty=format:"%H" --no-patch)
-      echo $hashLastCommitStartingAtPR
-      echo $GITHUB_SHA
-      echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
-      git config --global user.name "github-actions[bot]"
-      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "Adding reference to first commit in PR"
-  fi
-
-
   get_difference_between_commits $1
-
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
@@ -153,9 +137,7 @@ pull_request_workflow(){
   echo "Pull request:"
   echo "Executing: ms3 review in with regex $regexFiles"
 
-  firstCommitInPR=$(cat "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt")
-  echo "the first commit is: $firstCommitInPR"
-  if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $firstCommitInPR; then
+  if ! ms3 review -M -N -X -D --fail -i $regexFiles -c; then
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -277,7 +259,7 @@ main(){
     pushing_files "Added comparison files for review"
 
   elif [[ "$1" == "push_to_main" ]]; then
-    removeLastPRhash
+    # removeLastPRhash
     # echo "check if files have been"
     # abort_if_not_modified_file
     echo "Executing: ms3 review"
@@ -299,7 +281,7 @@ main(){
     #statements to differentiate between either PR or pull request being triggered
     pull_request_workflow $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
-    removeLastPRhash
+    # removeLastPRhash
     push_to_no_main_branch $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
     echo "this workflow does not need to run because a pull_request is opened"
