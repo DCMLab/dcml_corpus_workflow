@@ -125,6 +125,18 @@ push_to_no_main_branch(){
 #   $1 allows to differentiate between push and pull_request
 #######################################
 pull_request_workflow(){
+
+
+  if [[ ! -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
+  then
+      hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
+      echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      pushing_files "Adding reference to first commit in PR"
+  fi
+
+
   get_difference_between_commits $1
 
   regexFiles=""
@@ -134,46 +146,61 @@ pull_request_workflow(){
   echo "Pull request:"
   echo "Executing: ms3 review in with regex $regexFiles"
 
-  if [[ ! -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
-  then
-    if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
-      echo "---------------------------------------------------------------------------------------"
-      git config --global user.name "github-actions[bot]"
-      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "Added comparison files for review"
-      hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-      echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
-      git config --global user.name "github-actions[bot]"
-      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "Adding reference to first commit in PR"
-      exit -1
-    fi
+  firstCommitInPR=$(cat "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt")
+  echo "the fist commit is: $firstCommitInPR"
+  if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $firstCommitInPR; then
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     pushing_files "Added comparison files for review"
-
-    hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-    echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
-    git config --global user.name "github-actions[bot]"
-    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "Adding reference to first commit in PR"
-
-  else
-    firstCommitInPR=$(cat "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt")
-    echo "the fist commit is: $firstCommitInPR"
-    if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $firstCommitInPR; then
-      echo "---------------------------------------------------------------------------------------"
-      git config --global user.name "github-actions[bot]"
-      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "Added comparison files for review"
-      exit -1
-    fi
-    echo "---------------------------------------------------------------------------------------"
-    git config --global user.name "github-actions[bot]"
-    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "Added comparison files for review"
+    exit -1
   fi
+  echo "---------------------------------------------------------------------------------------"
+  git config --global user.name "github-actions[bot]"
+  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  pushing_files "Added comparison files for review"
+
+
+  # if [[ ! -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
+  # then
+  #   if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
+  #     echo "---------------------------------------------------------------------------------------"
+  #     git config --global user.name "github-actions[bot]"
+  #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  #     pushing_files "Added comparison files for review"
+  #     hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
+  #     echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
+  #     git config --global user.name "github-actions[bot]"
+  #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  #     pushing_files "Adding reference to first commit in PR"
+  #     exit -1
+  #   fi
+  #   echo "---------------------------------------------------------------------------------------"
+  #   git config --global user.name "github-actions[bot]"
+  #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  #   pushing_files "Added comparison files for review"
+  #
+  #   hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
+  #   echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
+  #   git config --global user.name "github-actions[bot]"
+  #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  #   pushing_files "Adding reference to first commit in PR"
+  #
+  # else
+  #   firstCommitInPR=$(cat "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt")
+  #   echo "the fist commit is: $firstCommitInPR"
+  #   if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $firstCommitInPR; then
+  #     echo "---------------------------------------------------------------------------------------"
+  #     git config --global user.name "github-actions[bot]"
+  #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  #     pushing_files "Added comparison files for review"
+  #     exit -1
+  #   fi
+  #   echo "---------------------------------------------------------------------------------------"
+  #   git config --global user.name "github-actions[bot]"
+  #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+  #   pushing_files "Added comparison files for review"
+  # fi
 
 }
 
