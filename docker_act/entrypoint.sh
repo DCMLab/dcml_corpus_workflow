@@ -93,7 +93,7 @@ get_difference_between_commits(){
 # Arguments:
 #   $1 allows to differentiate between push and pull_request
 #######################################
-executing_all_ms3_commands(){
+push_to_no_main_branch(){
   get_difference_between_commits $1
 
   regexFiles=""
@@ -113,6 +113,8 @@ executing_all_ms3_commands(){
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   pushing_files "Added comparison files for review"
+
+
 }
 #######################################
 # Executing  ms3 extract, ms3 check and ms3 compare  to mscx files commited/added
@@ -131,19 +133,56 @@ pull_request_workflow(){
   done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
   echo "Pull request:"
   echo "Executing: ms3 review in with regex $regexFiles"
-  if ! ms3 review -M -N -X -D --fail -i $regexFiles -c origin/$GITHUB_BASE_REF; then
+
+  if [[ ! -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
+  then
+    if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
+      echo "---------------------------------------------------------------------------------------"
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      pushing_files "Added comparison files for review"
+      hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
+      echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      pushing_files "Adding reference to first commit in PR"
+      exit -1
+    fi
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     pushing_files "Added comparison files for review"
-    exit -1
+
+    hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
+    echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
+    git config --global user.name "github-actions[bot]"
+    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    pushing_files "Adding reference to first commit in PR"
+
+  else
+    firstCommitInPR=$(cat "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt")
+    echo "the fist commit is: $firstCommitInPR"
+    if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $firstCommitInPR; then
+      echo "---------------------------------------------------------------------------------------"
+      git config --global user.name "github-actions[bot]"
+      git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      pushing_files "Added comparison files for review"
+      exit -1
+    fi
+    echo "---------------------------------------------------------------------------------------"
+    git config --global user.name "github-actions[bot]"
+    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    pushing_files "Added comparison files for review"
   fi
-  echo "---------------------------------------------------------------------------------------"
-  git config --global user.name "github-actions[bot]"
-  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  pushing_files "Added comparison files for review"
+
 }
 
+removeLastPRhash(){
+  if [[ -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
+  then
+    rm -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt"
+  if
+}
 #######################################
 # This function will check if at least one mscx file has been added or modified
 # if not it will exit the script
@@ -155,9 +194,6 @@ pull_request_workflow(){
 #   None
 abort_if_not_modified_file(){
   diffres=$(git diff --diff-filter=AM --name-status $commitFrom $GITHUB_SHA | grep -E '*.mscx')
-  echo "$diffres"
-  echo $GITHUB_SHA
-  echo $commitFrom
   if [[ -z $diffres ]]; then
     echo "No mscx changes were detected, finishing early"
     configure_output_to_cancel_this_workflow
@@ -206,7 +242,7 @@ main(){
     pushing_files "Added comparison files for review"
 
   elif [[ "$1" == "push_to_main" ]]; then
-
+    removeLastPRhash
     # echo "check if files have been"
     # abort_if_not_modified_file
     echo "Executing: ms3 review"
@@ -228,7 +264,8 @@ main(){
     #statements to differentiate between either PR or pull request being triggered
     pull_request_workflow $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
-    executing_all_ms3_commands $1
+    removeLastPRhash
+    push_to_no_main_branch $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
     echo "this workflow does not need to run because a pull_request is opened"
     configure_output_to_cancel_this_workflow
