@@ -133,11 +133,11 @@ pull_request_workflow(){
 
   if [[ ! -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
   then
-      hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
+      # hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
+      hashLastCommitStartingAtPR=$(git log HEAD --pretty=format:"%H" --no-patch)
       echo $hashLastCommitStartingAtPR
       echo $GITHUB_SHA
-      echo $GITHUB_SHA
-      echo "$GITHUB_SHA" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
+      echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
       git config --global user.name "github-actions[bot]"
       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
       pushing_files "Adding reference to first commit in PR"
@@ -212,6 +212,7 @@ pull_request_workflow(){
 }
 
 removeLastPRhash(){
+  echo "Removing"
   if [[ -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
   then
     rm -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt"
