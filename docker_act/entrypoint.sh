@@ -59,8 +59,9 @@ get_difference_between_commits(){
       diffres=$(git diff --diff-filter=AM --name-status $latestHashCommitInMain $GITHUB_SHA | grep -E '*.mscx')
     elif [[ "$1" == "pull_request" ]]; then
       # diffres=$(git diff --diff-filter=AM --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
+      latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
       echo $latestHashCommitInMain
-      echo $commitTo 
+      echo $commitTo
       diffres=$(git diff --diff-filter=AM --name-status $latestHashCommitInMain $commitTo | grep -E '*.mscx')
     fi
 
