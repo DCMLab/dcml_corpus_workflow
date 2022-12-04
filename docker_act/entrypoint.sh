@@ -58,7 +58,8 @@ get_difference_between_commits(){
       latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
       diffres=$(git diff --diff-filter=AM --name-status $latestHashCommitInMain $GITHUB_SHA | grep -E '*.mscx')
     elif [[ "$1" == "pull_request" ]]; then
-      diffres=$(git diff --diff-filter=AM --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
+      # diffres=$(git diff --diff-filter=AM --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
+      diffres=$(git diff --diff-filter=AM --name-status $latestHashCommitInMain $commitTo | grep -E '*.mscx')
     fi
 
     #finish the action execution if mscx files have not been changed or added
