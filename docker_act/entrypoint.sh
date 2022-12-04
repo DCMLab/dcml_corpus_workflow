@@ -181,7 +181,7 @@ removeLastPRhash(){
   if [[ -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
   then
     rm -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt"
-  if
+  fi
 }
 #######################################
 # This function will check if at least one mscx file has been added or modified
