@@ -114,13 +114,13 @@ push_to_no_main_branch(){
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "Added comparison files for review"
+    pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests failed)"
     exit -1
   fi
   echo "---------------------------------------------------------------------------------------"
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  pushing_files "Added comparison files for review"
+  pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests passed)"
 
 
 }
@@ -147,13 +147,13 @@ pull_request_workflow(){
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "Added comparison files for review"
+    pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests failed)"
     exit -1
   fi
   echo "---------------------------------------------------------------------------------------"
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  pushing_files "Added comparison files for review"
+  pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests passed)"
 
 
   # if [[ ! -f "${RUNNER_WORKSPACE}/startingCommitAtPR.txt" ]]
@@ -208,7 +208,7 @@ removeLastPRhash(){
 }
 #######################################
 # This function will check if at least one mscx file has been added or modified
-# if not it will exit the script
+# if not it will exit the script. Assumes CWD is $GITHUB_WORKSPACE
 # Globals:
 #   GITHUB_SHA: the last commit that triggered the action
 #               this is the last commit of the branch by default
@@ -253,6 +253,7 @@ set_up_venv(){
 #   ?
 main(){
   #### ToDo: document arguments
+  #### ToDo: make $2 be a version of ms3 and provide one Docker image with every new version
   # echo "Arguments being passed: $1 and $2" 
   echo "Arguments being passed: $1 and $comment_msg"
   # set_up_venv $2
@@ -265,14 +266,14 @@ main(){
       echo "---------------------------------------------------------------------------------------"
       git config --global user.name "github-actions[bot]"
       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "Added comparison files for review"
+      pushing_files "[bot] extracts facets and metadata from all scores; adds review reports (tests failed)"
       exit -1
     fi
 
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "Added comparison files for review"
+    pushing_files "[bot] extracts facets and metadata from all scores; adds review reports (tests passed)"
 
   elif [[ "$1" == "push_to_main" ]]; then
     # removeLastPRhash
@@ -281,17 +282,15 @@ main(){
     echo "Executing: ms3 review"
     if ! ms3 review -M -N -X -D --fail; then
       echo "---------------------------------------------------------------------------------------"
-      pushing_files "Automatically added TSV files from parse with ms3"
       git config --global user.name "github-actions[bot]"
       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "Added comparison files for review"
+      pushing_files "[bot] extracts facets and metadata from all scores; adds review reports (tests failed)"
       exit -1
     fi
     echo "---------------------------------------------------------------------------------------"
-    pushing_files "Automatically added TSV files from parse with ms3"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "Added comparison files for review"
+    pushing_files "[bot] extracts facets and metadata from all scores; adds review reports (tests passed)"
 
   elif [[ "$1" == "pull_request" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
     #statements to differentiate between either PR or pull request being triggered
@@ -300,7 +299,7 @@ main(){
     # removeLastPRhash
     push_to_no_main_branch $1
   elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
-    echo "this workflow does not need to run because a pull_request is opened"
+    echo "this workflow does not need to run because it comes together with a pull_request event"
     configure_output_to_cancel_this_workflow
   fi
 
