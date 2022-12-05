@@ -1,6 +1,6 @@
 #!/bin/bash
 #######################################
-# Push to current branch
+# Push to current branch, assuming CWD is $GITHUB_WORKSPACE
 # Arguments:
 #    $1 custom commit
 #######################################
@@ -46,13 +46,15 @@ configure_output_to_cancel_this_workflow(){
 #               of pull_request, this is the last merge commit, for push
 #               this is the last commit of the branch by default
 #   GITHUB_BASE_REF: The base ref or targer branch of the pull request
-#   GITHUB_WORKSPACE: default path for checkout action
+#   RUNNER_WORKSPECE: parent folder of the cloned repo for temporary files
 # Arguments:
 #   $1 to choose between PR or Push
 # Outputs:
 #  added_and_modified_files.txt
 #######################################
 get_difference_between_commits(){
+    echo "Executing: cd ${GITHUB_WORKSPACE}"
+    cd "${GITHUB_WORKSPACE}"
     if [[ "$1" == "push" ]] ; then
 
       latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
@@ -81,29 +83,31 @@ get_difference_between_commits(){
       for i in "${ADDR[@]}"; do
         ARRAY+=($(echo $i|sed -r 's#[.]+#\\.#g'))
       done
-      echo "${ARRAY[-1]}|" >> "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
+      echo "${ARRAY[-1]}|" >> "${RUNNER_WORKSPACE}/added_and_modified_files.txt"
     done < <(printf '%s\n' "$diffres")
 
-    truncate -s-2 "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
-    echo "" >> "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
+    truncate -s-2 "${RUNNER_WORKSPACE}/added_and_modified_files.txt"
+    echo "" >> "${RUNNER_WORKSPACE}/added_and_modified_files.txt"
 
-    cat "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
+    cat "${RUNNER_WORKSPACE}/added_and_modified_files.txt"
 
 }
 #######################################
 # Executing  ms3 extract, ms3 check and ms3 compare  to mscx files commited/added
 # Globals:
-#   GITHUB_WORKSPACE: default path for checkout action
+#   RUNNER_WORKSPECE: parent folder of the cloned repo for temporary files
 # Arguments:
 #   $1 allows to differentiate between push and pull_request
 #######################################
 push_to_no_main_branch(){
+  echo "Executing: cd ${GITHUB_WORKSPACE}"
+  cd "${GITHUB_WORKSPACE}"
   get_difference_between_commits $1
 
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
-  done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
+  done < ${RUNNER_WORKSPACE}/added_and_modified_files.txt
   echo "Push request another branch:"
   echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D --fail -i $regexFiles -c; then
@@ -121,19 +125,21 @@ push_to_no_main_branch(){
 
 }
 #######################################
-# Executing  ms3 extract, ms3 check and ms3 compare  to mscx files commited/added
+# Executing  ms3 review for all mscx files commited/added
 # similar to executing all ms3_commands passing the flag commit
 # Globals:
-#   GITHUB_WORKSPACE: default path for checkout action
+#   RUNNER_WORKSPECE: parent folder of the cloned repo for temporary files
 # Arguments:
 #   $1 allows to differentiate between push and pull_request
 #######################################
 pull_request_workflow(){
+  echo "Executing: cd ${GITHUB_WORKSPACE}"
+  cd "${GITHUB_WORKSPACE}"
   get_difference_between_commits $1
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
-  done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
+  done < ${RUNNER_WORKSPACE}/added_and_modified_files.txt
   echo "Pull request:"
   echo "Executing: ms3 review in with regex $regexFiles"
 
@@ -150,7 +156,7 @@ pull_request_workflow(){
   pushing_files "Added comparison files for review"
 
 
-  # if [[ ! -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
+  # if [[ ! -f "${RUNNER_WORKSPACE}/startingCommitAtPR.txt" ]]
   # then
   #   if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
   #     echo "---------------------------------------------------------------------------------------"
@@ -158,7 +164,7 @@ pull_request_workflow(){
   #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #     pushing_files "Added comparison files for review"
   #     hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-  #     echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
+  #     echo "$hashLastCommitStartingAtPR" > ${RUNNER_WORKSPACE}/startingCommitAtPR.txt
   #     git config --global user.name "github-actions[bot]"
   #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #     pushing_files "Adding reference to first commit in PR"
@@ -170,13 +176,13 @@ pull_request_workflow(){
   #   pushing_files "Added comparison files for review"
   #
   #   hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-  #   echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt
+  #   echo "$hashLastCommitStartingAtPR" > ${RUNNER_WORKSPACE}/startingCommitAtPR.txt
   #   git config --global user.name "github-actions[bot]"
   #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #   pushing_files "Adding reference to first commit in PR"
   #
   # else
-  #   firstCommitInPR=$(cat "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt")
+  #   firstCommitInPR=$(cat "${RUNNER_WORKSPACE}/startingCommitAtPR.txt")
   #   echo "the fist commit is: $firstCommitInPR"
   #   if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $firstCommitInPR; then
   #     echo "---------------------------------------------------------------------------------------"
@@ -195,16 +201,15 @@ pull_request_workflow(){
 
 removeLastPRhash(){
   echo "Removing"
-  if [[ -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt" ]]
+  if [[ -f "${RUNNER_WORKSPACE}/startingCommitAtPR.txt" ]]
   then
-    rm -f "${GITHUB_WORKSPACE}/main/startingCommitAtPR.txt"
+    rm -f "${RUNNER_WORKSPACE}/startingCommitAtPR.txt"
   fi
 }
 #######################################
 # This function will check if at least one mscx file has been added or modified
 # if not it will exit the script
 # Globals:
-#   GITHUB_WORKSPACE: default path for checkout action
 #   GITHUB_SHA: the last commit that triggered the action
 #               this is the last commit of the branch by default
 # Arguments:
@@ -236,12 +241,23 @@ set_up_venv(){
   echo "-------------------------------------"
 }
 
+#######################################
+# This function performs a full 'ms3 review' upon push to main.
+# 
+# Globals:
+#   GITHUB_WORKSPACE: default path for checkout action
+#   IsThereAPullRequestOpened:
+#   
+# Arguments:
+#   {push_to_main, pull_request, push}
+#   ?
 main(){
-  # echo "Arguments being passed: $1 and $2"
+  #### ToDo: document arguments
+  # echo "Arguments being passed: $1 and $2" 
   echo "Arguments being passed: $1 and $comment_msg"
   # set_up_venv $2
-  echo "Executing: cd ${GITHUB_WORKSPACE}/main"
-  cd "${GITHUB_WORKSPACE}/main"
+  echo "Executing: cd ${GITHUB_WORKSPACE}"
+  cd "${GITHUB_WORKSPACE}"
   configure_git
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
     echo "Executing: ms3 review"
