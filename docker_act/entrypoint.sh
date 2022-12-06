@@ -8,8 +8,8 @@ pushing_files() {
   #check if there have been changes
   if [[ `git status --porcelain` ]]; then
     #remove  added file
-    if [[ -f "${directory}/added_and_modified_files.txt" ]]; then
-      rm -f "${directory}/added_and_modified_files.txt"
+    if [[ -f "${directory}/${working_dir}/added_and_modified_files.txt" ]]; then
+      rm -f "${directory}/${working_dir}/added_and_modified_files.txt"
     fi
     git add -A
     git commit -m "$1"
@@ -57,8 +57,8 @@ configure_output_to_cancel_this_workflow(){
 #  added_and_modified_files.txt
 #######################################
 get_difference_between_commits(){
-    echo "Executing: cd ${directory}"
-    cd "${directory}"
+    echo "Executing: cd ${directory}/${working_dir}"
+    cd "${directory}/${working_dir}"
     if [[ "$1" == "push" ]] ; then
 
       latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
@@ -87,13 +87,13 @@ get_difference_between_commits(){
       for i in "${ADDR[@]}"; do
         ARRAY+=($(echo $i|sed -r 's#[.]+#\\.#g'))
       done
-      echo "${ARRAY[-1]}|" >> "${directory}/added_and_modified_files.txt"
+      echo "${ARRAY[-1]}|" >> "${directory}/${working_dir}/added_and_modified_files.txt"
     done < <(printf '%s\n' "$diffres")
 
-    truncate -s-2 "${directory}/added_and_modified_files.txt"
-    echo "" >> "${directory}/added_and_modified_files.txt"
+    truncate -s-2 "${directory}/${working_dir}/added_and_modified_files.txt"
+    echo "" >> "${directory}/${working_dir}/added_and_modified_files.txt"
 
-    cat "${directory}/added_and_modified_files.txt"
+    cat "${directory}/${working_dir}/added_and_modified_files.txt"
 
 }
 #######################################
@@ -104,14 +104,14 @@ get_difference_between_commits(){
 #   $1 allows to differentiate between push and pull_request
 #######################################
 push_to_no_main_branch(){
-  echo "Executing: cd ${directory}"
-  cd "${directory}"
+  echo "Executing: cd ${directory}/${working_dir}"
+  cd "${directory}/${working_dir}"
   get_difference_between_commits $1
 
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
-  done < ${directory}/added_and_modified_files.txt
+  done < ${directory}/${working_dir}/added_and_modified_files.txt
   echo "Push request another branch:"
   echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D -F -F --fail -i $regexFiles -c; then
@@ -137,13 +137,13 @@ push_to_no_main_branch(){
 #   $1 allows to differentiate between push and pull_request
 #######################################
 pull_request_workflow(){
-  echo "Executing: cd ${directory}"
-  cd "${directory}"
+  echo "Executing: cd ${directory}/${working_dir}"
+  cd "${directory}/${working_dir}"
   get_difference_between_commits $1
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
-  done < ${directory}/added_and_modified_files.txt
+  done < ${directory}/${working_dir}/added_and_modified_files.txt
   echo "Pull request:"
   echo "Executing: ms3 review in with regex $regexFiles"
 
@@ -160,7 +160,7 @@ pull_request_workflow(){
   pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests passed)"
 
 
-  # if [[ ! -f "${directory}/startingCommitAtPR.txt" ]]
+  # if [[ ! -f "${directory}/${working_dir}/startingCommitAtPR.txt" ]]
   # then
   #   if ! ms3 review -M -N -X -D -F --fail -i $regexFiles; then
   #     echo "---------------------------------------------------------------------------------------"
@@ -168,7 +168,7 @@ pull_request_workflow(){
   #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #     pushing_files "Added comparison files for review"
   #     hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-  #     echo "$hashLastCommitStartingAtPR" > ${directory}/startingCommitAtPR.txt
+  #     echo "$hashLastCommitStartingAtPR" > ${directory}/${working_dir}/startingCommitAtPR.txt
   #     git config --global user.name "github-actions[bot]"
   #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #     pushing_files "Adding reference to first commit in PR"
@@ -180,13 +180,13 @@ pull_request_workflow(){
   #   pushing_files "Added comparison files for review"
   #
   #   hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-  #   echo "$hashLastCommitStartingAtPR" > ${directory}/startingCommitAtPR.txt
+  #   echo "$hashLastCommitStartingAtPR" > ${directory}/${working_dir}/startingCommitAtPR.txt
   #   git config --global user.name "github-actions[bot]"
   #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #   pushing_files "Adding reference to first commit in PR"
   #
   # else
-  #   firstCommitInPR=$(cat "${directory}/startingCommitAtPR.txt")
+  #   firstCommitInPR=$(cat "${directory}/${working_dir}/startingCommitAtPR.txt")
   #   echo "the fist commit is: $firstCommitInPR"
   #   if ! ms3 review -M -N -X -D -F --fail -i $regexFiles -c $firstCommitInPR; then
   #     echo "---------------------------------------------------------------------------------------"
@@ -205,9 +205,9 @@ pull_request_workflow(){
 
 removeLastPRhash(){
   echo "Removing"
-  if [[ -f "${directory}/startingCommitAtPR.txt" ]]
+  if [[ -f "${directory}/${working_dir}/startingCommitAtPR.txt" ]]
   then
-    rm -f "${directory}/startingCommitAtPR.txt"
+    rm -f "${directory}/${working_dir}/startingCommitAtPR.txt"
   fi
 }
 #######################################
@@ -261,8 +261,8 @@ main(){
   # echo "Arguments being passed: $1 and $2"
   echo "Arguments being passed: $1 and $comment_msg"
   # set_up_venv $2
-  echo "Executing: cd ${directory}"
-  cd "${directory}"
+  echo "Executing: cd ${directory}/${working_dir}"
+  cd "${directory}/${working_dir}"
   configure_git
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
     echo "Executing: ms3 review"

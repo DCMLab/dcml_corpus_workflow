@@ -25,6 +25,16 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.MS3_BOT_TOKEN }}
 
+      # - name: Show workspace variables
+      #   run: |
+      #     echo 'github.workspace === ${{ github.workspace }}'
+      #     ls ${{ github.workspace }}
+      #     echo "GITHUB_WORKSPACE === $GITHUB_WORKSPACE"
+      #     ls $GITHUB_WORKSPACE
+      #     echo 'runner.workspace === ${{ runner.workspace }}'
+      #     ls ${{ runner.workspace }}
+      #     echo "RUNNER_WORKSPACE === $RUNNER_WORKSPACE"
+      #     ls $RUNNER_WORKSPACE
 
       - name: Pull Request open or not?
         id: checkpull
@@ -36,8 +46,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run 'ms3 review' via dcml_corpus_workflow action
-        uses: DCMLab/dcml_corpus_workflow@v2.4.4 # Uses an action in the root directory
+        uses: DCMLab/dcml_corpus_workflow@v2.4.7 # Uses an action in the root directory
         id: act_docker
+        # working-directory: ${{ github.repository.name }}
+        # needs to become a parameter/env variable
         with:
           ms3-command: ${{ github.event_name }}
         env:
@@ -48,7 +60,7 @@ jobs:
           comment_msg: "${{ github.event.head_commit.message }}"
           pr_title: "${{ github.event.pull_request.title }}"
           directory: "${{ github.workspace }}"
-
+          working-directory: ${{ github.repository.name }}
       - name: Cancel the run if skipped
         if: (steps.act_docker.outputs.skipped == 'true')
         run: |
