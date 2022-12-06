@@ -259,9 +259,9 @@ main(){
   #### ToDo: document arguments
   #### ToDo: make $2 be a version of ms3 and provide one Docker image with every new version
   # echo "Arguments being passed: $1 and $2"
-  echo "Arguments being passed: $1 and $comment_msg"
+  echo "Arguments being passed: $1 and $comment_msg and working dir: ${working_dir}"
   # set_up_venv $2
-  echo "Executing: cd ${directory}/${working_dir}"
+  echo "Executing: cd ${directory}//${working_dir}"
   cd "${directory}/${working_dir}"
   configure_git
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
