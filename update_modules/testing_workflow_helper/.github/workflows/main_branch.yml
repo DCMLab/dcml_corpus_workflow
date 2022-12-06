@@ -1,26 +1,27 @@
-name: local_testing
+name: Push to main branch
 
 on:
   push:
     branches:
       - main
 jobs:
-  compare:
+  ms3_review:
     if: (github.actor != 'ms3-bot' && github.event.pusher.name != 'github-actions[bot]')
     runs-on: ubuntu-latest
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout corpus repository
+        uses: actions/checkout@v3
         with:
-          path: main
           fetch-depth: 0
           token: ${{ secrets.MS3_BOT_TOKEN }}
 
 
-      - name: Action_to_run_docker
-        uses: DCMLab/dcml_corpus_workflow@v2.3.1 # Uses an action in the root directory
+      - name: Run 'ms3 review' via dcml_corpus_workflow action
+        uses: DCMLab/dcml_corpus_workflow@v2.4.4 # Uses an action in the root directory
         id: act_docker
+        # working-directory: ${{ github.repository.name }}
+        # needs to become a parameter/env variable
         with:
           ms3-command: "push_to_main"
         env:
