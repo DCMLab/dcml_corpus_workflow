@@ -38,6 +38,7 @@ jobs:
 
       - name: Pull Request open or not?
         id: checkpull
+        working-directory: ${{ github.event.repository.name }}
         continue-on-error: true
         run: |
            gh pr view --json state -q .[]
@@ -46,7 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run 'ms3 review' via dcml_corpus_workflow action
-        uses: DCMLab/dcml_corpus_workflow@v2.4.7 # Uses an action in the root directory
+        uses: DCMLab/dcml_corpus_workflow@v2.5.0 # Uses an action in the root directory
         id: act_docker
         # working-directory: ${{ github.repository.name }}
         # needs to become a parameter/env variable
