@@ -7,6 +7,10 @@
 pushing_files() {
   #check if there have been changes
   if [[ `git status --porcelain` ]]; then
+    #remove  added file 
+    if [[ -f "${GITHUB_WORKSPACE}/added_and_modified_files.txt" ]]; then
+      rm -f "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
+    fi
     git add -A
     git commit -m "$1"
     echo "Pushing files"
@@ -83,13 +87,13 @@ get_difference_between_commits(){
       for i in "${ADDR[@]}"; do
         ARRAY+=($(echo $i|sed -r 's#[.]+#\\.#g'))
       done
-      echo "${ARRAY[-1]}|" >> "${RUNNER_WORKSPACE}/added_and_modified_files.txt"
+      echo "${ARRAY[-1]}|" >> "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
     done < <(printf '%s\n' "$diffres")
 
-    truncate -s-2 "${RUNNER_WORKSPACE}/added_and_modified_files.txt"
-    echo "" >> "${RUNNER_WORKSPACE}/added_and_modified_files.txt"
+    truncate -s-2 "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
+    echo "" >> "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
 
-    cat "${RUNNER_WORKSPACE}/added_and_modified_files.txt"
+    cat "${GITHUB_WORKSPACE}/added_and_modified_files.txt"
 
 }
 #######################################
@@ -107,7 +111,7 @@ push_to_no_main_branch(){
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
-  done < ${RUNNER_WORKSPACE}/added_and_modified_files.txt
+  done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
   echo "Push request another branch:"
   echo "Executing: ms3 review in with regex $regexFiles"
   if ! ms3 review -M -N -X -D --fail -i $regexFiles -c; then
@@ -139,7 +143,7 @@ pull_request_workflow(){
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
-  done < ${RUNNER_WORKSPACE}/added_and_modified_files.txt
+  done < ${GITHUB_WORKSPACE}/added_and_modified_files.txt
   echo "Pull request:"
   echo "Executing: ms3 review in with regex $regexFiles"
 
@@ -156,7 +160,7 @@ pull_request_workflow(){
   pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests passed)"
 
 
-  # if [[ ! -f "${RUNNER_WORKSPACE}/startingCommitAtPR.txt" ]]
+  # if [[ ! -f "${GITHUB_WORKSPACE}/startingCommitAtPR.txt" ]]
   # then
   #   if ! ms3 review -M -N -X -D --fail -i $regexFiles; then
   #     echo "---------------------------------------------------------------------------------------"
@@ -164,7 +168,7 @@ pull_request_workflow(){
   #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #     pushing_files "Added comparison files for review"
   #     hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-  #     echo "$hashLastCommitStartingAtPR" > ${RUNNER_WORKSPACE}/startingCommitAtPR.txt
+  #     echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/startingCommitAtPR.txt
   #     git config --global user.name "github-actions[bot]"
   #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #     pushing_files "Adding reference to first commit in PR"
@@ -176,13 +180,13 @@ pull_request_workflow(){
   #   pushing_files "Added comparison files for review"
   #
   #   hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-  #   echo "$hashLastCommitStartingAtPR" > ${RUNNER_WORKSPACE}/startingCommitAtPR.txt
+  #   echo "$hashLastCommitStartingAtPR" > ${GITHUB_WORKSPACE}/startingCommitAtPR.txt
   #   git config --global user.name "github-actions[bot]"
   #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   #   pushing_files "Adding reference to first commit in PR"
   #
   # else
-  #   firstCommitInPR=$(cat "${RUNNER_WORKSPACE}/startingCommitAtPR.txt")
+  #   firstCommitInPR=$(cat "${GITHUB_WORKSPACE}/startingCommitAtPR.txt")
   #   echo "the fist commit is: $firstCommitInPR"
   #   if ! ms3 review -M -N -X -D --fail -i $regexFiles -c $firstCommitInPR; then
   #     echo "---------------------------------------------------------------------------------------"
@@ -201,9 +205,9 @@ pull_request_workflow(){
 
 removeLastPRhash(){
   echo "Removing"
-  if [[ -f "${RUNNER_WORKSPACE}/startingCommitAtPR.txt" ]]
+  if [[ -f "${GITHUB_WORKSPACE}/startingCommitAtPR.txt" ]]
   then
-    rm -f "${RUNNER_WORKSPACE}/startingCommitAtPR.txt"
+    rm -f "${GITHUB_WORKSPACE}/startingCommitAtPR.txt"
   fi
 }
 #######################################
@@ -243,18 +247,18 @@ set_up_venv(){
 
 #######################################
 # This function performs a full 'ms3 review' upon push to main.
-# 
+#
 # Globals:
 #   GITHUB_WORKSPACE: default path for checkout action
 #   IsThereAPullRequestOpened:
-#   
+#
 # Arguments:
 #   {push_to_main, pull_request, push}
 #   ?
 main(){
   #### ToDo: document arguments
   #### ToDo: make $2 be a version of ms3 and provide one Docker image with every new version
-  # echo "Arguments being passed: $1 and $2" 
+  # echo "Arguments being passed: $1 and $2"
   echo "Arguments being passed: $1 and $comment_msg"
   # set_up_venv $2
   echo "Executing: cd ${GITHUB_WORKSPACE}"
