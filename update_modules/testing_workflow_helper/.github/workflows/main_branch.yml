@@ -32,4 +32,4 @@ jobs:
           comment_msg: ""
           pr_title: ""
           directory: "${{ github.workspace }}"
-          working_dir: ${{ github.repository.name }}
+          working_dir: ${{ github.event.repository.name }}
