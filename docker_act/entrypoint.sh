@@ -262,7 +262,9 @@ main(){
   echo "Arguments being passed: $1 and $comment_msg and working dir: ${working_dir}"
   # set_up_venv $2
   echo "Executing: cd ${directory}//${working_dir}"
+  ls -a
   cd "${directory}/${working_dir}"
+  ls -a
   configure_git
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
     echo "Executing: ms3 review"
