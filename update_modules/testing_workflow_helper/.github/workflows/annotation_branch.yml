@@ -47,6 +47,7 @@ jobs:
           commitTo: "${{ github.event.pull_request.head.sha }}"
           comment_msg: "${{ github.event.head_commit.message }}"
           pr_title: "${{ github.event.pull_request.title }}"
+          directory: "${{ github.workspace }}"
 
       - name: Cancel the run if skipped
         if: (steps.act_docker.outputs.skipped == 'true')

@@ -31,3 +31,4 @@ jobs:
           commitTo: ""
           comment_msg: ""
           pr_title: ""
+          directory: "${{ github.workspace }}"
