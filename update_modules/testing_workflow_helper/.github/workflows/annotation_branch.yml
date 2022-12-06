@@ -49,7 +49,6 @@ jobs:
           pr_title: "${{ github.event.pull_request.title }}"
 
       - name: Cancel the run if skipped
-        working-directory: $GITHUB_WORKSPACE
         if: (steps.act_docker.outputs.skipped == 'true')
         run: |
            gh run cancel ${{ github.run_id }}
