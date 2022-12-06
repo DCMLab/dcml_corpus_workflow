@@ -35,7 +35,7 @@ for name in "${submodules[@]}"; do
 
     #allow some time before asking for the current executed actions
     sleep 5s
-    gh run list --workflow localpr.yml -L 3 -b workflow_update > res.txt
+    gh run list --workflow annotation_branch.yml -L 3 -b workflow_update > res.txt
 
     echo "garbage" > idrunner.txt
     while IFS= read -r line
@@ -64,11 +64,11 @@ for name in "${submodules[@]}"; do
 
       gh run view "${stringarray[-3]}" --log > res.txt
       if ! git grep --all-match --no-index -q -e "Executing: ms3 review" "res.txt"; then
-        echo "Error: localpr ran but its workflow-log is not correct"
+        echo "Error: annotation_branch ran but its workflow-log is not correct"
         exit 1
       fi
     else
-      echo "Error: localpr was not triggered"
+      echo "Error: annotation_branch was not triggered"
       exit 1
     fi
 
