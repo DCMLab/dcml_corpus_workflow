@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.MS3_BOT_TOKEN }}
-
+          path: ${{ github.event.repository.name }}
 
       - name: Run 'ms3 review' via dcml_corpus_workflow action
         uses: DCMLab/dcml_corpus_workflow@v2.4.6 # Uses an action in the root directory
