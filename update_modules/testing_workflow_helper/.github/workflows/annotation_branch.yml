@@ -60,7 +60,7 @@ jobs:
           comment_msg: "${{ github.event.head_commit.message }}"
           pr_title: "${{ github.event.pull_request.title }}"
           directory: "${{ github.workspace }}"
-          working-directory: ${{ github.repository.name }}
+          working_dir: ${{ github.repository.name }}
       - name: Cancel the run if skipped
         if: (steps.act_docker.outputs.skipped == 'true')
         run: |
