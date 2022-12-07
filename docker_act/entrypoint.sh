@@ -114,7 +114,7 @@ push_to_no_main_branch(){
   done < ${directory}/${working_dir}/added_and_modified_files.txt
   echo "Push request another branch:"
   echo "Executing: ms3 review in with regex $regexFiles"
-  if ! ms3 review -M -N -X -D -F -F --fail -i $regexFiles -c; then
+  if ! ms3 review -M -N -X -D -F --fail -i $regexFiles -c; then
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
