@@ -13,7 +13,7 @@ jobs:
      (github.event.pusher.name == 'github-actions[bot]' && github.event == 'pull_request')
      || github.event.head_commit.message == 'trigger_workflow'
      || github.event.pull_request.title == 'PR to check for errors'
-     || (github.event.pusher.name != 'ms3_bot' &&  github.event.pusher.name != 'github-actions[bot]')
+     || (github.actor != 'ms3-bot' && github.event.pusher.name != 'ms3_bot' &&  github.event.pusher.name != 'github-actions[bot]')
     runs-on: ubuntu-latest
     steps:
 
