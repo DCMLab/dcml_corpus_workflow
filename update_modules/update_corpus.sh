@@ -75,9 +75,9 @@ for name in "${submodules[@]}"; do
 
 
     git pull
-    # gh pr create --title "PR to check for errors" --body "This pull request allows reviewers to check for errors before merging to main branch" -B main
-    #
-    # if [[ "$1" == "test" ]]; then
-    #   break
-    # fi
+    gh pr create --title "PR to check for errors" --body "This pull request allows reviewers to check for errors before merging to main branch" -B main
+
+    if [[ "$1" == "test" ]]; then
+      break
+    fi
 done
