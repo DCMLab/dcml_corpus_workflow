@@ -85,7 +85,7 @@ get_difference_between_commits(){
       IFS='/' read -ra ADDR <<< "${splitLine[1]}"
       ARRAY=()
       for i in "${ADDR[@]}"; do
-        ARRAY+=($(echo $i|sed -r 's#[.]+#\\.#g'))
+        ARRAY+=($(echo $i|sed -r 's#[.]+#\\.#g'|head -c-5))
       done
       echo "${ARRAY[-1]}|" >> "${directory}/${working_dir}/added_and_modified_files.txt"
     done < <(printf '%s\n' "$diffres")
