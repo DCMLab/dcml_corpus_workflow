@@ -113,18 +113,18 @@ push_to_no_main_branch(){
     regexFiles=($regexFiles$line)
   done < ${directory}/${working_dir}/added_and_modified_files.txt
   echo "Push request another branch:"
-  echo "Executing: ms3 review in with regex $regexFiles"
-  if ! ms3 review -M -N -X -D -F --fail -i $regexFiles -c; then
+  echo "Executing: ms3 review -c -M -N -X -D -F --fail -i $regexFiles"
+  if ! ms3 review -c -M -N -X -D -F --fail -i $regexFiles; then
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests failed)"
+    pushing_files "[bot] ms3 review of modified scores (tests failed)"
     exit -1
   fi
   echo "---------------------------------------------------------------------------------------"
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests passed)"
+  pushing_files "[bot] ms3 review of modified scores (tests passed)"
 
 
 }
@@ -145,19 +145,19 @@ pull_request_workflow(){
     regexFiles=($regexFiles$line)
   done < ${directory}/${working_dir}/added_and_modified_files.txt
   echo "Pull request:"
-  echo "Executing: ms3 review in with regex $regexFiles"
+  echo "Executing: ms3 review -c -M -N -X -D -F --fail -i $regexFiles"
 
-  if ! ms3 review -M -N -X -D -F --fail -i $regexFiles -c; then
+  if ! ms3 review -c -M -N -X -D -F --fail -i $regexFiles; then
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests failed)"
+    pushing_files "[bot] ms3 review of modified scores (tests failed)"
     exit -1
   fi
   echo "---------------------------------------------------------------------------------------"
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  pushing_files "[bot] extracts facets and metadata from changed scores; adds review reports (tests passed)"
+  pushing_files "[bot] ms3 review of modified scores (tests passed)"
 
 
   # if [[ ! -f "${directory}/${working_dir}/startingCommitAtPR.txt" ]]
@@ -267,36 +267,36 @@ main(){
   ls -a
   configure_git
   if [[ "$comment_msg" == "trigger_workflow" ]]; then
-    echo "Executing: ms3 review"
-    if ! ms3 review -M -N -X -D -F --fail; then
+    echo "Executing: ms3 review -c -M -N -X -D -F --fail"
+    if ! ms3 review -c -M -N -X -D -F --fail; then
       echo "---------------------------------------------------------------------------------------"
       git config --global user.name "github-actions[bot]"
       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "[bot] extracts facets and metadata from all scores; adds review reports (tests failed)"
+      pushing_files "[bot] ms3 review of all scores (tests failed)"
       exit -1
     fi
 
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "[bot] extracts facets and metadata from all scores; adds review reports (tests passed)"
+    pushing_files "[bot] ms3 review of all scores (tests passed)"
 
   elif [[ "$1" == "push_to_main" ]]; then
     # removeLastPRhash
     # echo "check if files have been"
     # abort_if_not_modified_file
-    echo "Executing: ms3 review"
-    if ! ms3 review -M -N -X -D -F --fail; then
+    echo "Executing: ms3 review -c -M -N -X -D -F --fail"
+    if ! ms3 review -c -M -N -X -D -F --fail; then
       echo "---------------------------------------------------------------------------------------"
       git config --global user.name "github-actions[bot]"
       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "[bot] extracts facets and metadata from all scores; adds review reports (tests failed)"
+      pushing_files "[bot] ms3 review of all scores (tests failed)"
       exit -1
     fi
     echo "---------------------------------------------------------------------------------------"
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "[bot] extracts facets and metadata from all scores; adds review reports (tests passed)"
+    pushing_files "[bot] ms3 review of all scores (tests passed)"
 
   elif [[ "$1" == "pull_request" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
     #statements to differentiate between either PR or pull request being triggered
