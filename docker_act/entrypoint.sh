@@ -286,7 +286,7 @@ main(){
     # echo "check if files have been"
     # abort_if_not_modified_file
     echo "Executing: ms3 review -c -M -N -X -D -F --fail"
-    if ! ms3 review -c -M -N -X -D -F --fail; then
+    if ! ms3 review -M -N -X -D -F --fail; then
       echo "---------------------------------------------------------------------------------------"
       git config --global user.name "github-actions[bot]"
       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
