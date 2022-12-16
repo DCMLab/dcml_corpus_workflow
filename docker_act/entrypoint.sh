@@ -60,15 +60,8 @@ get_difference_between_commits(){
     echo "Executing: cd ${directory}/${working_dir}"
     cd "${directory}/${working_dir}"
     if [[ "$1" == "push" ]] ; then
-
       latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
       diffres=$(git diff --diff-filter=AMR --name-status $latestHashCommitInMain $GITHUB_SHA | grep -E '*.mscx')
-    elif [[ "$1" == "pull_request" ]]; then
-      # diffres=$(git diff --diff-filter=AM --name-status origin/$GITHUB_BASE_REF $commitTo | grep -E '*.mscx')
-      latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
-      echo $latestHashCommitInMain
-      echo $commitTo
-      diffres=$(git diff --diff-filter=AMR --name-status $latestHashCommitInMain $commitTo | grep -E '*.mscx')
     fi
 
     #finish the action execution if mscx files have not been changed or added
@@ -125,90 +118,6 @@ push_to_no_main_branch(){
   git config --global user.name "github-actions[bot]"
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   pushing_files "[bot] ms3 review of modified scores (tests passed)"
-
-
-}
-#######################################
-# Executing  ms3 review for all mscx files commited/added
-# similar to executing all ms3_commands passing the flag commit
-# Globals:
-#   RUNNER_WORKSPECE: parent folder of the cloned repo for temporary files
-# Arguments:
-#   $1 allows to differentiate between push and pull_request
-#######################################
-pull_request_workflow(){
-  echo "Executing: cd ${directory}/${working_dir}"
-  cd "${directory}/${working_dir}"
-  get_difference_between_commits $1
-  regexFiles=""
-  while IFS= read -r line; do
-    regexFiles=($regexFiles$line)
-  done < ${directory}/${working_dir}/added_and_modified_files.txt
-  echo "Pull request:"
-  echo "Executing: ms3 review -c -M -N -X -D -F --fail -i $regexFiles"
-
-  if ! ms3 review -c -M -N -X -D -F --fail -i $regexFiles; then
-    echo "---------------------------------------------------------------------------------------"
-    git config --global user.name "github-actions[bot]"
-    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "[bot] ms3 review of modified scores (tests failed)"
-    exit -1
-  fi
-  echo "---------------------------------------------------------------------------------------"
-  git config --global user.name "github-actions[bot]"
-  git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  pushing_files "[bot] ms3 review of modified scores (tests passed)"
-
-
-  # if [[ ! -f "${directory}/${working_dir}/startingCommitAtPR.txt" ]]
-  # then
-  #   if ! ms3 review -M -N -X -D -F --fail -i $regexFiles; then
-  #     echo "---------------------------------------------------------------------------------------"
-  #     git config --global user.name "github-actions[bot]"
-  #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  #     pushing_files "Added comparison files for review"
-  #     hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-  #     echo "$hashLastCommitStartingAtPR" > ${directory}/${working_dir}/startingCommitAtPR.txt
-  #     git config --global user.name "github-actions[bot]"
-  #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  #     pushing_files "Adding reference to first commit in PR"
-  #     exit -1
-  #   fi
-  #   echo "---------------------------------------------------------------------------------------"
-  #   git config --global user.name "github-actions[bot]"
-  #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  #   pushing_files "Added comparison files for review"
-  #
-  #   hashLastCommitStartingAtPR=$(git log HEAD^..HEAD --pretty=format:"%H" --no-patch)
-  #   echo "$hashLastCommitStartingAtPR" > ${directory}/${working_dir}/startingCommitAtPR.txt
-  #   git config --global user.name "github-actions[bot]"
-  #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  #   pushing_files "Adding reference to first commit in PR"
-  #
-  # else
-  #   firstCommitInPR=$(cat "${directory}/${working_dir}/startingCommitAtPR.txt")
-  #   echo "the fist commit is: $firstCommitInPR"
-  #   if ! ms3 review -M -N -X -D -F --fail -i $regexFiles -c $firstCommitInPR; then
-  #     echo "---------------------------------------------------------------------------------------"
-  #     git config --global user.name "github-actions[bot]"
-  #     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  #     pushing_files "Added comparison files for review"
-  #     exit -1
-  #   fi
-  #   echo "---------------------------------------------------------------------------------------"
-  #   git config --global user.name "github-actions[bot]"
-  #   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-  #   pushing_files "Added comparison files for review"
-  # fi
-
-}
-
-removeLastPRhash(){
-  echo "Removing"
-  if [[ -f "${directory}/${working_dir}/startingCommitAtPR.txt" ]]
-  then
-    rm -f "${directory}/${working_dir}/startingCommitAtPR.txt"
-  fi
 }
 #######################################
 # This function will check if at least one mscx file has been added or modified
@@ -298,15 +207,9 @@ main(){
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     pushing_files "[bot] ms3 review of all scores (tests passed)"
 
-  elif [[ "$1" == "pull_request" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
-    #statements to differentiate between either PR or pull request being triggered
-    pull_request_workflow $1
-  elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" != "OPEN" ]]; then
+  elif [[ "$1" == "push" ]]; then
     # removeLastPRhash
     push_to_no_main_branch $1
-  elif [[ "$1" == "push" ]] && [[ "$IsThereAPullRequestOpened" == "OPEN" ]]; then
-    echo "this workflow does not need to run because it comes together with a pull_request event"
-    configure_output_to_cancel_this_workflow
   fi
 
 }
