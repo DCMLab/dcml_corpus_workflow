@@ -3,6 +3,7 @@
 
 #Global var
 urlToYML="https://github.com/DCMLab/annotation_workflow_template"
+spreedSheetRepos="https://docs.google.com/spreadsheets/d/16UsEfawgln7l9rgG7fTkh_LwO2bg2poLor3SxzXFU0Y/export?exportFormat=csv"
 branch="workflow_update"
 verTemp=$(curl https://api.github.com/repos/DCMLab/dcml_corpus_workflow/releases/latest -s | grep "tag_name"| cut -c16-| head)
 latestVersionDCMLWorkflow=$(echo "${verTemp::-2}")
