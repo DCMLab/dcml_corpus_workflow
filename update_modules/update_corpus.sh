@@ -24,6 +24,7 @@ curl -L $spreedSheetRepos -o res.csv
 #thus it would not read the last line of this
 while IFS=, read -r path url ver || [ -n "$path" ]
 do
+    cd "${GITHUB_WORKSPACE}/main"
     echo "$path|$url|$ver"
     if [[ "$path" == "Repo name" ]]; then
       # skip the header row
