@@ -37,6 +37,8 @@ do
     sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$versionSel#" "${GITHUB_WORKSPACE}/main/update_modules/yml_to_send/.github/workflows/main_branch.yml"
     sed -i "s#uses: DCMLab/dcml_corpus_workflow@..*#uses: DCMLab/dcml_corpus_workflow@$versionSel#" "${GITHUB_WORKSPACE}/main/update_modules/yml_to_send/.github/workflows/annotation_branch.yml"
 
+    echo "$url"
+    echo "$path"
     linemodified=$(echo "${url/'git@github.com:'/'https://'"$token"'@github.com/'}")
     git submodule add "$linemodified" "$path"
     rm -rf "${GITHUB_WORKSPACE}/main/$path/.github/workflows"
