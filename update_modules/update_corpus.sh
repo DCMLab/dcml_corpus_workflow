@@ -22,10 +22,10 @@ curl -L $spreedSheetRepos -o res.csv
 #the name of a repo, link to the repo and dcml version for the repo
 #[ -n "$name" ] is an extra boolean condition as file does not contain EOF and
 #thus it would not read the last line of this
-while IFS=, read -r name url ver || [ -n "$name" ]
+while IFS=, read -r path url ver || [ -n "$name" ]
 do
-    echo "$name|$url|$ver"
-    if [[ "$name" == "Repo name" ]]; then
+    echo "$path|$url|$ver"
+    if [[ "$path" == "Repo name" ]]; then
       # skip the header row
       continue
     fi
@@ -38,6 +38,7 @@ do
 
     linemodified=$(echo "${url/'git@github.com:'/'https://'"$token"'@github.com/'}")
     git submodule add "$linemodified" "$path"
+    rm -rf "${GITHUB_WORKSPACE}/main/$path/.github/workflows"
     cp -r "${GITHUB_WORKSPACE}/main/update_modules/yml_to_send/.github/" "${GITHUB_WORKSPACE}/main/$path/"
 
     cd "${GITHUB_WORKSPACE}/main/$path"
