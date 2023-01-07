@@ -8,18 +8,15 @@ branch="workflow_update"
 verTemp=$(curl https://api.github.com/repos/DCMLab/dcml_corpus_workflow/releases/latest -s | grep "tag_name"| cut -c16-| head)
 latestVersionDCMLWorkflow=$(echo "${verTemp::-2}")
 
-#change to a diff branch
-git checkout -b update_modules
-
 #Cloning annotation_workflow yml files
 git clone $urlToYML
 cd annotation_workflow_template
 git checkout $branch
 cd ..
-mkdir yml_to_send
+mkdir "${GITHUB_WORKSPACE}/main/update_modules/yml_to_send"
 
 #get the corpora sheet
-cp -r "annotation_workflow_template/.github" yml_to_send
+cp -r "annotation_workflow_template/.github" "${GITHUB_WORKSPACE}/main/update_modules/yml_to_send"
 curl -L $spreedSheetRepos -o res.csv
 #google sheet contains a  corpora where echa entry contains:
 #the name of a repo, link to the repo and dcml version for the repo
