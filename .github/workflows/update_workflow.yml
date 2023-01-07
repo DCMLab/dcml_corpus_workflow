@@ -22,7 +22,7 @@ jobs:
           git config --global user.name "ms3-bot"
           git config --global user.email dcml.annotators@epfl.ch
           git config --global user.token ${{ secrets.MS3_BOT_TOKEN }}
-          # git push origin --delete update_modules
+          git push origin --delete update_modules
 
       # Notice: In this step, the yml files are being updated with the lastest
       # version published of the dcml_corpus_workflow
