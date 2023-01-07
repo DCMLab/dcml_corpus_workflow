@@ -100,7 +100,6 @@ push_to_no_main_branch(){
   echo "Executing: cd ${directory}/${working_dir}"
   cd "${directory}/${working_dir}"
   get_difference_between_commits $1
-
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
@@ -194,7 +193,7 @@ main(){
     # removeLastPRhash
     # echo "check if files have been"
     # abort_if_not_modified_file
-    echo "Executing: ms3 review -c -M -N -X -D -F --fail"
+    echo "Executing: ms3 review  -M -N -X -D -F --fail"
     if ! ms3 review -M -N -X -D -F --fail; then
       echo "---------------------------------------------------------------------------------------"
       git config --global user.name "github-actions[bot]"
