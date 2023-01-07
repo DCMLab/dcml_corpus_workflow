@@ -42,7 +42,10 @@ do
     cp -r "${GITHUB_WORKSPACE}/main/update_modules/yml_to_send/.github/" "${GITHUB_WORKSPACE}/main/$path/"
 
     cd "${GITHUB_WORKSPACE}/main/$path"
-    git checkout main
+
+    git push origin --delete workflow_update
+    git checkout -b workflow_update
+    git push --set-upstream origin workflow_update
     git add .
     git commit -m "trigger_workflow"
     git push
