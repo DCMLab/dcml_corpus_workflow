@@ -22,7 +22,7 @@ curl -L $spreedSheetRepos -o res.csv
 #the name of a repo, link to the repo and dcml version for the repo
 #[ -n "$name" ] is an extra boolean condition as file does not contain EOF and
 #thus it would not read the last line of this
-while IFS=, read -r path url ver || [ -n "$name" ]
+while IFS=, read -r path url ver || [ -n "$path" ]
 do
     echo "$path|$url|$ver"
     if [[ "$path" == "Repo name" ]]; then
@@ -42,6 +42,7 @@ do
     cp -r "${GITHUB_WORKSPACE}/main/update_modules/yml_to_send/.github/" "${GITHUB_WORKSPACE}/main/$path/"
 
     cd "${GITHUB_WORKSPACE}/main/$path"
+    git checkout main
     git add .
     git commit -m "trigger_workflow"
     git push
