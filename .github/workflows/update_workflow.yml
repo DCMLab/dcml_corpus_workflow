@@ -41,10 +41,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Download .gitmodules test
-      #   working-directory: ./main
-      #   run: |
-      #     curl -s https://"${{secrets.MS3_BOT_TOKEN}}"@raw.githubusercontent.com/DCMLab/unittest_metacorpus/ms3_tests/.gitmodules
+      - name: Download .gitmodules test
+        working-directory: ./main
+        run: |
+          curl -s https://"${{secrets.MS3_BOT_TOKEN}}"@raw.githubusercontent.com/DCMLab/unittest_metacorpus/ms3_tests/.gitmodules
       #
       # - name: Download .gitmodules
       #   working-directory: ./main
