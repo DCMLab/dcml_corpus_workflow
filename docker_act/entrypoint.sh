@@ -47,22 +47,18 @@ configure_output_to_cancel_this_workflow(){
 # Getting a list of files changed during PR or Push
 # Globals:
 #   GITHUB_SHA: the last commit that triggered the action , in the case
-#               of pull_request, this is the last merge commit, for push
-#               this is the last commit of the branch by default
-#   GITHUB_BASE_REF: The base ref or targer branch of the pull request
+#              of push event this is the last commit of the branch by default
 #   RUNNER_WORKSPECE: parent folder of the cloned repo for temporary files
 # Arguments:
-#   $1 to choose between PR or Push
+#  None
 # Outputs:
 #  added_and_modified_files.txt
 #######################################
 get_difference_between_commits(){
     echo "Executing: cd ${directory}/${working_dir}"
     cd "${directory}/${working_dir}"
-    if [[ "$1" == "push" ]] ; then
-      latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
-      diffres=$(git diff --diff-filter=AMR --name-status $latestHashCommitInMain $GITHUB_SHA | grep -E '*.mscx')
-    fi
+    latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
+    diffres=$(git diff --diff-filter=AMR --name-status $latestHashCommitInMain $GITHUB_SHA | grep -E '*.mscx')
 
     #finish the action execution if mscx files have not been changed or added
     if [[ -z $diffres ]]; then
@@ -94,12 +90,12 @@ get_difference_between_commits(){
 # Globals:
 #   RUNNER_WORKSPECE: parent folder of the cloned repo for temporary files
 # Arguments:
-#   $1 allows to differentiate between push and pull_request
+#   None
 #######################################
 push_to_no_main_branch(){
   echo "Executing: cd ${directory}/${working_dir}"
   cd "${directory}/${working_dir}"
-  get_difference_between_commits $1
+  get_difference_between_commits
   regexFiles=""
   while IFS= read -r line; do
     regexFiles=($regexFiles$line)
@@ -118,6 +114,7 @@ push_to_no_main_branch(){
   git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
   pushing_files "[bot] ms3 review of modified scores (tests passed)"
 }
+
 #######################################
 # This function will check if at least one mscx file has been added or modified
 # if not it will exit the script. Assumes CWD is $directory
@@ -174,7 +171,7 @@ main(){
   cd "${directory}/${working_dir}"
   ls -a
   configure_git
-  if [[ "$comment_msg" == "trigger_workflow" ]]; then
+  if [[ "$comment_msg" == "dcml_corpus_workflow"* ]]; then
     echo "Executing: ms3 review -c -M -N -X -D -F --fail"
     if ! ms3 review -c -M -N -X -D -F --fail; then
       echo "---------------------------------------------------------------------------------------"
@@ -190,9 +187,6 @@ main(){
     pushing_files "[bot] ms3 review of all scores (tests passed)"
 
   elif [[ "$1" == "push_to_main" ]]; then
-    # removeLastPRhash
-    # echo "check if files have been"
-    # abort_if_not_modified_file
     echo "Executing: ms3 review  -M -N -X -D -F --fail"
     if ! ms3 review -M -N -X -D -F --fail; then
       echo "---------------------------------------------------------------------------------------"
@@ -207,8 +201,7 @@ main(){
     pushing_files "[bot] ms3 review of all scores (tests passed)"
 
   elif [[ "$1" == "push" ]]; then
-    # removeLastPRhash
-    push_to_no_main_branch $1
+    push_to_no_main_branch
   fi
 
 }
