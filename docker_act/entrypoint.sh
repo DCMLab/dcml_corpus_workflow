@@ -38,7 +38,7 @@ configure_git(){
 #   None
 #######################################
 configure_output_to_cancel_this_workflow(){
-  echo "::set-output name=skipped::true"
+  echo "{skipped}={true}" >> $GITHUB_OUTPUT
   exit 0
 }
 
