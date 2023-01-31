@@ -167,7 +167,7 @@ main(){
   echo "Arguments being passed: $1, \ncomment: $comment_msg,\n working dir: ${working_dir}, \ncommitFrom: ${commitFrom},\ndirectory:  ${directory}"
   # set_up_venv $2
 
-  git config --global --add safe.directory "${directory}//${working_dir}"
+  git config --global --add safe.directory "${directory}/${working_dir}"
   echo "Changing CWD to ${directory}//${working_dir}"
   cd "${directory}/${working_dir}"
   configure_git
