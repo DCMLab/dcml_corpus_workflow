@@ -168,7 +168,7 @@ main(){
   # set_up_venv $2
 
   git config --global --add safe.directory "${directory}/${working_dir}"
-  echo "Changing CWD to ${directory}//${working_dir}"
+  echo "Changing CWD to ${directory}/${working_dir}"
   cd "${directory}/${working_dir}"
   configure_git
   if [[ "$comment_msg" == "dcml_corpus_workflow"* ]]; then
