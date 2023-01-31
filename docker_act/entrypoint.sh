@@ -55,7 +55,7 @@ configure_output_to_cancel_this_workflow(){
 #  added_and_modified_files.txt
 #######################################
 get_difference_between_commits(){
-    echo "Executing: cd ${directory}/${working_dir}"
+    echo "Changing CWD to ${directory}/${working_dir}"
     cd "${directory}/${working_dir}"
     latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
     diffres=$(git diff --diff-filter=AMR --name-status $latestHashCommitInMain $GITHUB_SHA | grep -E '*.mscx')
@@ -93,7 +93,7 @@ get_difference_between_commits(){
 #   None
 #######################################
 push_to_no_main_branch(){
-  echo "Executing: cd ${directory}/${working_dir}"
+  echo "Changing CWD to ${directory}/${working_dir}"
   cd "${directory}/${working_dir}"
   get_difference_between_commits
   regexFiles=""
@@ -164,12 +164,12 @@ main(){
   #### ToDo: document arguments
   #### ToDo: make $2 be a version of ms3 and provide one Docker image with every new version
   # echo "Arguments being passed: $1 and $2"
-  echo "Arguments being passed: $1 and $comment_msg and working dir: ${working_dir}"
+  echo "Arguments being passed: $1, \ncomment: $comment_msg,\n working dir: ${working_dir}, \ncommitFrom: ${commitFrom},\ndirectory:  ${directory}"
   # set_up_venv $2
-  echo "Executing: cd ${directory}//${working_dir}"
-  ls -a
+
+  git config --global --add safe.directory "${directory}//${working_dir}"
+  echo "Changing CWD to ${directory}//${working_dir}"
   cd "${directory}/${working_dir}"
-  ls -a
   configure_git
   if [[ "$comment_msg" == "dcml_corpus_workflow"* ]]; then
     echo "Executing: ms3 review -c -M -N -X -D -F --fail"
