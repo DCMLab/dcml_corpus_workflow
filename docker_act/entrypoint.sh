@@ -203,7 +203,7 @@ main(){
     ipython kernel install --name "dimcat" --user
     export PATH_TO_REPO="$envPath"
     pages_path="$directory/$working_dir/pages"
-    if ! [[ -d "$pages_path"]]; then
+    if ! [[ -d "$pages_path" ]]; then
       mkdir "$directory/$working_dir/pages"
     fi
     cd ~
