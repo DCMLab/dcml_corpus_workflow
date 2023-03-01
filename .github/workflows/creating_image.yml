@@ -52,7 +52,7 @@ jobs:
       working-directory: ./main
       continue-on-error: true
       run: |
-        current_tag=$(gh api -H "Accept: application/vnd.github+json" repos/marcelmmc/dcml_corpus_workflow/releases/92046324 --jq '.tag_name')
+        current_tag=$(gh api -H "Accept: application/vnd.github+json" repos/DCMLab/dcml_corpus_workflow/releases/74899476 --jq '.tag_name')
         version=$(echo $current_tag | cut -d "v" -f 2| cut -d "-" -f 1)
         echo $version
         first_digit=$(echo $version | cut -d "." -f 1)
@@ -100,28 +100,29 @@ jobs:
       with:
         context: "${{ github.workspace }}/main/creating_docker_image"
         push: true
-        tags: dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}
+        # tags: dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}
+        tags: dcmlepfl/dcml_corpus_workflow:v2.0.2-ms3-1.2.4.post0.dev3.g5df6c9f-dimcat-0.3.0-data_reports-b5e79d0
 
-    - name: update the dockerfile with pushed image version
-      working-directory: main
-      continue-on-error: true
-      run: |
-        cd docker_act
-        sed -i "1 s#.*#FROM dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}#" Dockerfile
-
-        git config --global user.name "ms3-bot"
-        git config --global user.email dcml.annotators@epfl.ch
-        git add Dockerfile
-        git commit -m "new version: ${{ steps.generateTag.outputs.new_version }}"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Check if pull
-      id: checkpull
-      working-directory: ./main
-      continue-on-error: true
-      run: |
-        gh api --method PATCH -H "Accept: application/vnd.github+json" repos/DCMLab/dcml_corpus_workflow/releases/74899476 -f tag_name=${{ steps.generateTag.outputs.new_version }} -f target_commitish='main' -f name='1.2.4' -f body='Description of the release' -F draft=false -F prerelease=false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - name: update the dockerfile with pushed image version
+    #   working-directory: main
+    #   continue-on-error: true
+    #   run: |
+    #     cd docker_act
+    #     sed -i "1 s#.*#FROM dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}#" Dockerfile
+    #
+    #     git config --global user.name "ms3-bot"
+    #     git config --global user.email dcml.annotators@epfl.ch
+    #     git add Dockerfile
+    #     git commit -m "new version: ${{ steps.generateTag.outputs.new_version }}"
+    #     git push
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #
+    # - name: Check if pull
+    #   id: checkpull
+    #   working-directory: ./main
+    #   continue-on-error: true
+    #   run: |
+    #     gh api --method PATCH -H "Accept: application/vnd.github+json" repos/DCMLab/dcml_corpus_workflow/releases/74899476 -f tag_name=${{ steps.generateTag.outputs.new_version }} -f target_commitish='main' -f name='1.2.4' -f body='Description of the release' -F draft=false -F prerelease=false
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
