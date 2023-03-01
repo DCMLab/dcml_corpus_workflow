@@ -75,54 +75,53 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-    # - name: transform py or md to notebook
-    #   working-directory: main/creating_docker_image/data_reports
-    #   continue-on-error: true
-    #   run: |
-    #     ls -a
-    #     pip install jupytext
-    #     jupytext --to notebook generate.py
-    #     jupytext --to notebook notes_stats.py
-    #     ls -a
-    #
-    # - name: Set up Docker Buildx
-    #   uses: docker/setup-buildx-action@v2
-    #
-    # - name: Login to Docker Hub
-    #   uses: docker/login-action@v2
-    #   with:
-    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-    #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-    #
-    # - name: Build and push
-    #   id: dockerBuild
-    #   uses: docker/build-push-action@v4
-    #   with:
-    #     # context: "{{defaultContext}}:creating_docker_image"
-    #     context: "${{ github.workspace }}/main/creating_docker_image"
-    #     push: true
-    #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/dockerms3:${{ steps.generateTag.outputs.new_version }}
-    #
-    # - name: update the dockerfile with pushed image version
-    #   working-directory: main
-    #   continue-on-error: true
-    #   run: |
-    #     cd docker_act
-    #     sed -i "1 s#.*#FROM marcelmoran/dockerms3:${{ steps.generateTag.outputs.new_version }}#" Dockerfile
-    #
-    #     git config --global user.email "marcel.morancalderon@epfl.ch"
-    #     git config --global user.name "marcelmmc"
-    #     git add Dockerfile
-    #     git commit -m "new version: ${{ steps.generateTag.outputs.new_version }}"
-    #     git push
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #
-    # - name: Check if pull
-    #   id: checkpull
-    #   working-directory: ./main
-    #   continue-on-error: true
-    #   run: |
-    #     gh api --method PATCH -H "Accept: application/vnd.github+json" repos/marcelmmc/dcml_corpus_workflow/releases/92046324 -f tag_name=${{ steps.generateTag.outputs.new_version }} -f target_commitish='main' -f name='1.2.4' -f body='Description of the release' -F draft=false -F prerelease=false
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: transform py or md to notebook
+      working-directory: main/creating_docker_image/data_reports
+      continue-on-error: true
+      run: |
+        ls -a
+        pip install jupytext
+        jupytext --to notebook generate.py
+        jupytext --to notebook notes_stats.py
+        ls -a
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: dcmlepfl
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+    - name: Build and push
+      id: dockerBuild
+      uses: docker/build-push-action@v4
+      with:
+        context: "${{ github.workspace }}/main/creating_docker_image"
+        push: true
+        tags: dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}
+
+    - name: update the dockerfile with pushed image version
+      working-directory: main
+      continue-on-error: true
+      run: |
+        cd docker_act
+        sed -i "1 s#.*#FROM dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}#" Dockerfile
+
+        git config --global user.name "ms3-bot"
+        git config --global user.email dcml.annotators@epfl.ch
+        git add Dockerfile
+        git commit -m "new version: ${{ steps.generateTag.outputs.new_version }}"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Check if pull
+      id: checkpull
+      working-directory: ./main
+      continue-on-error: true
+      run: |
+        gh api --method PATCH -H "Accept: application/vnd.github+json" repos/DCMLab/dcml_corpus_workflow/releases/74899476 -f tag_name=${{ steps.generateTag.outputs.new_version }} -f target_commitish='main' -f name='1.2.4' -f body='Description of the release' -F draft=false -F prerelease=false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
