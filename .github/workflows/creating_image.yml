@@ -104,8 +104,7 @@ jobs:
       with:
         context: "${{ github.workspace }}/main/creating_docker_image"
         push: true
-        # tags: dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}
-        tags: dcmlepfl/dcml_corpus_workflow:v2.0.2-ms3-1.2.4.post0.dev3.g5df6c9f-dimcat-0.3.0-data_reports-b5e79d0
+        tags: dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}
 
     - name: update the dockerfile with pushed image version
       working-directory: main
