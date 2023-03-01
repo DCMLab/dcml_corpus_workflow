@@ -1,0 +1,128 @@
+name: creating_docker_img
+on: workflow_dispatch
+jobs:
+  perform_creation_of_image:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout main
+      uses: actions/checkout@v3
+      with:
+        repository: DCMLab/data_reports
+        ref: romantic_corpus
+        path: data_reports
+        token: ${{ secrets.MS3_BOT_TOKEN }}
+
+    - name: Checkout main
+      uses: actions/checkout@v3
+      with:
+        path: main
+        token: ${{ secrets.MS3_BOT_TOKEN }}
+
+    - name: config git and delete old update_modules branch
+      continue-on-error: true
+      run: |
+        ls -a
+        cp -r data_reports main/creating_docker_image
+        ls -a
+
+    - name: get version of ms3 and dimcat
+      id: versionPackets
+      working-directory: main/creating_docker_image
+      continue-on-error: false
+      run: |
+        while read line; do
+          if [[ "$line" == *"ms3"* ]] || [[ "$line" == *"dimcat"* ]]; then
+            pip install $line
+            echo $line
+          fi
+        done < "requirements.txt"
+
+        ms3v=$(pip show ms3 | grep Version)
+        dimcatv=$(pip show dimcat | grep Version)
+
+        cd data_reports
+        data_repv=$(git log --pretty=format:'%h' -n 1)
+        echo "packets=ms3-${ms3v:9}-dimcat-${dimcatv:9}-data_reports-$data_repv" >> $GITHUB_OUTPUT
+
+
+    - name: Generate new tag for release
+      id: generateTag
+      working-directory: ./main
+      continue-on-error: true
+      run: |
+        current_tag=$(gh api -H "Accept: application/vnd.github+json" repos/marcelmmc/dcml_corpus_workflow/releases/92046324 --jq '.tag_name')
+        version=$(echo $current_tag | cut -d "v" -f 2| cut -d "-" -f 1)
+        echo $version
+        first_digit=$(echo $version | cut -d "." -f 1)
+        second_digit=$(echo $version | cut -d "." -f 2)
+        third_digit=$(echo $version | cut -d "." -f 3)
+        if (( $third_digit < 9 )); then
+          third_digit=$(echo "$((third_digit + 1))")
+        elif (( $second_digit < 9 )); then
+          second_digit=$(echo "$((second_digit + 1))")
+          third_digit="0"
+        else
+          third_digit="0"
+          second_digit="0"
+          first_digit=$(echo "$((first_digit + 1))")
+        fi
+        new_version="v$first_digit.$second_digit.$third_digit"
+        echo "$new_version-${{ steps.versionPackets.outputs.packets }}"
+        echo "new_version=$new_version-${{ steps.versionPackets.outputs.packets }}" >> $GITHUB_OUTPUT
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+    # - name: transform py or md to notebook
+    #   working-directory: main/creating_docker_image/data_reports
+    #   continue-on-error: true
+    #   run: |
+    #     ls -a
+    #     pip install jupytext
+    #     jupytext --to notebook generate.py
+    #     jupytext --to notebook notes_stats.py
+    #     ls -a
+    #
+    # - name: Set up Docker Buildx
+    #   uses: docker/setup-buildx-action@v2
+    #
+    # - name: Login to Docker Hub
+    #   uses: docker/login-action@v2
+    #   with:
+    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+    #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+    #
+    # - name: Build and push
+    #   id: dockerBuild
+    #   uses: docker/build-push-action@v4
+    #   with:
+    #     # context: "{{defaultContext}}:creating_docker_image"
+    #     context: "${{ github.workspace }}/main/creating_docker_image"
+    #     push: true
+    #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/dockerms3:${{ steps.generateTag.outputs.new_version }}
+    #
+    # - name: update the dockerfile with pushed image version
+    #   working-directory: main
+    #   continue-on-error: true
+    #   run: |
+    #     cd docker_act
+    #     sed -i "1 s#.*#FROM marcelmoran/dockerms3:${{ steps.generateTag.outputs.new_version }}#" Dockerfile
+    #
+    #     git config --global user.email "marcel.morancalderon@epfl.ch"
+    #     git config --global user.name "marcelmmc"
+    #     git add Dockerfile
+    #     git commit -m "new version: ${{ steps.generateTag.outputs.new_version }}"
+    #     git push
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #
+    # - name: Check if pull
+    #   id: checkpull
+    #   working-directory: ./main
+    #   continue-on-error: true
+    #   run: |
+    #     gh api --method PATCH -H "Accept: application/vnd.github+json" repos/marcelmmc/dcml_corpus_workflow/releases/92046324 -f tag_name=${{ steps.generateTag.outputs.new_version }} -f target_commitish='main' -f name='1.2.4' -f body='Description of the release' -F draft=false -F prerelease=false
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
