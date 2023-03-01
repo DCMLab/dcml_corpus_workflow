@@ -202,12 +202,16 @@ main(){
   elif [[ "$1" == "update website" ]]; then
     ipython kernel install --name "dimcat" --user
     export PATH_TO_REPO="$envPath"
+    pages_path="$directory/$working_dir/pages"
+    if ! [[ -d "$pages_path"]]; then
+      mkdir "$directory/$working_dir/pages"
+    fi
     cd ~
     cd /data_reports
     jupyter nbconvert --execute --allow-errors --to html generate.ipynb
     jupyter nbconvert --execute --allow-errors --to html notes_stats.ipynb
-    cp generate.html notes_stats.html "$directory/$working_dir"
-    cd "$directory/$working_dir"
+    cp generate.html notes_stats.html "$directory/$working_dir/pages"
+    cd "$directory/$working_dir/pages"
     git add generate.html notes_stats.html
     git commit -m "add html pages"
     git push
