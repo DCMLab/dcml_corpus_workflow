@@ -199,7 +199,18 @@ main(){
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     pushing_files "[bot] ms3 review of all scores (tests passed)"
-
+  elif [[ "$1" == "update website" ]]; then
+    ipython kernel install --name "dimcat" --user
+    export PATH_TO_REPO="$envPath"
+    cd ~
+    cd /data_reports
+    jupyter nbconvert --execute --allow-errors --to html generate.ipynb
+    jupyter nbconvert --execute --allow-errors --to html notes_stats.ipynb
+    cp generate.html notes_stats.html "$directory/$working_dir"
+    cd "$directory/$working_dir"
+    git add generate.html notes_stats.html
+    git commit -m "add html pages"
+    git push
   elif [[ "$1" == "push" ]]; then
     push_to_no_main_branch
   fi
