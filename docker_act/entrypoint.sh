@@ -199,7 +199,7 @@ main(){
     git config --global user.name "github-actions[bot]"
     git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
     pushing_files "[bot] ms3 review of all scores (tests passed)"
-  elif [[ "$1" == "update website" ]]; then
+  elif [[ "$1" == "update_website" ]]; then
     ipython kernel install --name "dimcat" --user
     export PATH_TO_REPO="$envPath"
     pages_path="$directory/$working_dir/pages"
