@@ -41,6 +41,7 @@ jobs:
         git clone https://github.com/DCMLab/dimcat.git
         cd dimcat
         git checkout notebooks
+        python -m pip install --upgrade pip
         python -m pip install -e .
         ms3v=$(pip show ms3 | grep Version)
         dimcatv=$(pip show dimcat | grep Version)
