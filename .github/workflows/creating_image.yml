@@ -29,9 +29,9 @@ jobs:
 
     - name: get version of ms3 and dimcat
       id: versionPackets
-      working-directory: main/creating_docker_image
       continue-on-error: false
       run: |
+        cd main/creating_docker_image
         while read line; do
           if [[ "$line" == *"ms3"* ]]; then
             pip install $line
