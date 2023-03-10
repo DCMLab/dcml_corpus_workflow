@@ -201,19 +201,19 @@ main(){
     pushing_files "[bot] ms3 review of all scores (tests passed)"
   elif [[ "$1" == "update_website" ]]; then
     ipython kernel install --name "dimcat" --user
-    export PATH_TO_REPO="$envPath"
+    export CORPUS_PATH="$envPath"
     pages_path="$directory/$working_dir/pages"
     if ! [[ -d "$pages_path" ]]; then
       mkdir "$directory/$working_dir/pages"
     fi
     cd ~
-    cd /data_reports
-    jupyter nbconvert --execute --allow-errors --to html generate.ipynb
-    jupyter nbconvert --execute --allow-errors --to html notes_stats.ipynb
-    cp generate.html notes_stats.html "$directory/$working_dir/pages"
+    cd /dimcat/docs/notebooks
+    jupyter nbconvert --execute --allow-errors --to markdown generate.ipynb
+    jupyter nbconvert --execute --allow-errors --to markdown notes_stats.ipynb
+    cp generate.md notes_stats.md "$directory/$working_dir/pages"
     cd "$directory/$working_dir/pages"
-    git add generate.html notes_stats.html
-    git commit -m "add html pages"
+    git add generate.md notes_stats.md
+    git commit -m "add md pages"
     git push
   elif [[ "$1" == "push" ]]; then
     push_to_no_main_branch

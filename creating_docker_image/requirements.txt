@@ -1,5 +1,4 @@
 git+https://github.com/johentsch/ms3.git@corpus_structure
-dimcat
 plotly
 kaleido
 colorlover

@@ -6,13 +6,13 @@ jobs:
 
     steps:
 
-    - name: Checkout main
-      uses: actions/checkout@v3
-      with:
-        repository: DCMLab/data_reports
-        ref: romantic_corpus
-        path: data_reports
-        token: ${{ secrets.MS3_BOT_TOKEN }}
+    # - name: Checkout main
+    #   uses: actions/checkout@v3
+    #   with:
+    #     repository: DCMLab/data_reports
+    #     ref: romantic_corpus
+    #     path: data_reports
+    #     token: ${{ secrets.MS3_BOT_TOKEN }}
 
     - name: Checkout main
       uses: actions/checkout@v3
@@ -20,12 +20,12 @@ jobs:
         path: main
         token: ${{ secrets.MS3_BOT_TOKEN }}
 
-    - name: config git and delete old update_modules branch
-      continue-on-error: true
-      run: |
-        ls -a
-        cp -r data_reports main/creating_docker_image
-        ls -a
+    # - name: config git and delete old update_modules branch
+    #   continue-on-error: true
+    #   run: |
+    #     ls -a
+    #     cp -r data_reports main/creating_docker_image
+    #     ls -a
 
     - name: get version of ms3 and dimcat
       id: versionPackets
@@ -33,18 +33,20 @@ jobs:
       continue-on-error: false
       run: |
         while read line; do
-          if [[ "$line" == *"ms3"* ]] || [[ "$line" == *"dimcat"* ]]; then
+          if [[ "$line" == *"ms3"* ]]; then
             pip install $line
             echo $line
           fi
         done < "requirements.txt"
-
+        git clone https://github.com/DCMLab/dimcat.git && \
+            cd dimcat && git checkout notebooks && \
+            pip install -e .
         ms3v=$(pip show ms3 | grep Version)
         dimcatv=$(pip show dimcat | grep Version)
 
-        cd data_reports
-        data_repv=$(git log --pretty=format:'%h' -n 1)
-        echo "packets=ms3-${ms3v:9}-dimcat-${dimcatv:9}-data_reports-$data_repv" >> $GITHUB_OUTPUT
+        # cd data_reports
+        # data_repv=$(git log --pretty=format:'%h' -n 1)
+        echo "packets=ms3-${ms3v:9}-dimcat-${dimcatv:9}" >> $GITHUB_OUTPUT
 
 
     - name: Generate new tag for release
@@ -80,15 +82,15 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-    - name: transform py or md to notebook
-      working-directory: main/creating_docker_image/data_reports
-      continue-on-error: true
-      run: |
-        ls -a
-        pip install jupytext
-        jupytext --to notebook generate.py
-        jupytext --to notebook notes_stats.py
-        ls -a
+    # - name: transform py or md to notebook
+    #   working-directory: main/creating_docker_image/data_reports
+    #   continue-on-error: true
+    #   run: |
+    #     ls -a
+    #     pip install jupytext
+    #     jupytext --to notebook generate.py
+    #     jupytext --to notebook notes_stats.py
+    #     ls -a
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -113,7 +115,6 @@ jobs:
       run: |
         cd docker_act
         sed -i "1 s#.*#FROM dcmlepfl/dcml_corpus_workflow:${{ steps.generateTag.outputs.new_version }}#" Dockerfile
-
         git config --global user.name "ms3-bot"
         git config --global user.email dcml.annotators@epfl.ch
         git add Dockerfile
