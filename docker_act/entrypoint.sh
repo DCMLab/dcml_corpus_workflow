@@ -202,19 +202,17 @@ main(){
   elif [[ "$1" == "update_website" ]]; then
     ipython kernel install --name "dimcat" --user
     export CORPUS_PATH="$envPath"
-    pages_path="$directory/$working_dir/pages"
+    pages_path="$directory/pages"
     if ! [[ -d "$pages_path" ]]; then
-      mkdir "$directory/$working_dir/pages"
+      mkdir "$pages_path"
     fi
     cd ~
     cd /dimcat/docs/notebooks
-    jupyter nbconvert --execute --allow-errors --to markdown generate.ipynb
-    jupyter nbconvert --execute --allow-errors --to markdown notes_stats.ipynb
-    cp generate.md notes_stats.md "$directory/$working_dir/pages"
-    cd "$directory/$working_dir/pages"
-    git add generate.md notes_stats.md
-    git commit -m "add md pages"
-    git push
+    jupyter nbconvert --execute --allow-errors --to html generate.ipynb
+    jupyter nbconvert --execute --allow-errors --to html notes_stats.ipynb
+    mv generate.md notes_stats.md "$pages_path"
+    cd "$pages_path"
+    ls -a
   elif [[ "$1" == "push" ]]; then
     push_to_no_main_branch
   fi
