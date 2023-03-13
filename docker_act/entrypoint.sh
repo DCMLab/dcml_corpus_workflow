@@ -210,9 +210,7 @@ main(){
     cd /dimcat/docs/notebooks
     jupyter nbconvert --execute --allow-errors --to html generate.ipynb
     jupyter nbconvert --execute --allow-errors --to html notes_stats.ipynb
-    mv generate.md notes_stats.md "$pages_path"
-    cd "$pages_path"
-    ls -a
+    mv generate.html notes_stats.html "$pages_path"
   elif [[ "$1" == "push" ]]; then
     push_to_no_main_branch
   fi
