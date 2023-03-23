@@ -2,8 +2,8 @@ name: test recursive corpus
 on: workflow_dispatch
 jobs:
   perform_creation_of_image:
-    steps:
     runs-on: ubuntu-latest
+    steps:
     - name: Checkout corpus repository
       uses: actions/checkout@v3
       with:
