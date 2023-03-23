@@ -8,7 +8,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        token: ${{ secrets.CELMARBOT2 }}
+        token: ${{ secrets.MS3_BOT_TOKEN }}
         path: ${{ github.event.repository.name }}
 
 
