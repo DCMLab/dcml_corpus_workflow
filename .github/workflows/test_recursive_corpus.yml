@@ -7,13 +7,15 @@ jobs:
     - name: Checkout corpus repository
       uses: actions/checkout@v3
       with:
+        repository: 'DCMLab/corpus_docs'
+        token: ${{ secrets.MS3_BOT_TOKEN  }}
         fetch-depth: 0
 
 
-    - name: Download dimcat repository, install dependecies and pull notebooks
-      continue-on-error: false
-      run: |
-        # git config --local user.email "dcml.annotators@epfl.ch"
-        # git config --local user.name "ms3-bot"
-        git config --global user.token ${{ secrets.MS3_BOT_TOKEN  }}
-        git clone https://github.com/DCMLab/corpus_docs --recurse-submodules
+    # - name: Download dimcat repository, install dependecies and pull notebooks
+    #   continue-on-error: false
+    #   run: |
+    #     # git config --local user.email "dcml.annotators@epfl.ch"
+    #     # git config --local user.name "ms3-bot"
+    #     git config --global user.token ${{ secrets.MS3_BOT_TOKEN  }}
+    #     git clone https://github.com/DCMLab/corpus_docs --recurse-submodules
