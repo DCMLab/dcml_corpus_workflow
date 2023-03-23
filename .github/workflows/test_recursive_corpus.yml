@@ -1,0 +1,20 @@
+name: test recursive corpus
+on: workflow_dispatch
+jobs:
+  perform_creation_of_image:
+    steps:
+    - name: Checkout corpus repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.CELMARBOT2 }}
+        path: ${{ github.event.repository.name }}
+
+
+    - name: Download dimcat repository, install dependecies and pull notebooks
+      continue-on-error: false
+      run: |
+        # git config --local user.email "dcml.annotators@epfl.ch"
+        # git config --local user.name "ms3-bot"
+        git config --global user.token ${{ secrets.MS3_BOT_TOKEN  }}
+        git clone https://github.com/DCMLab/corpus_docs --recurse-submodules
