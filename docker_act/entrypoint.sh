@@ -187,18 +187,15 @@ main(){
     pushing_files "[bot] ms3 review of all scores (tests passed)"
 
   elif [[ "$1" == "push_to_main" ]]; then
-    echo "Executing: ms3 review  -M -N -X -D -F --fail"
-    if ! ms3 review -M -N -X -D -F --fail; then
+    echo "Executing: ms3 review --fail"
+    if ! ms3 review --fail; then
       echo "---------------------------------------------------------------------------------------"
       git config --global user.name "github-actions[bot]"
       git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      pushing_files "[bot] ms3 review of all scores (tests failed)"
+      pushing_files "[bot] Warnings when running ms3 review on all scores (tests failed)"
       exit -1
     fi
-    echo "---------------------------------------------------------------------------------------"
-    git config --global user.name "github-actions[bot]"
-    git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    pushing_files "[bot] ms3 review of all scores (tests passed)"
+    echo "All checks passed, nothing to push."
   elif [[ "$1" == "update_website" ]]; then
     ipython kernel install --name "dimcat" --user
     export CORPUS_PATH="$envPath"
