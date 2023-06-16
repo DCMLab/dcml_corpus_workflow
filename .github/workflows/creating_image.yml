@@ -32,17 +32,7 @@ jobs:
       continue-on-error: false
       run: |
         cd main/creating_docker_image
-        while read line; do
-          if [[ "$line" == *"ms3"* ]]; then
-            pip install $line
-            echo $line
-          fi
-        done < "requirements.txt"
-        git clone https://github.com/DCMLab/dimcat.git
-        cd dimcat
-        git checkout notebooks
-        python -m pip install --upgrade pip
-        python -m pip install -e .
+        pip install -r requirements.txt
         ms3v=$(pip show ms3 | grep Version)
         dimcatv=$(pip show dimcat | grep Version)
 

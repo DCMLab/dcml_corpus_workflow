@@ -1,7 +1,2 @@
 git+https://github.com/johentsch/ms3.git@corpus_structure
-plotly
-kaleido
-colorlover
-nbformat
-jupytext
-ipykernel
+dimcat[docs]
