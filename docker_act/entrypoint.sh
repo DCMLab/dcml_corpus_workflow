@@ -58,7 +58,8 @@ get_difference_between_commits(){
     echo "Changing CWD to ${directory}/${working_dir}"
     cd "${directory}/${working_dir}"
     latestHashCommitInMain=$(git log -n 1 origin/main --pretty=format:"%H")
-    diffres=$(git diff --diff-filter=AMR --name-status $latestHashCommitInMain $GITHUB_SHA | grep -E '*.mscx')
+    recentAncestorCommitWithMain=$(git merge-base $latestHashCommitInMain $GITHUB_SHA) 
+    diffres=$(git diff --diff-filter=AMR --name-status $recentAncestorCommitWithMain $GITHUB_SHA | grep -E '*.mscx')
 
     #finish the action execution if mscx files have not been changed or added
     if [[ -z $diffres ]]; then
