@@ -1,4 +1,4 @@
-FROM dcmlepfl/dcml_corpus_workflow:v2.7.1-ms3-1.2.10.post0.dev2-gfc0fab9-dimcat-0.3.0
+FROM dcmlepfl/dcml_corpus_workflow:v2.7.2-ms3-1.2.10.post0.dev5-g054927a-dimcat-0.3.0
 RUN apt-get -y update
 RUN apt-get -y install git
 RUN pip install git+https://github.com/johentsch/ms3.git@corpus_structure
