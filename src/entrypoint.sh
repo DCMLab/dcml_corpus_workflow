@@ -49,6 +49,7 @@ configure_output_to_cancel_this_workflow(){
 # with another branch, files can be filter by including a regex as argument
 # Globals:
 #   GITHUB_SHA:  The last commit of the branch that triggered the action.
+#   CUSTOM_GITHUB_SHA:  A hash commit that will overwrite GITHUB_SHA if specified.
 # Arguments:
 #  $1 The target branch to compare with.
 #  $2 Regular expression to the list of files.
@@ -56,9 +57,14 @@ configure_output_to_cancel_this_workflow(){
 #  /home/added_and_modified_files.txt
 #######################################
 get_difference_between_commits(){
+    if [[ -z "$CUSTOM_GITHUB_SHA" ]]; then
+      SHA="$GITHUB_SHA"
+    else 
+      SHA="$CUSTOM_GITHUB_SHA"
+    fi
     latestHashCommitInMain=$(git log -n 1 "origin/$1" --pretty=format:"%H")
-    recentAncestorCommitWithMain=$(git merge-base $latestHashCommitInMain $GITHUB_SHA) 
-    diffres=$(git diff --diff-filter=AMR --name-status $recentAncestorCommitWithMain $GITHUB_SHA | grep -G "$2")
+    recentAncestorCommitWithMain=$(git merge-base $latestHashCommitInMain "$SHA") 
+    diffres=$(git diff --diff-filter=AMR --name-status $recentAncestorCommitWithMain "$SHA" | grep -G "$2")
     #finish the action execution if mscx files have not been changed or added
     if [[ -z $diffres ]]; then
       echo "No mscx changes were detected, finishing early"

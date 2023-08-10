@@ -16,13 +16,11 @@ jobs:
         uses: ./
         with:
           ms3_command: review
-          parameters: "-X___-M___test_argument 2"
-          include: '.*\.mscx$'
-          only_modified: true
         env:
           Token: "${{ secrets.MS3_BOT_TOKEN }}"
           CUSTOM_GITHUB_REPOSITORY: "DCMLab/ravel_piano"
-          # CUSTOM_REF_NAME: "main"
-          # CUSTOM_EVENT_TRIGGERED_BY_BRANCH: "main"
+          CUSTOM_REF_NAME: "testing_branch"
+          CUSTOM_EVENT_TRIGGERED_BY_BRANCH: "nomain"
+          CUSTOM_GITHUB_SHA: "53ea255ff29fb477e9419f5e8629886a874ecf9c"
 
 
