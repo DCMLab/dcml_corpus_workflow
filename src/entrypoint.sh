@@ -27,7 +27,7 @@ configure_git(){
   echo "Configuring git"
   git config --global user.name "ms3-bot"
   git config --global user.email dcml.annotators@epfl.ch
-  git config --global credential.https://github.com.username marcelmmc
+  git config --global credential.https://github.com.username ms3-bot
   echo -e "#!/bin/bash\necho \"\$Token\"" > /home/token.sh
   chmod +x /home/token.sh
   export GIT_ASKPASS=/home/token.sh
