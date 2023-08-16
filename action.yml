@@ -2,17 +2,25 @@
 name: 'Docker_set_up'
 description: 'Initialize docker and run ms3 commands'
 inputs:
-  ms3-command:  # id of input
-    description: 'ms3 execution for mscx files, arguments can be [extract, check, compare]'
+  ms3_command:  # id of input
+    description: 'ms3 execution for mscx files, arguments can be [extract, check, compare, review, transform]'
     required: true
-    default: '-h'
-  ms3-version:  # id of version
-    description: 'version to run the code'
-    required: true
-    default: 'new'
-
+    default: ''
+  parameters:
+    description: 'TO-DO'
+    required: false
+    default: ''
+  include:
+    description: 'TO-DO'
+    required: false
+    default: ''
+  only_modified:
+    description: 'TO-DO'
+    required: false
+    default: false
 runs:
   using: 'docker'
-  image: 'docker_act/Dockerfile'
+  image: 'docker://dcmlepfl/dcml_corpus_workflow:test' #pull image from docker hub
+  # image: 'src/Dockerfile' # build docker image from path
   args:
     - ${{ inputs.ms3-command }} ${{ inputs.ms3-version }}

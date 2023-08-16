@@ -1,0 +1,26 @@
+name: Act
+
+on:
+  push:
+
+jobs:
+  docker_action:
+    runs-on: ubuntu-latest 
+    name: test action locally
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: test action
+        uses: ./
+        with:
+          ms3_command: review
+        env:
+          Token: "${{ secrets.MS3_BOT_TOKEN }}"
+          CUSTOM_GITHUB_REPOSITORY: "DCMLab/ravel_piano"
+          CUSTOM_REF_NAME: "testing_branch"
+          CUSTOM_EVENT_TRIGGERED_BY_BRANCH: "nomain"
+          CUSTOM_GITHUB_SHA: "53ea255ff29fb477e9419f5e8629886a874ecf9c"
+
+

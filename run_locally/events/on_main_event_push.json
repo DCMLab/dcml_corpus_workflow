@@ -1,0 +1,14 @@
+{
+  "head": {
+    "ref": "sample-head-ref"
+  },
+  "base": {
+    "ref": "sample-base-ref"
+  },
+  "head_commit": {
+    "message": "sample-commit"
+  },
+  "before": "",
+  "after":"",
+  "ref": "refs/heads/main"
+}
